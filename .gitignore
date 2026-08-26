@@ -1,0 +1,30 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# builds
+.next/
+dist/
+out/
+tsconfig.tsbuildinfo
+
+# env — each package owns its own .env
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# prisma
+packages/db/src/generated/
+
+# e2e artifacts (videos, screenshots, traces)
+packages/e2e/artifacts/
+playwright-report/
+
+# misc
+.DS_Store
+*.log
+coverage/
+
+# pi agent transient paste artifacts
+.pi/clip/

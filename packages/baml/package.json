@@ -1,0 +1,20 @@
+{
+  "name": "@reka-bytes/baml",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "generate": "baml-cli generate --from baml_src",
+    "build": "baml-cli generate --from baml_src",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo \"(baml: no lint yet)\""
+  },
+  "dependencies": {
+    "@boundaryml/baml": "^0.226.1"
+  },
+  "devDependencies": {
+    "typescript": "^5"
+  }
+}

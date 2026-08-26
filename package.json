@@ -1,0 +1,19 @@
+{
+  "name": "reka-bytes",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@11.9.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev:backend": "pnpm --filter @reka-bytes/backend dev",
+    "dev:frontend": "pnpm --filter @reka-bytes/frontend dev",
+    "dev:admin": "pnpm --filter @reka-bytes/admin dev",
+    "db:migrate": "pnpm --filter @reka-bytes/db migrate",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint",
+    "test:e2e": "pnpm --filter @reka-bytes/e2e test"
+  }
+}
