@@ -75,10 +75,10 @@ export function QuizRunner({ quizId }: { quizId: string }) {
         <div
           data-testid={result.passed ? 'quiz-pass-banner' : 'quiz-fail-banner'}
           className={cn(
-            'border p-8 text-center',
+            'rounded-card border p-8 text-center shadow-card',
             result.passed
-              ? 'border-success bg-elevated'
-              : 'border-danger bg-elevated',
+              ? 'border-success/50 bg-elevated'
+              : 'border-danger/50 bg-elevated',
           )}
         >
           <p className={cn('font-display text-5xl font-semibold', result.passed ? 'text-success' : 'text-danger')}>
@@ -91,7 +91,7 @@ export function QuizRunner({ quizId }: { quizId: string }) {
 
         <ul className="mt-8 space-y-4" data-testid="quiz-results-breakdown">
           {result.results.map((r, i) => (
-            <li key={r.questionId} className="border border-line bg-elevated p-5">
+            <li key={r.questionId} className="card-surface rounded-panel p-5">
               <p className="font-body text-sm font-medium text-ink">
                 Q{i + 1}. {r.question}
               </p>
@@ -122,13 +122,13 @@ export function QuizRunner({ quizId }: { quizId: string }) {
               setPhase('taking');
             }}
             data-testid="quiz-retry"
-            className="bg-accent px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-ink transition-colors hover:bg-accent-hover"
+            className="rounded-full bg-accent px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-ink transition-colors hover:bg-accent-hover"
           >
             try again
           </button>
           <Link
             href="/learn"
-            className="border border-line-strong px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted transition-colors hover:text-ink"
+            className="rounded-full border border-line-strong px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted transition-colors hover:border-accent hover:text-ink"
           >
             back to learn
           </Link>
@@ -170,7 +170,7 @@ export function QuizRunner({ quizId }: { quizId: string }) {
                     setAnswers((prev) => prev.map((a, idx) => (idx === current ? i : a)))
                   }
                   className={cn(
-                    'w-full border px-5 py-4 text-left font-body text-sm transition-colors',
+                    'w-full rounded-panel border px-5 py-4 text-left font-body text-sm transition-colors',
                     selected
                       ? 'border-accent bg-elevated text-accent'
                       : 'border-line text-muted hover:border-line-strong hover:text-ink',
@@ -192,7 +192,7 @@ export function QuizRunner({ quizId }: { quizId: string }) {
             disabled={current === 0}
             onClick={() => setCurrent((c) => Math.max(0, c - 1))}
             data-testid="quiz-prev"
-            className="border border-line px-5 py-3 font-mono text-xs uppercase tracking-[0.12em] text-muted transition-colors enabled:hover:text-ink disabled:opacity-30"
+            className="rounded-full border border-line px-5 py-3 font-mono text-xs uppercase tracking-[0.12em] text-muted transition-colors enabled:hover:border-line-strong enabled:hover:text-ink disabled:opacity-30"
           >
             ← previous
           </button>
@@ -201,7 +201,7 @@ export function QuizRunner({ quizId }: { quizId: string }) {
               type="button"
               disabled={answers.some((a) => a < 0)}              onClick={submit}
               data-testid="quiz-submit"
-              className="bg-accent px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-ink transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-40"
+              className="rounded-full bg-accent px-8 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-ink transition-all hover:-translate-y-0.5 hover:bg-accent-hover disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-40"
             >
               {phase === 'submitting' ? 'submitting…' : 'submit quiz'}
             </button>
@@ -211,7 +211,7 @@ export function QuizRunner({ quizId }: { quizId: string }) {
               disabled={(answers[current] ?? -1) < 0}
               onClick={() => setCurrent((c) => Math.min(quiz.questions.length - 1, c + 1))}
               data-testid="quiz-next"
-              className="border border-line-strong px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-ink transition-colors hover:border-accent hover:text-accent disabled:opacity-30"
+              className="rounded-full border border-line-strong bg-elevated px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-ink transition-colors hover:border-accent hover:text-accent disabled:opacity-30"
             >
               next →
             </button>

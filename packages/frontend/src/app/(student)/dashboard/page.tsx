@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import type { LearnDashboardDTO } from '@reka-bytes/shared';
 import { useStudentGuard } from '@/hooks/use-student-guard';
 import { useApiQuery } from '@/hooks/api-query';
+import { Card } from '@/components/ui/card';
 
 function ProgressRing({ completed, total }: { completed: number; total: number }) {
   const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
@@ -22,7 +23,7 @@ function ProgressRing({ completed, total }: { completed: number; total: number }
           r={radius}
           fill="none"
           strokeWidth="10"
-          strokeLinecap="butt"
+          strokeLinecap="round"
           className="stroke-accent"
           strokeDasharray={circumference}
           initial={{ strokeDashoffset: circumference }}
@@ -62,14 +63,14 @@ export default function DashboardPage() {
 
   return (
     <div data-testid="student-dashboard">
-      <header className="border-b border-line pb-8">
+      <header className="pb-8">
         <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-dim">cohort 001 · live</p>
         <h1 className="mt-2 font-display text-3xl font-semibold">Welcome back 👋</h1>
       </header>
 
       {empty ? (
-        <section
-          className="mt-10 border border-line bg-elevated p-12 text-center"
+        <Card
+          className="mt-10 border-dashed p-12 text-center"
           data-testid="empty-classroom"
         >
           <h2 className="font-display text-2xl font-semibold">Your classroom is being set up</h2>
@@ -79,19 +80,23 @@ export default function DashboardPage() {
           </p>
           <Link
             href="/learn"
-            className="mt-8 inline-block font-mono text-xs uppercase tracking-[0.12em] text-accent hover:underline"
+            className="mt-8 inline-block rounded-full bg-accent px-7 py-3 font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-ink transition-colors hover:bg-accent-hover"
           >
             go to learn →
           </Link>
-        </section>
+        </Card>
       ) : (
         <>
-          <section className="mt-8 grid gap-px border border-line bg-line md:grid-cols-[280px_1fr]">
-            <div className="flex items-center justify-center bg-elevated p-8">
+          {/* Continue-learning hero */}
+          <section
+            className="card-surface glow-accent mt-8 overflow-hidden md:grid md:grid-cols-[280px_1fr]"
+            data-testid="continue-hero"
+          >
+            <div className="flex items-center justify-center border-b border-line p-8 md:border-b-0 md:border-r">
               <ProgressRing completed={data.completedLessons} total={data.totalLessons} />
             </div>
 
-            <div className="bg-elevated p-8">
+            <div className="flex flex-col justify-center p-8">
               <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
                 continue learning
               </p>
@@ -104,7 +109,7 @@ export default function DashboardPage() {
                   <Link
                     href={`/learn/${data.nextLesson.lessonId}`}
                     data-testid="continue-cta"
-                    className="mt-6 inline-block bg-accent px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-ink transition-colors hover:bg-accent-hover"
+                    className="mt-6 inline-block rounded-full bg-accent px-8 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-ink shadow-lift transition-all hover:-translate-y-0.5 hover:bg-accent-hover"
                   >
                     continue →
                   </Link>
@@ -120,15 +125,15 @@ export default function DashboardPage() {
             </div>
           </section>
 
-          <section className="mt-8 grid gap-6 md:grid-cols-2">
-            <div className="border border-line bg-elevated p-6" data-testid="recent-quizzes">
+          <section className="mt-6 grid gap-6 md:grid-cols-2">
+            <Card data-testid="recent-quizzes">
               <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
                 recent quiz scores
               </p>
               {data.recentAttempts.length === 0 ? (
                 <p className="mt-4 font-body text-sm text-faint">No quizzes taken yet.</p>
               ) : (
-                <ul className="mt-4 divide-y divide-line">
+                <ul className="mt-4 divide-y divide-line/60">
                   {data.recentAttempts.map((a) => (
                     <li key={a.id} className="flex items-center justify-between py-3">
                       <div>
@@ -138,7 +143,9 @@ export default function DashboardPage() {
                         </p>
                       </div>
                       <span
-                        className={`font-mono text-sm font-bold ${a.passed ? 'text-success' : 'text-danger'}`}
+                        className={`inline-flex items-center rounded-full px-3 py-1 font-mono text-xs font-bold ${
+                          a.passed ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'
+                        }`}
                       >
                         {a.score}% {a.passed ? '✓' : '✗'}
                       </span>
@@ -146,9 +153,9 @@ export default function DashboardPage() {
                   ))}
                 </ul>
               )}
-            </div>
+            </Card>
 
-            <div className="border border-line bg-elevated p-6" data-testid="announcements">
+            <Card data-testid="announcements">
               <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">announcements</p>
               <div className="mt-4 border-l-2 border-accent pl-4">
                 <p className="font-body text-sm leading-relaxed text-muted">
@@ -156,7 +163,7 @@ export default function DashboardPage() {
                   through the lessons in order.
                 </p>
               </div>
-            </div>
+            </Card>
           </section>
         </>
       )}

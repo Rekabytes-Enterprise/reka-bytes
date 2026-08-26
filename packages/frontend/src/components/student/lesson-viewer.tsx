@@ -57,7 +57,7 @@ export function LessonViewer({ lessonId }: { lessonId: string }) {
             <Link
               href={`/learn/${lesson.prevLessonId}`}
               data-testid="prev-lesson"
-              className="flex items-center gap-1 border border-line px-3 py-2 font-mono text-xs uppercase tracking-[0.12em] text-muted transition-colors hover:border-line-strong hover:text-ink"
+              className="flex items-center gap-1 rounded-full border border-line px-4 py-2 font-mono text-xs uppercase tracking-[0.12em] text-muted transition-colors hover:border-line-strong hover:text-ink"
             >
               <ArrowLeft size={13} /> prev
             </Link>
@@ -66,7 +66,7 @@ export function LessonViewer({ lessonId }: { lessonId: string }) {
             <Link
               href={`/learn/${lesson.nextLessonId}`}
               data-testid="next-lesson"
-              className="flex items-center gap-1 border border-line-strong px-3 py-2 font-mono text-xs uppercase tracking-[0.12em] text-ink transition-colors hover:border-accent hover:text-accent"
+              className="flex items-center gap-1 rounded-full border border-line-strong bg-elevated px-4 py-2 font-mono text-xs uppercase tracking-[0.12em] text-ink transition-colors hover:border-accent hover:text-accent"
             >
               next <ArrowRight size={13} />
             </Link>
@@ -84,7 +84,7 @@ export function LessonViewer({ lessonId }: { lessonId: string }) {
 
       {/* Video */}
       {embed && (
-        <div className="mt-8 aspect-video w-full border border-line bg-inset" data-testid="lesson-video">
+        <div className="mt-8 aspect-video w-full overflow-hidden rounded-card border border-line bg-inset shadow-card" data-testid="lesson-video">
           <iframe
             src={embed}
             title={lesson.title}
@@ -111,10 +111,10 @@ export function LessonViewer({ lessonId }: { lessonId: string }) {
           onClick={markComplete}
           disabled={completed || completing}
           data-testid="mark-complete"
-          className={`inline-flex items-center gap-2 px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.12em] transition-colors ${
+          className={`inline-flex items-center gap-2 rounded-full px-8 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.12em] transition-all hover:-translate-y-0.5 ${
             completed
-              ? 'cursor-default bg-elevated text-success'
-              : 'bg-accent text-accent-ink hover:bg-accent-hover'
+              ? 'cursor-default bg-success/10 text-success'
+              : 'bg-accent text-accent-ink shadow-lift hover:bg-accent-hover'
           }`}
         >
           <Check size={14} strokeWidth={3} />
@@ -123,7 +123,7 @@ export function LessonViewer({ lessonId }: { lessonId: string }) {
 
         {/* Quiz CTA */}
         {lesson.quiz && (
-          <div className="mt-8 flex items-center justify-between border border-line bg-elevated p-5" data-testid="quiz-cta">
+          <div className="card-surface mt-8 flex flex-wrap items-center justify-between gap-4 p-5" data-testid="quiz-cta">
             <div>
               <p className="font-body text-sm font-medium">📝 {lesson.quiz.title}</p>
               <p className="font-mono text-xs text-faint">
@@ -132,7 +132,7 @@ export function LessonViewer({ lessonId }: { lessonId: string }) {
             </div>
             <Link
               href={`/learn/quiz/${lesson.quiz.id}`}
-              className="border border-line-strong px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-ink transition-colors hover:border-accent hover:text-accent"
+              className="rounded-full border border-line-strong px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-ink transition-colors hover:border-accent hover:text-accent"
             >
               take quiz →
             </Link>
@@ -146,7 +146,7 @@ export function LessonViewer({ lessonId }: { lessonId: string }) {
           <Link
             href={`/learn/${lesson.prevLessonId}`}
             data-testid="prev-lesson-bottom"
-            className="flex items-center gap-2 border border-line px-5 py-3 font-mono text-xs uppercase tracking-[0.12em] text-muted transition-colors hover:border-line-strong hover:text-ink"
+            className="flex items-center gap-2 rounded-full border border-line px-5 py-3 font-mono text-xs uppercase tracking-[0.12em] text-muted transition-colors hover:border-line-strong hover:text-ink"
           >
             <ArrowLeft size={13} /> prev lesson
           </Link>
@@ -157,7 +157,7 @@ export function LessonViewer({ lessonId }: { lessonId: string }) {
           <Link
             href={`/learn/${lesson.nextLessonId}`}
             data-testid="next-lesson-bottom"
-            className="flex items-center gap-2 border border-line-strong bg-elevated px-5 py-3 font-mono text-xs font-bold uppercase tracking-[0.12em] text-ink transition-colors hover:border-accent hover:text-accent"
+            className="flex items-center gap-2 rounded-full border border-line-strong bg-elevated px-5 py-3 font-mono text-xs font-bold uppercase tracking-[0.12em] text-ink transition-colors hover:border-accent hover:text-accent"
           >
             next lesson <ArrowRight size={13} />
           </Link>

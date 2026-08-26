@@ -51,7 +51,7 @@ const MermaidInner = ({
 
   if (failed) {
     return (
-      <div className="border border-line bg-inset p-4">
+      <div className="rounded-panel border border-line bg-inset p-4">
         <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-warning">
           <AlertTriangle size={12} /> diagram failed to render
         </p>
@@ -61,7 +61,7 @@ const MermaidInner = ({
   }
 
   return (
-    <figure data-testid="mermaid-block" className="border border-line bg-inset p-4">
+    <figure data-testid="mermaid-block" className="rounded-panel border border-line bg-inset p-4">
       {svg ? (
         // mermaid strict-mode SVG output — sanitized by mermaid itself
         <div className="mermaid-svg overflow-x-auto [&_svg]:mx-auto [&_svg]:max-w-full" dangerouslySetInnerHTML={{ __html: svg }} />

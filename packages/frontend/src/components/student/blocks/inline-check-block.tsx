@@ -32,7 +32,7 @@ export function InlineCheckBlockView({
 }) {
   if (rawBlock.type !== 'inline-check') {
     return (
-      <div data-testid="unsupported-block" className="border border-dashed border-line bg-inset px-5 py-4">
+      <div data-testid="unsupported-block" className="rounded-panel border border-dashed border-line bg-inset px-5 py-4">
         <p className="font-mono text-xs text-faint">// mis-typed block</p>
       </div>
     );
@@ -62,7 +62,7 @@ export function InlineCheckBlockView({
   };
 
   return (
-    <section data-testid="inline-check-block" className="border border-line bg-elevated p-5">
+    <section data-testid="inline-check-block" className="rounded-card border border-line bg-elevated p-5 shadow-card">
       <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-accent">
         // quick check
       </p>
@@ -89,7 +89,7 @@ export function InlineCheckBlockView({
               type="button"
               disabled={!!result}
               onClick={() => setSelected(i)}
-              className={`flex w-full items-center gap-3 border px-4 py-2.5 text-left text-sm transition-colors ${optionClass}`}
+              className={`flex w-full items-center gap-3 rounded-panel border px-4 py-2.5 text-left text-sm transition-colors ${optionClass}`}
             >
               <span className="font-mono text-xs text-faint">
                 {String.fromCharCode(65 + i)}
@@ -111,13 +111,13 @@ export function InlineCheckBlockView({
           type="button"
           onClick={submit}
           disabled={selected === null || checking}
-          className="mt-4 border border-line-strong px-5 py-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-ink transition-colors enabled:hover:border-accent enabled:hover:text-accent disabled:opacity-40"
+          className="mt-4 rounded-full border border-line-strong px-5 py-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-ink transition-colors enabled:hover:border-accent enabled:hover:text-accent disabled:opacity-40"
         >
           {checking ? 'checking…' : 'check answer'}
         </button>
       ) : (
         <div
-          className={`reveal-in mt-4 border-l-2 px-4 py-3 ${
+          className={`reveal-in mt-4 rounded-r-panel border-l-2 px-4 py-3 ${
             result.correct ? 'border-l-success bg-inset' : 'border-l-warning bg-inset'
           }`}
         >

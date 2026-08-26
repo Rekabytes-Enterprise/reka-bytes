@@ -15,7 +15,7 @@ export function CalloutBlockView({ block }: { block: CalloutBlock }) {
   return (
     <aside
       data-testid="callout-block"
-      className={`border border-line border-l-2 ${style.border} bg-inset px-5 py-4`}
+      className={`rounded-panel border border-line border-l-2 ${style.border} bg-inset px-5 py-4`}
     >
       <p
         className={`font-mono text-[10px] font-bold uppercase tracking-[0.16em] ${style.text}`}

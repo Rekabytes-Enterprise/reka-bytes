@@ -23,6 +23,17 @@
   --color-line: #23262d;
   --color-line-strong: #363b44;
 
+  /* Radius scale — "Soft Terminal" (PRD-04 §2.2). Semantic names so Tailwind's
+     default sm/md/lg scale stays intact for the landing page in this package. */
+  --radius-input: 10px;
+  --radius-panel: 14px;
+  --radius-card: 20px;
+
+  /* Elevation (PRD-04 §2.3) — soft ambient shadows, no hard drop-offs */
+  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 8px 24px rgb(0 0 0 / 0.35);
+  --shadow-lift: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 12px 32px rgb(0 0 0 / 0.45);
+
+
   /* Fonts — runtime vars injected by next/font + fontshare link in layout */
   --font-display: 'Clash Display', var(--font-jetbrains), ui-sans-serif, sans-serif;
   --font-body: var(--font-inter), system-ui, sans-serif;
@@ -51,6 +62,20 @@ body {
     linear-gradient(to right, rgb(35 38 45 / 0.35) 1px, transparent 1px),
     linear-gradient(to bottom, rgb(35 38 45 / 0.35) 1px, transparent 1px);
   background-size: 48px 48px;
+}
+
+/* Accent glow wash — signals ACHIEVEMENT (hero/CTA cards only), never decoration (PRD-04 §2.3) */
+.glow-accent {
+  background-image: radial-gradient(ellipse 80% 100% at 50% -20%, rgb(198 255 74 / 0.08), transparent 70%);
+}
+
+/* Card surface composition (PRD-04 §2.4) — rounded card + top highlight + ambient shadow.
+   Hover lift is applied by the consumer (group-hover / motion), not here. */
+.card-surface {
+  background-color: var(--color-elevated);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
 }
 
 /* Marquee ticker */
@@ -91,10 +116,11 @@ body {
   }
 }
 
-/* Focus visibility */
-:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
 }
 
 /* ── Lesson prose (Phase 1 classroom) ─────────────────────────── */

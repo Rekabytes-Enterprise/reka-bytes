@@ -7,7 +7,7 @@ import type { MermaidBlock } from '@reka-bytes/shared';
 const MermaidInner = dynamic(() => import('./mermaid-inner'), {
   ssr: false,
   loading: () => (
-    <div className="border border-line bg-inset p-4">
+    <div className="rounded-panel border border-line bg-inset p-4">
       <p className="py-8 text-center font-mono text-xs text-faint">// loading diagram…</p>
     </div>
   ),

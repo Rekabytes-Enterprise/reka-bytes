@@ -38,7 +38,7 @@ export function Input({ className, invalid, ...props }: InputProps) {
     <input
       aria-invalid={invalid || undefined}
       className={cn(
-        'w-full bg-inset px-4 py-3 font-body text-sm text-ink placeholder:text-faint',
+        'w-full rounded-input bg-inset px-4 py-3 font-body text-sm text-ink placeholder:text-faint',
         'border border-line transition-colors focus:border-line-strong focus:outline-none',
         invalid && 'border-danger',
         className,
@@ -57,7 +57,7 @@ export function Textarea({ className, invalid, ...props }: TextareaProps) {
     <textarea
       aria-invalid={invalid || undefined}
       className={cn(
-        'min-h-24 w-full resize-y bg-inset px-4 py-3 font-body text-sm text-ink placeholder:text-faint',
+        'min-h-24 w-full resize-y rounded-input bg-inset px-4 py-3 font-body text-sm text-ink placeholder:text-faint',
         'border border-line transition-colors focus:border-line-strong focus:outline-none',
         invalid && 'border-danger',
         className,

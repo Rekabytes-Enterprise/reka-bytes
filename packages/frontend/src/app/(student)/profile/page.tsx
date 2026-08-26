@@ -5,6 +5,16 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { apiFetch } from '@reka-bytes/shared';
 import { sessionAtom } from '@/atoms/auth';
 import { useStudentGuard } from '@/hooks/use-student-guard';
+import { Card } from '@/components/ui/card';
+
+function initials(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? '')
+    .join('');
+}
 
 export default function ProfilePage() {
   const guard = useStudentGuard();
@@ -22,11 +32,26 @@ export default function ProfilePage() {
 
   return (
     <div className="mx-auto max-w-xl">
-      <header className="border-b border-line pb-8">
-        <h1 className="font-display text-3xl font-semibold">Profile</h1>
+      <header className="pb-8">
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-dim">account</p>
+        <h1 className="mt-2 font-display text-3xl font-semibold">Profile</h1>
       </header>
 
-      <dl className="mt-8 grid grid-cols-[120px_1fr] gap-y-4">
+      {/* Identity card */}
+      <Card className="flex items-center gap-5" data-testid="profile-identity">
+        <span
+          aria-hidden
+          className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-accent/10 font-display text-xl font-semibold text-accent ring-1 ring-accent/30"
+        >
+          {initials(user.name)}
+        </span>
+        <div className="min-w-0">
+          <p className="truncate font-display text-xl font-semibold">{user.name}</p>
+          <p className="truncate font-mono text-xs text-faint">{user.email}</p>
+        </div>
+      </Card>
+
+      <dl className="mt-6 grid grid-cols-[120px_1fr] gap-y-4 rounded-card border border-line bg-inset/60 p-6">
         <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">Name</dt>
         <dd className="font-body text-sm">{user.name}</dd>
         <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">Email</dt>
@@ -38,7 +63,8 @@ export default function ProfilePage() {
       <button
         type="button"
         onClick={logout}
-        className="mt-10 border border-line-strong px-7 py-3 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted transition-colors hover:border-danger hover:text-danger"
+        data-testid="profile-logout"
+        className="mt-10 rounded-full border border-danger/50 px-7 py-3 font-mono text-xs font-bold uppercase tracking-[0.12em] text-danger transition-colors hover:border-danger hover:bg-danger/10"
       >
         log out
       </button>

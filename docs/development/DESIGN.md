@@ -23,7 +23,7 @@ Reka Bytes sits between **creativity (Reka)** and **machine precision (Bytes)**.
 |---|---|
 | Asymmetric split | Hero & feature sections use a **7/5 or 8/4 column split** (left text, right visual) — never centered-everything |
 | Baseline grid | 8px spacing scale only: `2 · 4 · 8 · 12 · 16 · 24 · 32 · 48 · 64 · 96 · 128` |
-| Hairlines over cards | No rounded shadow-card soup. Sections separated by 1px borders + corner tick marks (`+`) like technical drawings |
+| Hairlines over cards | Landing keeps pure hairlines. **Student app (2026-08, PRD-04) switched to "Soft Terminal": rounded elevated cards** — see §5a |
 | Numbered everything | Section labels in mono: `01 / REGISTER`, `02 / CURRICULUM` |
 | Marquee strip | Thin scrolling ticker of mono terms between sections (`ARCHITECTURE → DEBUGGING → GIT → APIS →`) |
 | Max width | 1200px content, full-bleed for hero/visuals |
@@ -191,6 +191,23 @@ Each token maps to a Tailwind component string (font-family + size clamp + weigh
 | Ticker/marquee | `bgElevated` strip, `label` style, infinite CSS translate loop, pauses on hover |
 | Section header | `[mono label 01 / NAME]` above a `displayM` title, hairline underneath spanning full column |
 | Toasts | Bottom-right stack, left-edge semantic stripe, auto-dismiss 5s, framer-motion slide-in |
+
+### 5a. Soft Terminal geometry — student app (PRD-04, shipped)
+
+The student app keeps every token above but swaps blueprint geometry for rounded product surfaces:
+
+| Aspect | Spec |
+|---|---|
+| Radius tokens (`@theme`) | `--radius-input: 10px` (inputs, badges, code) · `--radius-panel: 14px` (ghost buttons, inner panels, module rows) · `--radius-card: 20px` (cards, modals). Utilities: `rounded-input/panel/card`. Pills = `rounded-full` |
+| Elevation tokens | `--shadow-card` (inset top highlight + soft ambient) · `--shadow-lift` (hover). `.card-surface` composes bg/border/radius/shadow |
+| Buttons | Primary = **pill**, lime fill; ghost = `rounded-panel`; danger = pill with danger border/tint |
+| Cards | `.card-surface`; interactive cards get hover lift `-translate-y-0.5` + brighter border; **testids are frozen** through reskins |
+| Badges | Tinted pills — semantic color at 10% alpha background + dot + mono text |
+| Sidebar | Floating rounded rail (`card-surface`, inset 16px), **pill-shaped active nav item** (`bg-accent/10`); mobile drawer backdrop-blur |
+| Accent glow | `.glow-accent` radial wash — achievement surfaces ONLY (hero/CTA), never decoration |
+| Motion | Hover lifts spring `y:-0.5..-2px`; staggered card entrance 60ms; all gated by `prefers-reduced-motion`. Gamification visual language (XP bars, level pills, celebrations) lands with PRD-04 R3 |
+
+Gamification UI follows the same rules once PRD-04 R3 ships.
 
 ## 6. Signature Screens (Phase 0)
 

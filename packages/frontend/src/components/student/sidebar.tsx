@@ -18,7 +18,7 @@ const NAV = [
 function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   return (
-    <nav className="flex flex-col gap-1" data-testid="student-sidebar">
+    <nav className="flex flex-col gap-1.5 px-3" data-testid="student-sidebar">
       {NAV.map(({ href, label, Icon }) => {
         const active = pathname === href || pathname.startsWith(`${href}/`);
         return (
@@ -27,10 +27,10 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
             href={href}
             onClick={onNavigate}
             aria-current={active ? 'page' : undefined}
-            className={`flex items-center gap-3 border-l-2 px-4 py-3 font-mono text-xs font-bold uppercase tracking-[0.12em] transition-colors ${
+            className={`flex items-center gap-3 rounded-full px-4 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.12em] transition-colors ${
               active
-                ? 'border-accent bg-elevated text-accent'
-                : 'border-transparent text-muted hover:border-line-strong hover:text-ink'
+                ? 'bg-accent/10 text-accent'
+                : 'text-muted hover:bg-elevated hover:text-ink'
             }`}
           >
             <Icon size={16} strokeWidth={2} />
@@ -54,7 +54,7 @@ function SidebarFooter() {
   }
 
   return (
-    <div className="border-t border-line p-4">
+    <div className="border-t border-line p-5">
       <p className="font-body text-sm font-medium text-ink">{user?.name}</p>
       <p className="truncate font-mono text-xs text-faint">{user?.email}</p>
       <button
@@ -81,10 +81,11 @@ export function StudentSidebar() {
         </button>
       </div>
 
-      {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col justify-between border-r border-line bg-canvas md:flex">
+      {/* Desktop sidebar — floating rounded rail (PRD-04 §2.4).
+          Offset math: left-4 + w-60 + gap ⇒ layout uses md:pl-[19rem]. */}
+      <aside className="card-surface fixed bottom-4 left-4 top-4 z-30 hidden w-60 flex-col justify-between overflow-hidden md:flex">
         <div>
-          <Link href="/dashboard" className="block px-5 pb-6 pt-6 font-display text-xl font-semibold tracking-tight">
+          <Link href="/dashboard" className="block px-6 pb-6 pt-7 font-display text-xl font-semibold tracking-tight">
             reka<span className="text-accent">·</span>bytes
           </Link>
           <NavLinks />
@@ -97,14 +98,14 @@ export function StudentSidebar() {
         {open && (
           <>
             <motion.div
-              className="fixed inset-0 z-40 bg-black/60 md:hidden"
+              className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm md:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setOpen(false)}
             />
             <motion.aside
-              className="fixed inset-y-0 left-0 z-50 flex w-64 flex-col justify-between border-r border-line bg-canvas md:hidden"
+              className="fixed inset-y-0 left-0 z-50 flex w-72 flex-col justify-between border-r border-line bg-canvas/95 backdrop-blur-md md:hidden"
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
