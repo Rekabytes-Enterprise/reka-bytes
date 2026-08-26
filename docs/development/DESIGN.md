@@ -209,6 +209,23 @@ The student app keeps every token above but swaps blueprint geometry for rounded
 
 Gamification UI follows the same rules once PRD-04 R3 ships.
 
+### 5b. Gamification visual language (PRD-04 R3, shipped)
+
+The student app carries a light-touch momentum layer (PRD-04 §3) — visuals stay Terminal-Editorial but reward every visible action.
+
+| Element | Spec |
+|---|---|
+| Level pill | `bg-accent/10` + `ring-accent/30`, mono `lvl` label + display number; same component reused in dashboard header + profile identity card |
+| XP bar | Slim `h-1.5` lime fill on `bg-inset` track, `rounded-full`, animated width (framer-motion ease-out). Labels: `intoLevel/forNextLevel` + remaining-to-go |
+| Streak card | Flame icon — lit (`text-warning`, filled) when `activeToday=true`, dim outline + "complete a lesson today to keep it" otherwise. Longest shown as a quiet stat underneath |
+| Quiz avg card | Trophy + `text-accent-dim`; null avg renders `—` + "no quizzes taken yet" |
+| XP toast | Floating bottom-right pill `bg-elevated/95` + `border-accent/40` + `shadow-lift`, spring enter/exit, auto-dismiss 2.4s. Labels (e.g. `lesson`, `quiz`) in mono caption |
+| Sidebar level ring | Two stacked elements: animated SVG ring (`stroke-accent` over `stroke-line`) + initials pill (`ring-1 ring-line`). Constant momentum reminder |
+| Badge grid | 10 tiles, `rounded-card`; unlocked = `border-accent/30 bg-accent/5` with `★` glyph + accent label; locked = `border-line bg-inset/60 opacity-70` silhouette + hint caption |
+| Confetti | `canvas-confetti` (~6 KB, no native build), palette = `--color-accent`, `--color-success`, off-white; **honors `prefers-reduced-motion`** (skipped entirely, static animations elsewhere) |
+
+All motion respects reduced-motion (no particle bursts, instant reveals). Stats never color-only (XP/level numbers always paired with mono labels).
+
 ## 6. Signature Screens (Phase 0)
 
 ### Landing `/`

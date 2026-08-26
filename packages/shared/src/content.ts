@@ -174,6 +174,8 @@ export interface LearnDashboardDTO {
   completedLessons: number;
   nextLesson: NextLessonDTO | null;
   recentAttempts: QuizAttemptDTO[];
+  /** Average score across every quiz attempt for the user (null when none). */
+  quizAvgScore: number | null;
   /** Gamification layer (PRD-04 §4) — XP levels, streaks, badge catalog state. */
   game: GameProfileDTO;
 }

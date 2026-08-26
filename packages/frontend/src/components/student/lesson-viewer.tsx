@@ -9,6 +9,7 @@ import { BlockRenderer } from '@/components/student/blocks/block-renderer';
 import { toYouTubeEmbed } from '@/components/student/youtube-embed';
 import { useApiQuery } from '@/hooks/api-query';
 import { useToastError } from '@/components/system/toaster';
+import { fireConfetti, showXpToast } from '@/lib/celebrations';
 
 export function LessonViewer({ lessonId }: { lessonId: string }) {
   const { data: lesson } = useApiQuery<LessonDetailDTO>(`/api/learn/lessons/${lessonId}`);
@@ -28,6 +29,8 @@ export function LessonViewer({ lessonId }: { lessonId: string }) {
     try {
       await apiFetch(`/api/learn/lessons/${lesson.id}/complete`, { method: 'POST' });
       setCompleted(true);
+      void fireConfetti();
+      showXpToast(50, { celebrate: true, label: 'lesson' });
     } catch (e) {
       toastError(e, 'Failed to mark lesson complete');
     } finally {
@@ -98,7 +101,15 @@ export function LessonViewer({ lessonId }: { lessonId: string }) {
       {/* Content — typed blocks when present, legacy markdown otherwise (LESSON-PLAN §4.2) */}
       <div className="mt-8 max-w-[72ch]" data-testid="lesson-content">
         {lesson.blocks && lesson.blocks.length > 0 ? (
-          <BlockRenderer blocks={lesson.blocks} lessonId={lesson.id} onLessonCompleted={() => setCompleted(true)} />
+          <BlockRenderer
+            blocks={lesson.blocks}
+            lessonId={lesson.id}
+            onLessonCompleted={() => {
+              setCompleted(true);
+              void fireConfetti();
+              showXpToast(50, { celebrate: true, label: 'lesson' });
+            }}
+          />
         ) : (
           <Markdown>{lesson.contentMarkdown}</Markdown>
         )}

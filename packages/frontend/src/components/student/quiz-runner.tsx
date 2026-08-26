@@ -11,6 +11,7 @@ import {
 } from '@reka-bytes/shared';
 import { cn } from '@/lib/utils';
 import { useApiQuery } from '@/hooks/api-query';
+import { fireConfetti, showXpToast } from '@/lib/celebrations';
 
 type Phase = 'taking' | 'submitting' | 'results';
 
@@ -48,6 +49,10 @@ export function QuizRunner({ quizId }: { quizId: string }) {
       });
       setResult(res);
       setPhase('results');
+      if (res.passed) {
+        void fireConfetti();
+        showXpToast(res.score === 100 ? 150 : 100, { celebrate: true, label: 'quiz' });
+      }
     } catch (e) {
       if (isApiClientError(e)) setError(e.message);
       setPhase('taking');

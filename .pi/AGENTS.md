@@ -2,11 +2,11 @@
 
 ## What this is
 Academy platform teaching non-CS people to vibe code properly. Founder: SWE grad + Google Certified PM.
-**Shipped**: Phase 0 MVP · Phase 1 (Classroom + AI Masterclass) · AI Masterclass v2 BAML pipeline (real-AI verified 2026-08-23) · v2.1 outline checkpoint + generation animations · v2.2 long-screen redesign (structured analysis panel, capped log, collapsible modules) · Phase A Interactive Lesson Engine (typed blocks, E2E 16/16) · PRD-03 (auto-complete + admin console + lesson polish).
+**Shipped**: Phase 0 MVP · Phase 1 (Classroom + AI Masterclass) · AI Masterclass v2 BAML pipeline (real-AI verified 2026-08-23) · v2.1 outline checkpoint + generation animations · v2.2 long-screen redesign (structured analysis panel, capped log, collapsible modules) · Phase A Interactive Lesson Engine (typed blocks, E2E 16/16) · PRD-03 (auto-complete + admin console + lesson polish) · **PRD-04 (Soft Terminal reskin + XP ledger + gamification UI, 22/22 E2E green, shipped 2026-08-25)**.
 
-- Roadmap: `docs/development/PRD.md` (phases 0–5) · Phase 1 spec `PRD-02.md` · `PRD-03.md` (shipped 2026-08-25)
-- Design system ("Terminal Editorial"): `docs/development/DESIGN.md`
-- **Next cycle: PRD-04** — student-app "Soft Terminal" reskin + light gamification (`docs/development/PRD-04.md`, approved 2026-08-25; R1 reskin → R2 XP ledger → R3 game UI). Phase B simulation library moves behind it.
+- Roadmap: `docs/development/PRD.md` (phases 0–5) · Phase 1 spec `PRD-02.md` · `PRD-03.md` (shipped 2026-08-25) · `PRD-04.md` (shipped — R1 reskin → R2 data → R3 game UI; e2e-16 added)
+- Design system ("Terminal Editorial"): `docs/development/DESIGN.md` (§5a Soft Terminal geometry + §5b gamification visual language for the student app; landing stays blueprint)
+- **Next cycle: Phase B** — simulation template library (`docs/development/LESSON-PLAN.md` §11) + one real-AI WriteLesson smoke to validate v3 schema on the live model.
 
 ## Architecture
 pnpm monorepo, Node 22 / pnpm 11.9. Ports: backend **4300** (Hono), frontend **4301** (Next 16), admin **4302** (Next 16).
@@ -20,6 +20,16 @@ pnpm monorepo, Node 22 / pnpm 11.9. Ports: backend **4300** (Hono), frontend **4
 - Admin: `(console)` route group (login outside it — unmatched routes render OUTSIDE the group, which was the "sidebar disappears" bug). `/content` tree editor, `/students`, `/analytics`, `/applications`, 5-step `/ai-masterclass` wizard (jotai `components/ai/state.ts`: atomWithStorage + `useHydrateAtoms`).
 - Server state in both apps goes through **`useApiQuery`/`useAdminQuery`** (`packages/{frontend,admin}/src/hooks/api-query.ts`) — see Coding rules.
 - pnpm-workspace.yaml has an `allowBuilds` map — new native deps may need entries (placeholder strings break install).
+
+## Gamification layer (PRD-04, 2026-08-25)
+- Schema: `XpEvent` append-only (`@@unique([userId, reason, refId])` → idempotent awards). Migration `20260826134240_xp_events`. `pnpm --filter @reka-bytes/db generate` after migrate.
+- Backfill: `packages/db/scripts/xp-backfill.ts` (tsx). **Copies original timestamps** from LessonProgress / QuizAttempt so streaks + badges reflect real history. Re-run is a no-op.
+- Pure functions in `packages/shared/src/game/`: `levels.ts` (`T(n)=50·n·(n+1)`, L1@0, L2@300, L3@600, L4@1000…), `streaks.ts` (UTC-day, yesterday grace, longest run, comeback ≥5d gap), `badges.ts` (10 derived predicates, NO unlock storage), `profile.ts` (`buildGameProfile` composer). Tests via `tsx --test`: `pnpm --filter @reka-bytes/shared test` — 22/22.
+- Award rules: LESSON_COMPLETED 50, MODULE_COMPLETED +100, CLASS_COMPLETED +250, QUIZ_PASSED 100 (first pass only), PERFECT_QUIZ +50 (first 100 only). Inline-checks award 0 XP (anti-farm) but count as streak activity.
+- Wired fire-and-forget from `learn.service.ts`: `awardLessonCompletion` in `completeLesson` + `checkInlineAnswer` auto-complete; `awardQuizAttempt` in `submitQuiz`. P2002 swallowed silently.
+- DTO: `LearnDashboardDTO.game: GameProfileDTO` (xp/streak/badges) + `quizAvgScore`. Stateless server; celebrations diff against `localStorage['rb-last-seen-badges']` — first call primes, subsequent diffs fire confetti+toast for new keys.
+- UI: `packages/frontend/src/components/student/game/` (LevelPill, XpBar, StreakCard, QuizAvgCard, BadgeGrid, LevelRing). `lib/celebrations.tsx` mounts `XpToastHost` (event-bus pattern). `lib/badge-diff.ts` hook (`useBadgeDiff(keys, enabled)` — pass `enabled=!!data` to avoid first-load false-diffs). Reduced-motion gates both confetti and XP toasts.
+- e2e-16 covers full XP loop (lesson → toast → dashboard → DB XpEvent rows).
 
 ## AI Masterclass v2 — packages/baml (BAML 0.226.1)
 - Pipeline per job: extract PDF → chunk (4k chars, 300 overlap, max 40) → `AnalyzeDocument` → `GenerateOutline` → **pause at `awaiting_approval`** (outline checkpoint; approve → fire-and-forget `resumeGeneration` = lessons (concurrency 4) → quizzes → single transactional write; `regenerate-outline` re-runs outline only, stays paused; Redis TTL 2h; upload file deleted only after resume persists).

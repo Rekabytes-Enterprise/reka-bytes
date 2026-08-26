@@ -377,7 +377,7 @@ export async function getDashboard(userId: string): Promise<LearnDashboardDTO> {
     }
   }
 
-  const [attempts, balanceAgg, xpTimestamps, blockTimestamps, correctChecks, perfectQuizzes, passedQuizRows] =
+  const [attempts, balanceAgg, xpTimestamps, blockTimestamps, correctChecks, perfectQuizzes, passedQuizRows, quizAvgAgg] =
     await Promise.all([
       prisma.quizAttempt.findMany({
         where: { userId },
@@ -397,6 +397,7 @@ export async function getDashboard(userId: string): Promise<LearnDashboardDTO> {
         distinct: ['quizId'],
         select: { quizId: true },
       }),
+      prisma.quizAttempt.aggregate({ where: { userId }, _avg: { score: true } }),
     ]);
 
   // Derived from the already-fetched class tree (zero extra queries).
@@ -443,6 +444,7 @@ export async function getDashboard(userId: string): Promise<LearnDashboardDTO> {
     totalLessons,
     completedLessons,
     nextLesson,
+    quizAvgScore: quizAvgAgg._avg.score === null ? null : Math.round(quizAvgAgg._avg.score),
     recentAttempts: attempts.map((a) => ({
       id: a.id,
       quizId: a.quizId,

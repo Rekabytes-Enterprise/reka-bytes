@@ -2,6 +2,7 @@
 
 import { useStudentGuard } from '@/hooks/use-student-guard';
 import { StudentSidebar } from '@/components/student/sidebar';
+import { XpToastHost } from '@/lib/celebrations';
 
 export default function StudentLayout({ children }: { children: React.ReactNode }) {
   const state = useStudentGuard();
@@ -18,6 +19,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
     <div className="min-h-dvh md:pl-[19rem]">
       <StudentSidebar />
       <main className="mx-auto w-full max-w-[1100px] px-5 py-8 md:px-10">{children}</main>
+      <XpToastHost />
     </div>
   );
 }

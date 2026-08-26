@@ -6,6 +6,11 @@ import type { LearnDashboardDTO } from '@reka-bytes/shared';
 import { useStudentGuard } from '@/hooks/use-student-guard';
 import { useApiQuery } from '@/hooks/api-query';
 import { Card } from '@/components/ui/card';
+import { LevelPill } from '@/components/student/game/level-pill';
+import { XpBar } from '@/components/student/game/xp-bar';
+import { StreakCard } from '@/components/student/game/streak-card';
+import { QuizAvgCard } from '@/components/student/game/quiz-avg-card';
+import { useBadgeDiff } from '@/lib/badge-diff';
 
 function ProgressRing({ completed, total }: { completed: number; total: number }) {
   const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
@@ -49,6 +54,10 @@ export default function DashboardPage() {
     state === 'ready' ? '/api/learn/dashboard' : null,
   );
 
+  // Hooks must run unconditionally on every render — guard the inputs, not the call.
+  const unlockedKeys = data?.game.badges.filter((b) => b.unlocked).map((b) => b.key) ?? [];
+  useBadgeDiff(unlockedKeys, !!data);
+
   if (state === 'loading' || loading || !data) {
     return (
       <div data-testid="dashboard-loading">
@@ -60,19 +69,26 @@ export default function DashboardPage() {
   }
 
   const empty = data.totalLessons === 0;
+  const passedCount = data.recentAttempts.filter((a) => a.passed).length;
 
   return (
     <div data-testid="student-dashboard">
+      {/* Greeting + level pill + XP bar */}
       <header className="pb-8">
-        <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-dim">cohort 001 · live</p>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-dim">cohort 001 · live</p>
+          <LevelPill level={data.game.xp.level} />
+        </div>
         <h1 className="mt-2 font-display text-3xl font-semibold">Welcome back 👋</h1>
+        <XpBar
+          level={data.game.xp.level}
+          intoLevel={data.game.xp.intoLevel}
+          forNextLevel={data.game.xp.forNextLevel}
+        />
       </header>
 
       {empty ? (
-        <Card
-          className="mt-10 border-dashed p-12 text-center"
-          data-testid="empty-classroom"
-        >
+        <Card className="mt-10 border-dashed p-12 text-center" data-testid="empty-classroom">
           <h2 className="font-display text-2xl font-semibold">Your classroom is being set up</h2>
           <p className="mx-auto mt-4 max-w-md font-body text-sm leading-relaxed text-muted">
             We&apos;re preparing your first class right now. Check back soon — lessons will appear
@@ -87,6 +103,16 @@ export default function DashboardPage() {
         </Card>
       ) : (
         <>
+          {/* Stat row — always-visible momentum (PRD-04 §5) */}
+          <section className="mt-2 grid gap-6 md:grid-cols-2">
+            <StreakCard
+              current={data.game.streak.current}
+              longest={data.game.streak.longest}
+              activeToday={data.game.streak.activeToday}
+            />
+            <QuizAvgCard avg={data.quizAvgScore} passed={passedCount} />
+          </section>
+
           {/* Continue-learning hero */}
           <section
             className="card-surface glow-accent mt-8 overflow-hidden md:grid md:grid-cols-[280px_1fr]"
@@ -106,13 +132,22 @@ export default function DashboardPage() {
                   <p className="mt-2 font-body text-sm text-muted">
                     {data.nextLesson.moduleTitle} · {data.nextLesson.durationMinutes} min
                   </p>
-                  <Link
-                    href={`/learn/${data.nextLesson.lessonId}`}
-                    data-testid="continue-cta"
-                    className="mt-6 inline-block rounded-full bg-accent px-8 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-ink shadow-lift transition-all hover:-translate-y-0.5 hover:bg-accent-hover"
-                  >
-                    continue →
-                  </Link>
+                  <div className="mt-6 flex flex-wrap items-center gap-3">
+                    <Link
+                      href={`/learn/${data.nextLesson.lessonId}`}
+                      data-testid="continue-cta"
+                      className="inline-block rounded-full bg-accent px-8 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-ink shadow-lift transition-all hover:-translate-y-0.5 hover:bg-accent-hover"
+                    >
+                      continue →
+                    </Link>
+                    <span
+                      className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-accent"
+                      data-testid="xp-preview-chip"
+                    >
+                      <span aria-hidden className="size-1.5 rounded-full bg-accent" />
+                      +50 xp
+                    </span>
+                  </div>
                 </div>
               ) : (
                 <div className="mt-4">
