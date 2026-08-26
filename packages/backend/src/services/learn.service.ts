@@ -2,6 +2,7 @@ import { prisma } from '../lib/prisma';
 import { toJsonInput } from '@reka-bytes/db';
 import {
   AppError,
+  buildGameProfile,
   parseBlocks,
   sanitizeBlocksForStudent,
 } from '@reka-bytes/shared';
@@ -35,6 +36,115 @@ function quizSummary(quiz: {
     required: quiz.required,
     questionCount: quiz._count?.questions ?? 0,
   };
+}
+
+// ── XP award helpers (PRD-04 §3.2) ─────────────────────────────
+
+const LESSON_XP = 50;
+const MODULE_BONUS = 100;
+const CLASS_BONUS = 250;
+const QUIZ_PASS_XP = 100;
+const PERFECT_QUIZ_BONUS = 50;
+
+/**
+ * Fire-and-forget XP awards for completing a lesson: lesson + (when earned)
+ * module + class bonuses. The XpEvent @@unique + createMany skipDuplicates
+ * make re-awards idempotent; failures are logged at warn so progress writes
+ * never depend on telemetry.
+ */
+function awardLessonCompletion(userId: string, lessonId: string): void {
+  void (async () => {
+    try {
+      const lesson = await prisma.lesson.findUnique({
+        where: { id: lessonId },
+        select: {
+          moduleId: true,
+          module: { select: { classId: true, class: { select: { published: true } } } },
+        },
+      });
+      if (!lesson?.module.class.published) return;
+
+      const [moduleTotal, moduleDone, classTotal, classDone] = await Promise.all([
+        prisma.lesson.count({ where: { moduleId: lesson.moduleId } }),
+        prisma.lessonProgress.count({
+          where: { userId, lesson: { moduleId: lesson.moduleId } },
+        }),
+        prisma.lesson.count({
+          where: { module: { classId: lesson.module.classId } },
+        }),
+        prisma.lessonProgress.count({
+          where: { userId, lesson: { module: { classId: lesson.module.classId } } },
+        }),
+      ]);
+
+      const events: Array<{ amount: number; reason: string; refId: string }> = [
+        { amount: LESSON_XP, reason: 'LESSON_COMPLETED', refId: lessonId },
+      ];
+      if (moduleTotal > 0 && moduleDone === moduleTotal) {
+        events.push({ amount: MODULE_BONUS, reason: 'MODULE_COMPLETED', refId: lesson.moduleId });
+      }
+      if (classTotal > 0 && classDone === classTotal) {
+        events.push({ amount: CLASS_BONUS, reason: 'CLASS_COMPLETED', refId: lesson.module.classId });
+      }
+      await prisma.xpEvent.createMany({
+        data: events.map((e) => ({ userId, ...e })),
+        skipDuplicates: true,
+      });
+    } catch (err) {
+      console.warn('[learn] XP award failed (lesson):', err instanceof Error ? err.message : err);
+    }
+  })();
+}
+
+/**
+ * Fire-and-forget quiz XP awards: only the FIRST passing attempt per quiz
+ * earns QUIZ_PASSED, and only the FIRST 100% attempt earns PERFECT_QUIZ.
+ */
+function awardQuizAttempt(
+  userId: string,
+  quizId: string,
+  attemptCreatedAt: Date,
+  passed: boolean,
+  score: number,
+): void {
+  void (async () => {
+    try {
+      const events: Array<{ amount: number; reason: string; refId: string }> = [];
+      if (passed) {
+        const earlierPasses = await prisma.quizAttempt.count({
+          where: {
+            userId,
+            quizId,
+            passed: true,
+            createdAt: { lt: attemptCreatedAt },
+          },
+        });
+        if (earlierPasses === 0) {
+          events.push({ amount: QUIZ_PASS_XP, reason: 'QUIZ_PASSED', refId: quizId });
+        }
+      }
+      if (score === 100) {
+        const earlierPerfects = await prisma.quizAttempt.count({
+          where: {
+            userId,
+            quizId,
+            score: 100,
+            createdAt: { lt: attemptCreatedAt },
+          },
+        });
+        if (earlierPerfects === 0) {
+          events.push({ amount: PERFECT_QUIZ_BONUS, reason: 'PERFECT_QUIZ', refId: quizId });
+        }
+      }
+      if (events.length === 0) return;
+      await prisma.xpEvent.createMany({
+        data: events.map((e) => ({ userId, ...e })),
+        skipDuplicates: true,
+      });
+    } catch (err) {
+      console.warn('[learn] XP award failed (quiz):', err instanceof Error ? err.message : err);
+    }
+  })();
 }
 
 // ── Classes (published only) ────────────────────────────────────
@@ -212,6 +322,7 @@ export async function checkInlineAnswer(
         update: {},
       });
       completedAt = progress.completedAt.toISOString();
+      awardLessonCompletion(userId, lessonId);
     }
   }
 
@@ -237,6 +348,7 @@ export async function completeLesson(lessonId: string, userId: string): Promise<
     create: { lessonId, userId },
     update: {},
   });
+  awardLessonCompletion(userId, lessonId);
   return { completedAt: progress.completedAt.toISOString() };
 }
 
@@ -265,11 +377,66 @@ export async function getDashboard(userId: string): Promise<LearnDashboardDTO> {
     }
   }
 
-  const attempts = await prisma.quizAttempt.findMany({
-    where: { userId },
-    orderBy: { createdAt: 'desc' },
-    take: 3,
-    include: { quiz: { include: { module: { select: { title: true } } } } },
+  const [attempts, balanceAgg, xpTimestamps, blockTimestamps, correctChecks, perfectQuizzes, passedQuizRows] =
+    await Promise.all([
+      prisma.quizAttempt.findMany({
+        where: { userId },
+        orderBy: { createdAt: 'desc' },
+        take: 3,
+        include: { quiz: { include: { module: { select: { title: true } } } } },
+      }),
+      prisma.xpEvent.aggregate({ where: { userId }, _sum: { amount: true } }),
+      prisma.xpEvent.findMany({ where: { userId }, select: { createdAt: true } }),
+      prisma.blockEvent.findMany({ where: { userId }, select: { createdAt: true } }),
+      prisma.blockEvent.count({
+        where: { userId, kind: 'inline-check', payload: { path: ['correct'], equals: true } },
+      }),
+      prisma.quizAttempt.count({ where: { userId, score: 100 } }),
+      prisma.quizAttempt.findMany({
+        where: { userId, passed: true },
+        distinct: ['quizId'],
+        select: { quizId: true },
+      }),
+    ]);
+
+  // Derived from the already-fetched class tree (zero extra queries).
+  let modulesCompleted = 0;
+  let classesCompleted = 0;
+  let bestClassCompletionPct = 0;
+  for (const cls of classes) {
+    const total = cls.modules.reduce((sum, m) => sum + m.lessons.length, 0);
+    const done = cls.modules.reduce(
+      (sum, m) => sum + m.lessons.filter((l) => l.completedAt !== null).length,
+      0,
+    );
+    if (total > 0) {
+      if (done === total) classesCompleted += 1;
+      const pct = Math.round((done / total) * 100);
+      if (pct > bestClassCompletionPct) bestClassCompletionPct = pct;
+      for (const m of cls.modules) {
+        const mTotal = m.lessons.length;
+        if (mTotal > 0 && m.lessons.every((l) => l.completedAt !== null)) {
+          modulesCompleted += 1;
+        }
+      }
+    }
+  }
+
+  const game = buildGameProfile({
+    balance: balanceAgg._sum.amount ?? 0,
+    activityTimestamps: [
+      ...xpTimestamps.map((r) => r.createdAt),
+      ...blockTimestamps.map((r) => r.createdAt),
+    ],
+    badgeInput: {
+      completedLessons,
+      modulesCompleted,
+      classesCompleted,
+      bestClassCompletionPct,
+      correctInlineChecks: correctChecks,
+      perfectQuizzes,
+      passedQuizCount: passedQuizRows.length,
+    },
   });
 
   return {
@@ -285,6 +452,7 @@ export async function getDashboard(userId: string): Promise<LearnDashboardDTO> {
       passed: a.passed,
       createdAt: a.createdAt.toISOString(),
     })),
+    game,
   };
 }
 
@@ -361,6 +529,7 @@ export async function submitQuiz(
       answers: toJsonInput(answers),
     },
   });
+  awardQuizAttempt(userId, quizId, attempt.createdAt, passed, score);
 
   return { score, passed, attemptId: attempt.id, results };
 }

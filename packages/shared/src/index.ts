@@ -20,5 +20,8 @@ export * from './content';
 // Lesson blocks (Interactive Lesson Engine)
 export * from './blocks';
 
+// Gamification pure functions (PRD-04)
+export * from './game';
+
 // Theme tokens
 export * from './theme';

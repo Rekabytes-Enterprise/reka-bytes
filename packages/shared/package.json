@@ -12,7 +12,8 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src/"
+    "lint": "eslint src/",
+    "test": "tsx --test src/game/*.test.ts"
   },
   "dependencies": {
     "zod": "^4.4.0"
@@ -21,6 +22,7 @@
     "@eslint/js": "^9.20.0",
     "@types/node": "^22.10.0",
     "eslint": "^9.20.0",
+    "tsx": "^4.23.0",
     "typescript": "^5.9.0",
     "typescript-eslint": "^8.24.0"
   }

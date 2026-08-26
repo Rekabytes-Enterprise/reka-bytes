@@ -4,6 +4,7 @@
  */
 
 import type { StudentLessonBlock } from './blocks';
+import type { GameProfileDTO } from './game/profile';
 
 // ── Admin side ──────────────────────────────────────────────────
 export interface ClassSummaryDTO {
@@ -173,6 +174,8 @@ export interface LearnDashboardDTO {
   completedLessons: number;
   nextLesson: NextLessonDTO | null;
   recentAttempts: QuizAttemptDTO[];
+  /** Gamification layer (PRD-04 §4) — XP levels, streaks, badge catalog state. */
+  game: GameProfileDTO;
 }
 
 // ── AI Masterclass ──────────────────────────────────────────────
