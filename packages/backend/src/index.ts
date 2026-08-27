@@ -6,6 +6,7 @@ import { logger } from 'hono/logger';
 import { env, corsOrigins } from './env';
 import { errorHandler } from './middleware/error-handler';
 import { authRoutes } from './routes/auth.routes';
+import { adminAuthRoutes } from './routes/admin-auth.routes';
 import { publicRoutes } from './routes/public.routes';
 import { adminRoutes } from './routes/admin.routes';
 import { learnRoutes } from './routes/learn.routes';
@@ -25,6 +26,9 @@ app.get('/health', (c) => c.json({ data: { status: 'ok', service: 'reka-bytes-ap
 
 app.route('/api/auth', authRoutes);
 app.route('/api/public', publicRoutes);
+// adminAuthRoutes must mount BEFORE adminRoutes: it carries the unauthenticated
+// POST /api/admin/login; everything after is requireAdmin-guarded.
+app.route('/api/admin', adminAuthRoutes);
 app.route('/api/admin', adminRoutes);
 app.route('/api/learn', learnRoutes);
 

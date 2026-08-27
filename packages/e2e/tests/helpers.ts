@@ -60,21 +60,37 @@ export async function registerViaApi(
   };
 }
 
-/** Login and return the session cookie string. */
-export async function loginCookie(email: string, password: string): Promise<string> {
-  const res = await fetch(`${BACK}/api/auth/login`, {
+/** Shared login POST → returns the session cookie string. */
+async function loginVia(url: string, email: string, password: string): Promise<string> {
+  const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
   });
-  if (!res.ok) throw new Error(`login failed for ${email}: ${res.status}`);
+  if (!res.ok) throw new Error(`login failed for ${email} at ${url}: ${res.status}`);
   const setCookie = res.headers.get('set-cookie');
   if (!setCookie) throw new Error('no session cookie returned');
   return setCookie.split(';')[0] ?? '';
 }
 
-export async function approveViaApi(applicationId: string, adminEmail: string, adminPassword: string) {
-  const cookie = await loginCookie(adminEmail, adminPassword);
+/** Student/real-DB-user login via the shared login endpoint. */
+export async function loginCookie(email: string, password: string): Promise<string> {
+  return loginVia(`${BACK}/api/auth/login`, email, password);
+}
+
+/**
+ * Env-admin session cookie via the DEDICATED admin login endpoint.
+ * The shared /api/auth/login no longer accepts env-admin credentials
+ * (2026-08 session-leak fix) — admin flows must use this instead.
+ */
+export async function adminLoginCookie(): Promise<string> {
+  const email = process.env.ADMIN_EMAIL ?? 'admin@rekabytes.dev';
+  const password = process.env.ADMIN_PASSWORD ?? 'change-me-in-production';
+  return loginVia(`${BACK}/api/admin/login`, email, password);
+}
+
+export async function approveViaApi(applicationId: string) {
+  const cookie = await adminLoginCookie();
   const res = await fetch(`${BACK}/api/admin/applications/${applicationId}/decision`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', Cookie: cookie },
@@ -84,9 +100,7 @@ export async function approveViaApi(applicationId: string, adminEmail: string, a
 }
 
 export async function findApplicationIdByEmail(email: string): Promise<string | null> {
-  const adminEmail = process.env.ADMIN_EMAIL ?? 'admin@rekabytes.dev';
-  const adminPassword = process.env.ADMIN_PASSWORD ?? 'change-me-in-production';
-  const cookie = await loginCookie(adminEmail, adminPassword);
+  const cookie = await adminLoginCookie();
   const res = await fetch(`${BACK}/api/admin/applications`, { headers: { Cookie: cookie } });
   const json = (await res.json()) as { data?: Array<{ id: string; user: { email: string } }> };
   return json.data?.find((a) => a.user.email === email)?.id ?? null;
@@ -226,9 +240,7 @@ export async function approveStudent(email: string, password = 'password123'): P
 
   const appId = await findApplicationIdByEmail(email);
   if (!appId) throw new Error(`no application found for ${email}`);
-  const adminEmail = process.env.ADMIN_EMAIL ?? 'admin@rekabytes.dev';
-  const adminPassword = process.env.ADMIN_PASSWORD ?? 'change-me-in-production';
-  const decisionStatus = await approveViaApi(appId, adminEmail, adminPassword);
+  const decisionStatus = await approveViaApi(appId);
   if (decisionStatus !== 200) throw new Error(`approve failed with ${decisionStatus}`);
 }
 

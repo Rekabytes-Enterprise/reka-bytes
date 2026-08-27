@@ -39,6 +39,12 @@ export default function LoginPage() {
         method: 'POST',
         body: parsed.data,
       });
+      // Defensive: this endpoint can no longer mint env-admin sessions, but
+      // never accept an ADMIN identity on the student surface regardless.
+      if (user.role === 'ADMIN') {
+        pushToast({ variant: 'error', title: 'This is not a student account' });
+        return;
+      }
       setSession(user);
       router.push('/status');
     } catch (err) {

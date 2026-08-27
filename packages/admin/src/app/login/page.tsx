@@ -27,15 +27,13 @@ export default function AdminLoginPage() {
     setSubmitting(true);
     setErrors({});
     try {
-      const user = await apiFetch<SessionUser>('/api/auth/login', {
+      // Dedicated env-admin login endpoint — the shared /api/auth/login no
+      // longer carries the env-admin fallback (session-leak fix 2026-08).
+      // Response is always the env-admin identity; nothing to inspect.
+      await apiFetch<SessionUser>('/api/admin/login', {
         method: 'POST',
         body: { email, password },
       });
-      if (user.role !== 'ADMIN') {
-        pushToast({ variant: 'error', title: 'This account is not an admin' });
-        await apiFetch('/api/auth/logout', { method: 'POST' }).catch(() => undefined);
-        return;
-      }
       router.push('/');
     } catch (err) {
       if (isApiClientError(err)) {

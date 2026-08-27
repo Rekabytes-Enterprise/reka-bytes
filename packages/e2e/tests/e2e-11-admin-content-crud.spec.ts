@@ -4,12 +4,10 @@ import {
   uniqueEmail,
   cleanupUsers,
   loginCookie,
+  adminLoginCookie,
   pgClient,
   approveStudent,
 } from './helpers';
-
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'admin@rekabytes.dev';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? 'change-me-in-production';
 
 /**
  * E2E-11 · Admin content CRUD via the UI: create class → module → lesson →
@@ -30,7 +28,7 @@ test.describe('E2E-11 · admin content CRUD', () => {
 
     const adminCtx = await browser.newContext({ baseURL: ADMIN });
     const page = await adminCtx.newPage();
-    const cookie = await loginCookie(ADMIN_EMAIL, ADMIN_PASSWORD);
+    const cookie = await adminLoginCookie();
     await adminCtx.addCookies([{ name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' }]);
 
     // create class

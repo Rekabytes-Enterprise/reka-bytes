@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { ADMIN, loginCookie, seedClassroom, cleanupClassroom } from './helpers';
+import { ADMIN, adminLoginCookie, seedClassroom, cleanupClassroom } from './helpers';
 import { pgClient } from './db';
 
 /**
@@ -10,9 +10,7 @@ test.describe('E2E-15 · admin console', () => {
   let cookie = '';
 
   test.beforeAll(async () => {
-    const adminEmail = process.env.ADMIN_EMAIL ?? 'admin@rekabytes.dev';
-    const adminPassword = process.env.ADMIN_PASSWORD ?? 'change-me-in-production';
-    cookie = await loginCookie(adminEmail, adminPassword);
+    cookie = await adminLoginCookie();
   });
 
   test('sidebar + students directory', async ({ browser }) => {

@@ -1,8 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { ADMIN, uniqueEmail, cleanupUsers, loginCookie, pgClient, approveStudent } from './helpers';
+import { ADMIN, uniqueEmail, cleanupUsers, loginCookie, adminLoginCookie, pgClient, approveStudent } from './helpers';
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'admin@rekabytes.dev';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? 'change-me-in-production';
 const PASSWORD = 'password123';
 
 /**
@@ -24,7 +22,7 @@ test.describe('E2E-13 · AI masterclass (mocked)', () => {
     // admin session via API cookie
     const adminCtx = await browser.newContext({ baseURL: ADMIN });
     const page = await adminCtx.newPage();
-    const cookie = await loginCookie(ADMIN_EMAIL, ADMIN_PASSWORD);
+    const cookie = await adminLoginCookie();
     await adminCtx.addCookies([{ name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' }]);
 
     // step 1 — upload fixture PDF + title

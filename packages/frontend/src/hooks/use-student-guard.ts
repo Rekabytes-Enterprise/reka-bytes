@@ -11,7 +11,7 @@ type GuardState = 'loading' | 'ready';
 
 /**
  * Approved-only guard for the (student) route group.
- * 401 → /login · non-APPROVED → /status (with toast) · otherwise ready.
+ * 401 → /login · ADMIN role → /login (toast) · non-APPROVED → /status (with toast) · otherwise ready.
  */
 export function useStudentGuard(): GuardState {
   const router = useRouter();
@@ -24,6 +24,17 @@ export function useStudentGuard(): GuardState {
     apiFetch<SessionUser>('/api/auth/me')
       .then((user) => {
         if (cancelled) return;
+        // Defense in depth against stale/cross-app admin cookies: a shared
+        // rb_session cookie on localhost means an admin-console session can
+        // arrive here. Never render the student surface for it.
+        if (user.role === 'ADMIN') {
+          pushToast({
+            variant: 'error',
+            title: 'Admin accounts must use the admin console.',
+          });
+          router.replace('/login');
+          return;
+        }
         setSession(user);
         if (user.status !== 'APPROVED') {
           pushToast({
