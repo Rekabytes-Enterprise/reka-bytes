@@ -3,7 +3,6 @@
  * server-aggregated numbers. No unlock storage: evaluation is stateless and
  * idempotent; celebration UX diffs against localStorage client-side.
  */
-import type { LevelInfo } from './levels';
 
 export const BADGE_KEYS = [
   'first-steps',
