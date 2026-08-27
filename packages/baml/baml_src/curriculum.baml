@@ -28,6 +28,9 @@ client<llm> OpenRouter {
     base_url = env.OPENROUTER_BASE_URL
     api_key  = env.OPENROUTER_API_KEY
     model    = env.AI_MODEL
+    http {
+      request_timeout_ms: 0
+    }
   }
 }
 
