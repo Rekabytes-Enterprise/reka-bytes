@@ -67,6 +67,11 @@ export default function Step3Page() {
   const failed = useAtomValue(failedAtom);
   const totalLessons = useAtomValue(totalLessonsAtom);
   const totalMinutes = useAtomValue(totalMinutesAtom);
+  // Approve/regenerate are only meaningful when the job is actually waiting
+  // for the admin to act. Without this guard, the `approving`/`regenerating`
+  // flags (which can persist across React Router navigations within the same
+  // tab) would lock the buttons even when the job has already moved on.
+  const canInteract = !approving && !regenerating && job?.status === 'awaiting_approval';
 
   // ── Data fetch (the ONE useEffect) ─────────────────────────────────────
   // Depends ONLY on jobId (a primitive). The previous bug was depending on
@@ -76,6 +81,14 @@ export default function Step3Page() {
     if (!wizard.hydrated || !wizard.jobId) return;
 
     let cancelled = false;
+
+    // Reset any stale in-flight flags from a previous visit to step 3.
+    // These atoms are module-scoped (Jotai singleton) and survive React
+    // Router navigations within the tab — without this reset, a previous
+    // click that never resolved (e.g. job expired) would lock the buttons
+    // forever with no escape hatch (see PR for bug repro).
+    setApproving(false);
+    setRegenerating(false);
 
     apiFetch<AIGenJobStatusDTO>(`/api/admin/ai/masterclass/status/${wizard.jobId}`)
       .then((data) => {
@@ -93,7 +106,7 @@ export default function Step3Page() {
     return () => {
       cancelled = true;
     };
-  }, [wizard.jobId, setJob, setOutline, setError, setPausedAt]);
+  }, [wizard.jobId, setJob, setOutline, setError, setPausedAt, setApproving, setRegenerating]);
 
   // ── Redirect on status change ───────────────────────────────────────────
   useEffect(() => {
@@ -232,7 +245,7 @@ export default function Step3Page() {
                 <button
                   type="button"
                   onClick={handleApprove}
-                  disabled={approving || regenerating}
+                  disabled={!canInteract}
                   data-testid="ai-approve-btn"
                   className="bg-accent px-7 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-ink hover:bg-accent-hover disabled:opacity-40"
                 >
@@ -248,7 +261,7 @@ export default function Step3Page() {
                 <button
                   type="button"
                   onClick={handleRegenerate}
-                  disabled={approving || regenerating}
+                  disabled={!canInteract}
                   data-testid="ai-regen-outline-btn"
                   className="border border-line-strong px-5 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.12em] hover:border-accent hover:text-accent disabled:opacity-40"
                 >
@@ -262,6 +275,9 @@ export default function Step3Page() {
                 <button
                   type="button"
                   onClick={() => router.push('/ai-masterclass/step/1')}
+                  // "Start over" is the escape hatch — keep it clickable even
+                  // when the job has already moved on, so the user is never
+                  // stranded on this page.
                   disabled={approving || regenerating}
                   className="ml-auto border border-line-strong px-5 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint hover:border-danger hover:text-danger disabled:opacity-40"
                 >
