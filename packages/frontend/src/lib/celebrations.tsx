@@ -26,13 +26,15 @@ export async function fireConfetti(): Promise<void> {
   if (typeof window === 'undefined') return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const confetti = (await import('canvas-confetti')).default;
-  const accent = getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim() || '#c6ff4a';
-  const success = getComputedStyle(document.documentElement).getPropertyValue('--color-success').trim() || '#4ade80';
+  const accent = getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim() || '#4e7700';
+  const success = getComputedStyle(document.documentElement).getPropertyValue('--color-success').trim() || '#15803d';
   confetti({
     particleCount: 80,
     spread: 70,
     origin: { y: 0.4 },
-    colors: [accent, success, '#ffffff'],
+    // Light theme: third piece uses ink so it stays visible on paper
+    // (white confetti against a paper-white canvas would disappear).
+    colors: [accent, success, '#14161a'],
     ticks: 200,
   });
 }

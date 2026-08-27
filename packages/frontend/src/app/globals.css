@@ -5,23 +5,24 @@
 @source '../../../shared/src';
 
 @theme {
-  /* Colors — see docs/development/DESIGN.md (HEX tokens) */
-  --color-canvas: #0a0b0d;
-  --color-elevated: #111318;
-  --color-inset: #16191f;
-  --color-ink: #f2f4f1;
-  --color-muted: #9ba3ab;
-  --color-faint: #4a5158;
-  --color-accent: #c6ff4a;
-  --color-accent-hover: #d8ff7a;
-  --color-accent-dim: #84a82f;
-  --color-accent-ink: #0a0b0d;
-  --color-success: #4ade80;
-  --color-warning: #facc15;
-  --color-danger: #f45b69;
-  --color-info: #6ec1ff;
-  --color-line: #23262d;
-  --color-line-strong: #363b44;
+  /* Colors — Light theme (2026-08, see docs/development/DESIGN.md §2 HEX tokens).
+     Brand lime hue ~78° darkened to ~81° for AA contrast on paper surfaces. */
+  --color-canvas: #fafaf7;
+  --color-elevated: #ffffff;
+  --color-inset: #f0f1ec;
+  --color-ink: #14161a;
+  --color-muted: #565e66;
+  --color-faint: #9aa1a9;
+  --color-accent: #4e7700;
+  --color-accent-hover: #3e6200;
+  --color-accent-dim: #558006;
+  --color-accent-ink: #ffffff;
+  --color-success: #15803d;
+  --color-warning: #a16207;
+  --color-danger: #dc2626;
+  --color-info: #0369a1;
+  --color-line: #e3e5de;
+  --color-line-strong: #c6cac0;
 
   /* Radius scale — "Soft Terminal" (PRD-04 §2.2). Semantic names so Tailwind's
      default sm/md/lg scale stays intact for the landing page in this package. */
@@ -29,9 +30,10 @@
   --radius-panel: 14px;
   --radius-card: 20px;
 
-  /* Elevation (PRD-04 §2.3) — soft ambient shadows, no hard drop-offs */
-  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 8px 24px rgb(0 0 0 / 0.35);
-  --shadow-lift: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 12px 32px rgb(0 0 0 / 0.45);
+  /* Elevation (PRD-04 §2.3) — soft ambient shadows, no hard drop-offs.
+     Light theme: subtle inner top-highlight + low-alpha ink shadow (paper-realistic). */
+  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.9) inset, 0 8px 24px rgb(20 22 26 / 0.08);
+  --shadow-lift: 0 1px 0 rgb(255 255 255 / 0.9) inset, 0 12px 32px rgb(20 22 26 / 0.14);
 
 
   /* Fonts — runtime vars injected by next/font + fontshare link in layout */
@@ -41,7 +43,7 @@
 }
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
@@ -56,17 +58,19 @@ body {
   color: var(--color-accent-ink);
 }
 
-/* Blueprint hairline backdrop used on hero / sections */
+/* Blueprint hairline backdrop used on hero / sections — paper background,
+   so use a low-alpha ink line that reads as a quiet grid, not a heavy mesh. */
 .blueprint-grid {
   background-image:
-    linear-gradient(to right, rgb(35 38 45 / 0.35) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(35 38 45 / 0.35) 1px, transparent 1px);
+    linear-gradient(to right, rgb(20 22 26 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(20 22 26 / 0.05) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 
-/* Accent glow wash — signals ACHIEVEMENT (hero/CTA cards only), never decoration (PRD-04 §2.3) */
+/* Accent glow wash — signals ACHIEVEMENT (hero/CTA cards only), never decoration (PRD-04 §2.3).
+   Light theme: brand lime wash at higher alpha so the chartreuse tint actually reads on paper. */
 .glow-accent {
-  background-image: radial-gradient(ellipse 80% 100% at 50% -20%, rgb(198 255 74 / 0.08), transparent 70%);
+  background-image: radial-gradient(ellipse 80% 100% at 50% -20%, rgb(198 255 74 / 0.16), transparent 70%);
 }
 
 /* Card surface composition (PRD-04 §2.4) — rounded card + top highlight + ambient shadow.
@@ -112,6 +116,78 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
   .reveal-in {
+    animation: none;
+  }
+}
+
+/* ── Badge idle animations (BadgeArt; unlocked only — svg.badge-live gates) ──
+   Looping motion per badge identity: sprout sways, sword/trophy rock,
+   flames flicker, jewels/sparks twinkle, laser dot pulses, arc breathes,
+   and every unlocked chip gets a periodic light-band sheen sweep.
+   Amplitudes are deliberately noticeable (user feedback: first pass too subtle).
+   SVG children animate around their own geometry via transform-box: fill-box.
+   Phase is staggered per tile through --badge-delay (set by BadgeArt) — carried
+   INSIDE each animation shorthand, since shorthand resets animation-delay. */
+@keyframes rb-badge-sway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(7deg); }
+}
+@keyframes rb-badge-rock {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+@keyframes rb-badge-flicker {
+  0%, 100% { transform: scale(1, 1) rotate(0deg); }
+  30% { transform: scale(1.08, 0.9) rotate(-3deg); }
+  60% { transform: scale(0.92, 1.08) rotate(3deg); }
+}
+@keyframes rb-badge-twinkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.1; transform: scale(0.5); }
+}
+@keyframes rb-badge-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+@keyframes rb-badge-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.7); }
+}
+@keyframes rb-badge-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2.5px); }
+}
+/* Diagonal light band sweeps across the chip, then rests (opacity 0 while parked). */
+@keyframes rb-badge-sheen {
+  0% { transform: translateX(0) rotate(18deg); opacity: 0; }
+  8% { opacity: 1; }
+  55% { transform: translateX(76px) rotate(18deg); opacity: 1; }
+  56%, 100% { transform: translateX(76px) rotate(18deg); opacity: 0; }
+}
+
+.badge-anim {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-delay: var(--badge-delay, 0s);
+}
+.badge-origin-bottom {
+  transform-origin: 50% 100%;
+}
+svg.badge-live .badge-anim-sway { animation: rb-badge-sway 3s ease-in-out var(--badge-delay, 0s) infinite; }
+svg.badge-live .badge-anim-rock { animation: rb-badge-rock 2.6s ease-in-out var(--badge-delay, 0s) infinite; }
+svg.badge-live .badge-anim-flicker { animation: rb-badge-flicker 1.8s ease-in-out var(--badge-delay, 0s) infinite; }
+svg.badge-live .badge-anim-flicker-core {
+  animation: rb-badge-flicker 1.2s ease-in-out calc(var(--badge-delay, 0s) - 0.5s) infinite;
+}
+svg.badge-live .badge-anim-twinkle { animation: rb-badge-twinkle 2s ease-in-out var(--badge-delay, 0s) infinite; }
+svg.badge-live .badge-anim-glow { animation: rb-badge-glow 2.4s ease-in-out var(--badge-delay, 0s) infinite; }
+svg.badge-live .badge-anim-pulse { animation: rb-badge-pulse 1.8s ease-in-out var(--badge-delay, 0s) infinite; }
+svg.badge-live .badge-anim-bob { animation: rb-badge-bob 2.8s ease-in-out var(--badge-delay, 0s) infinite; }
+svg.badge-live .badge-anim-sheen { animation: rb-badge-sheen 3.6s linear var(--badge-delay, 0s) infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  svg.badge-live [class*='badge-anim-'] {
     animation: none;
   }
 }

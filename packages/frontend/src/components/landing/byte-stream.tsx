@@ -61,8 +61,8 @@ export function ByteStream({ className }: { className?: string }) {
         float d = length(frag - mousePx) / min(u_res.x, u_res.y);
         float glow = exp(-d * 5.0);
 
-        vec3 dimColor = vec3(0.34, 0.37, 0.40);   // brighter mono bits
-        vec3 accent = vec3(0.776, 1.0, 0.29);      // #C6FF4A
+        vec3 dimColor = vec3(0.60, 0.63, 0.66);   // mid-grey mono bits over paper (light theme)
+        vec3 accent = vec3(0.306, 0.467, 0.0);    // #4E7700 olive accent on light theme
 
         vec3 col = mix(dimColor, accent, clamp(glow * 1.6, 0.0, 1.0));
         float alpha = shape * alive * flicker * (0.32 + glow * 0.85);
@@ -144,7 +144,7 @@ export function ByteStream({ className }: { className?: string }) {
       gl.uniform2f(uRes, canvas.width, canvas.height);
       gl.uniform1f(uTime, (now - start) / 1000);
       gl.uniform2f(uMouse, mouse.x, mouse.y);
-      gl.clearColor(0.039, 0.043, 0.051, 1); // #0A0B0D
+      gl.clearColor(0.980, 0.980, 0.969, 1); // #FAFAF7 (paper canvas)
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.enable(gl.BLEND);
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);

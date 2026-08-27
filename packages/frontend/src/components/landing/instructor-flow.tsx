@@ -1,8 +1,22 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { colors } from '@reka-bytes/shared';
 import { useReducedMotion } from '@/hooks/use-media-query';
+
+/**
+ * Local light-theme palette for the instructor-flow canvas (2026-08).
+ * Mirrors the frontend @theme tokens in globals.css; we don't import the
+ * shared `colors` constant because admin also uses it (out of scope).
+ */
+const colors = {
+  border: '#E3E5DE',
+  borderStrong: '#C6CAC0',
+  accent: '#4E7700',
+  accentDim: '#558006',
+  bgInset: '#F0F1EC',
+  textPrimary: '#14161A',
+  textSecondary: '#565E66',
+};
 
 type Pt = { x: number; y: number };
 
