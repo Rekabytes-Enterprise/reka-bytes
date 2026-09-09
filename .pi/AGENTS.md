@@ -111,6 +111,7 @@ pnpm monorepo, Node 22 / pnpm 11.9. Ports: backend **4300** (Hono), frontend **4
 - **Default verification** after a change = `pnpm -r typecheck`, `pnpm -r lint`, `pnpm build` for affected packages, shared unit tests (`pnpm --filter @reka-bytes/shared test`), and short-lived `curl` probes against the user's already-running dev servers. All exit immediately.
 - E2E is the user's call — they decide when to re-verify. The dev-server-never-start rule applies to all sessions regardless of who triggered it.
 - Applies to visual probes, screenshot capture, and any other Playwright-driven activity too — not just `test()` runs.
+- **Isolated/visual specs must use the override config**: `npx playwright test --config=playwright.notfound.config.ts tests/<spec>` (no `webServer`, no `globalSetup` — it never spawns dev servers; it fails fast instead). The MAIN `playwright.config.ts` auto-starts backend+frontend+admin whenever they are down — never invoke it casually. Probe `:4301` with curl first.
 
 ## Known loose ends
 - Frontend globals.css still has an unlayered `:focus-visible` rule (admin fixed via `@layer base`; unlayered beats Tailwind utilities → double rings).
