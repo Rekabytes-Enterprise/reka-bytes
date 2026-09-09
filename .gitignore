@@ -28,3 +28,5 @@ coverage/
 
 # pi agent transient paste artifacts
 .pi/clip/
+# pi generate_image scratch renders — finals get encoded into packages/frontend/public/
+.pi/media/
