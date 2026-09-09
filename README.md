@@ -1,6 +1,6 @@
 # Reka Bytes
 
-> **Reka** (*Mereka Cipta / Rekaan*) × **Bytes** — where creativity meets computer science fundamentals.
+> **Reka** × **Bytes** — where creativity meets computer science fundamentals.
 > Academy teaching people how to vibe code *properly*.
 
 ## Stack

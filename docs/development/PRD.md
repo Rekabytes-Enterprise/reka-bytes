@@ -1,7 +1,7 @@
 # PRD — Reka Bytes
 
-> **Reka** (BM): *Mereka Cipta* / *Rekaan* — creation & design · **Bytes**: the fundamental unit of computing.
-> Reka Bytes = where creativity meets computer science fundamentals.
+> **Reka** × **Bytes** — where creativity meets computer science fundamentals.
+> Reka Bytes = the fundamentals behind vibe coding, taught properly.
 
 | Field | Value |
 |---|---|
