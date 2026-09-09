@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Field, Input, Textarea } from '@/components/ui/field';
 import { SeatsMeter } from '@/components/landing/seats-meter';
+import { Footer } from '@/components/layout/footer';
 import { usePushToast } from '@/components/system/toaster';
 
 type Step = 0 | 1 | 2;
@@ -117,27 +118,31 @@ export default function RegisterPage() {
 
   if (done) {
     return (
-      <main className="mx-auto flex min-h-dvh max-w-xl flex-col items-center justify-center px-6 text-center">
-        <span className="flex size-14 items-center justify-center border border-accent-dim">
-          <Check className="size-6 text-accent" aria-hidden />
-        </span>
-        <h1 className="mt-8 font-display text-4xl font-semibold">Application received.</h1>
-        <p className="mt-4 font-body text-sm leading-relaxed text-muted">
-          We review every application personally — usually within a day or two.
-          Log in anytime to check your status.
-        </p>
-        <div className="mt-10 flex gap-4">
-          <Button onClick={() => router.push('/login')}>Go to login</Button>
-          <Link href="/">
-            <Button variant="ghost">Back home</Button>
-          </Link>
-        </div>
-      </main>
+      <div className="flex min-h-dvh flex-col">
+        <main className="mx-auto flex w-full max-w-xl flex-1 flex-col items-center justify-center px-6 py-12 text-center">
+          <span className="flex size-14 items-center justify-center border border-accent-dim">
+            <Check className="size-6 text-accent" aria-hidden />
+          </span>
+          <h1 className="mt-8 font-display text-4xl font-semibold">Application received.</h1>
+          <p className="mt-4 font-body text-sm leading-relaxed text-muted">
+            We review every application personally — usually within a day or two.
+            Log in anytime to check your status.
+          </p>
+          <div className="mt-10 flex gap-4">
+            <Button onClick={() => router.push('/login')}>Go to login</Button>
+            <Link href="/">
+              <Button variant="ghost">Back home</Button>
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </div>
     );
   }
 
   return (
-    <main className="mx-auto grid min-h-dvh max-w-[1240px] grid-cols-1 gap-12 px-6 py-16 lg:grid-cols-[240px_1fr] lg:px-10">
+    <div className="flex min-h-dvh flex-col">
+      <main className="mx-auto grid w-full max-w-[1240px] flex-1 grid-cols-1 gap-12 px-6 py-16 lg:grid-cols-[240px_1fr] lg:px-10">
       {/* live cohort capacity */}
       <div className="order-first lg:col-span-2">
         <SeatsMeter variant="chip" />
@@ -317,6 +322,31 @@ export default function RegisterPage() {
                     </div>
                   ))}
                 </dl>
+                <p className="mt-8 font-body text-xs text-muted">
+                  By submitting, you confirm the information above is accurate and consent to
+                  Reka Bytes processing your personal data for the purposes described in our{' '}
+                  <Link
+                    href="/privacy"
+                    className="text-accent underline-offset-4 hover:underline"
+                  >
+                    Privacy Policy
+                  </Link>
+                  . You also agree to our{' '}
+                  <Link
+                    href="/terms"
+                    className="text-accent underline-offset-4 hover:underline"
+                  >
+                    Terms of Use
+                  </Link>{' '}
+                  and{' '}
+                  <Link
+                    href="/cookies"
+                    className="text-accent underline-offset-4 hover:underline"
+                  >
+                    Cookies Policy
+                  </Link>
+                  .
+                </p>
               </section>
             )}
           </motion.div>
@@ -344,6 +374,9 @@ export default function RegisterPage() {
         </div>
       </div>
     </main>
+
+    <Footer />
+  </div>
   );
 }
 

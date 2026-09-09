@@ -6,6 +6,7 @@ import { SectionHeader } from '@/components/landing/section-header';
 import { SeatsMeter } from '@/components/landing/seats-meter';
 import { Ticker } from '@/components/system/ticker';
 import { Button } from '@/components/ui/button';
+import { Footer } from '@/components/layout/footer';
 import { typeStyles } from '@reka-bytes/shared';
 import { cn } from '@/lib/utils';
 
@@ -42,6 +43,8 @@ const CURRICULUM = [
   },
 ];
 
+/* FOOTER_COLUMNS moved to @/components/layout/footer — single source of truth. */
+
 export default function LandingPage() {
   const t = typeStyles;
 
@@ -50,10 +53,9 @@ export default function LandingPage() {
       <Hero />
       <Ticker />
 
-      {/* 01 / WHY */}
+      {/* WHY */}
       <section className="mx-auto max-w-[1240px] px-6 py-28 lg:py-36 lg:px-10">
         <SectionHeader
-          index="01"
           name="WHY"
           title="Vibe coding without fundamentals is building on sand."
         />
@@ -86,7 +88,7 @@ export default function LandingPage() {
       {/* 02 / BASICS CLASS */}
       <section id="curriculum" className="border-y border-line bg-elevated">
         <div className="mx-auto max-w-[1240px] px-6 py-28 lg:py-36 lg:px-10">
-          <SectionHeader index="02" name="BASICS CLASS" title="Cohort 001 — the fundamentals, hands-on." />
+          <SectionHeader name="BASICS CLASS" title="Cohort 001 — the fundamentals, hands-on." />
           <ol className="mt-4">
             {CURRICULUM.map((mod) => (
               <li
@@ -108,7 +110,7 @@ export default function LandingPage() {
 
       {/* 03 / INSTRUCTOR */}
       <section className="mx-auto max-w-[1240px] px-6 py-28 lg:py-36 lg:px-10">
-        <SectionHeader index="03" name="WHO TEACHES YOU" title="An engineer, not a course reseller." />
+        <SectionHeader name="WHO TEACHES YOU" title="An engineer, not a course reseller." />
         <div className="mt-14 grid grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:gap-16">
           {/* left portrait placeholder with halftone treatment */}
           <div className="relative aspect-[3/4] overflow-hidden border border-line bg-inset lg:col-span-5 lg:aspect-auto lg:min-h-[30rem]">
@@ -148,7 +150,7 @@ export default function LandingPage() {
       <section className="border-t border-line bg-elevated">
         <div className="mx-auto grid max-w-[1240px] grid-cols-1 items-center gap-16 px-6 py-28 lg:py-32 lg:grid-cols-8 lg:px-10">
           <div className="lg:col-span-5">
-            <SectionHeader index="04" name="JOIN COHORT 001" title="Five seats. Real fundamentals. No fluff." />
+            <SectionHeader name="JOIN COHORT 001" title="Five seats. Real fundamentals. No fluff." />
             <p className={cn(t.body, 'mt-8 max-w-lg text-muted')}>
               Applications are reviewed personally. Once approved, you get access to
               the class and the private Discord where the cohort builds together.
@@ -170,17 +172,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-line">
-        <div className="mx-auto flex max-w-[1240px] flex-col items-start justify-between gap-6 px-6 py-14 sm:flex-row sm:items-center lg:px-10">
-          <p className={cn(t.mono)}>
-            <span className="text-accent">reka</span>·<span className="text-muted">bytes</span>{' '}
-            <span className="text-faint">— 0b01001010</span>
-          </p>
-          <p className={cn(t.label, 'text-faint')}>
-            © {new Date().getFullYear()} reka bytes · mereka cipta × computer science
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </main>
   );
 }

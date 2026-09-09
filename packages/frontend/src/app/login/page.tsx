@@ -8,6 +8,7 @@ import { loginSchema, apiFetch, isApiClientError, type SessionUser } from '@reka
 import { sessionAtom } from '@/atoms/auth';
 import { Button } from '@/components/ui/button';
 import { Field, Input } from '@/components/ui/field';
+import { Footer } from '@/components/layout/footer';
 import { usePushToast } from '@/components/system/toaster';
 
 export default function LoginPage() {
@@ -62,54 +63,55 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-6">
-      <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-dim">
-        reka·bytes / login
-      </p>
-      <h1 className="mt-4 font-display text-4xl font-semibold">Check your status</h1>
+    <div className="flex min-h-dvh flex-col">
+      <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-6 py-12">
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-dim">
+          reka·bytes / login
+        </p>
+        <h1 className="mt-4 font-display text-4xl font-semibold">Check your status</h1>
 
-      <form onSubmit={onSubmit} className="mt-12 flex flex-col gap-6" noValidate>
-        <Field label="Email" error={errors.email}>
-          {(id) => (
-            <Input
-              id={id}
-              type="email"
-              value={email}
-              invalid={!!errors.email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              autoComplete="email"
-              data-testid="login-email"
-            />
-          )}
-        </Field>
-        <Field label="Password" error={errors.password}>
-          {(id) => (
-            <Input
-              id={id}
-              type="password"
-              value={password}
-              invalid={!!errors.password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-              data-testid="login-password"
-            />
-          )}
-        </Field>
-        <Button type="submit" disabled={submitting} data-testid="login-submit">
-          {submitting ? 'Signing in…' : 'Sign in'}
-        </Button>
-      </form>
+        <form onSubmit={onSubmit} className="mt-12 flex flex-col gap-6" noValidate>
+          <Field label="Email" error={errors.email}>
+            {(id) => (
+              <Input
+                id={id}
+                type="email"
+                value={email}
+                invalid={!!errors.email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                autoComplete="email"
+                data-testid="login-email"
+              />
+            )}
+          </Field>
+          <Field label="Password" error={errors.password}>
+            {(id) => (
+              <Input
+                id={id}
+                type="password"
+                value={password}
+                invalid={!!errors.password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+                data-testid="login-password"
+              />
+            )}
+          </Field>
+          <Button type="submit" disabled={submitting} data-testid="login-submit">
+            {submitting ? 'Signing in…' : 'Sign in'}
+          </Button>
+        </form>
 
-      <p className="mt-10 font-mono text-xs uppercase tracking-[0.12em] text-faint">
-        No account yet?{' '}
-        <Link href="/register" className="text-accent hover:underline">
-          register
-        </Link>
-      </p>
-      <Link href="/" className="mt-2 font-mono text-xs uppercase tracking-[0.12em] text-faint hover:text-muted">
-        ← back home
-      </Link>
-    </main>
+        <p className="mt-10 font-mono text-xs uppercase tracking-[0.12em] text-faint">
+          No account yet?{' '}
+          <Link href="/register" className="text-accent hover:underline">
+            register
+          </Link>
+        </p>
+      </main>
+
+      <Footer />
+    </div>
   );
 }
