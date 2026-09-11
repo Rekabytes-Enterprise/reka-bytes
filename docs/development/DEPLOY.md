@@ -55,22 +55,16 @@ Admin has no `LEG_*` vars. Health check for both: `GET /`.
 
 ## Database migrations
 
-**Migrations are never automatic.** Skip this and every `/api/*` call that
-reads a table 500s with `P2021: The table public.<T> does not exist` (the
-deployed backend connects fine — the database is just empty).
+**Automatic since v0.1.2.** The backend image's CMD is `start.sh`, which runs
+`prisma migrate deploy` on **every container start** before the server boots —
+idempotent and forward-only, so first boot applies the full history and later
+deploys are fast no-ops. No Coolify pre-deploy field, nothing to remember.
 
-Set the backend resource's **pre-deploy command** in Coolify (Configuration →
-General) — the image ships the Prisma CLI for exactly this:
+Manual fallback (if you ever need to run it by hand): Coolify → backend →
+**Terminal** → `pnpm db:deploy`.
 
-```bash
-pnpm db:deploy
-```
-
-(`db:deploy` → `prisma migrate deploy` — applies pending migrations, never
-resets. First deploy applies the full history from empty.)
-
-First-deploy one-off if the backend is already running: Coolify → backend →
-**Terminal** → same command.
+Skip-migrations symptom, for the record: every table-reading API 500s with
+`P2021: The table public.<T> does not exist` while the backend itself is up.
 
 ## Domain layout
 
