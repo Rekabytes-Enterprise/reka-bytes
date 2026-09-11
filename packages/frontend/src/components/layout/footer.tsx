@@ -29,9 +29,7 @@ const FOOTER_COLUMNS: ReadonlyArray<{
   },
   {
     title: 'Product',
-    links: [
-      { label: 'Showcase', href: '/showcase' },
-    ],
+    links: [{ label: 'Showcase', href: '/showcase' }],
   },
   {
     title: 'Legal',
@@ -44,11 +42,13 @@ const FOOTER_COLUMNS: ReadonlyArray<{
 ];
 
 /**
- * Global site footer.
+ * Global site footer — compact sizing, used on EVERY public page (landing,
+ * about, legal pages, login, register, 404). Same structure as the original
+ * full footer (brand + link columns + bottom bar) with tightened paddings so
+ * it doesn't dominate short pages like /login.
  *
- * Rendered on every public page (landing, privacy, terms, cookies, login,
- * register). The country in the bottom bar comes from `LEG_OPERATOR_COUNTRY`
- * (default "Malaysia") — see `src/lib/legal.ts`.
+ * The country in the bottom bar comes from `LEG_OPERATOR_COUNTRY` (default
+ * "Malaysia") — see `src/lib/legal.ts`.
  *
  * Pages with a long scroll should render it after `</main>`; pages with
  * short content (login/register) should wrap their main in a `flex
@@ -58,48 +58,44 @@ export function Footer() {
   const t = typeStyles;
 
   return (
-    <footer className="border-t border-line bg-elevated">
-      <div className="mx-auto max-w-[1240px] px-6 py-16 lg:px-10 lg:py-20">
+    <footer className="border-t border-line bg-elevated" data-testid="site-footer">
+      <div className="mx-auto max-w-[1240px] px-6 py-10 lg:px-10">
         {/* Top: brand + link columns */}
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-10">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:gap-10">
           {/* Brand block */}
           <div className="md:col-span-5">
             <Link
               href="/"
-              className="inline-flex items-baseline font-mono text-lg font-bold tracking-[-0.02em]"
+              className="inline-flex items-baseline font-mono text-base font-bold tracking-[-0.02em]"
             >
               <span className="text-accent">reka</span>
               <span className="text-muted">·</span>
               <span className="text-ink">bytes</span>
             </Link>
-            <p className="mt-6 max-w-sm font-body text-sm leading-relaxed text-muted">
-              Teaching non-CS people to vibe code properly — fundamentals first, with
-              an engineer who ships for a living.
+            <p className="mt-3 max-w-sm font-body text-sm leading-relaxed text-muted">
+              Teaching non-CS people to vibe code properly — fundamentals first.
             </p>
             <Link
               href="/register"
-              className="mt-8 inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent transition-colors hover:text-accent-hover"
+              className="mt-4 inline-flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-accent transition-colors hover:text-accent-hover"
             >
               Apply to cohort <span aria-hidden>→</span>
             </Link>
           </div>
 
           {/* Link columns */}
-          <nav
-            aria-label="Footer"
-            className="grid grid-cols-2 gap-10 sm:grid-cols-3 md:col-span-7"
-          >
+          <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-3 md:col-span-7">
             {FOOTER_COLUMNS.map((col) => (
               <div key={col.title}>
-                <h3 className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-ink">
+                <h3 className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-ink">
                   {col.title}
                 </h3>
-                <ul className="mt-5 space-y-3">
+                <ul className="mt-3 space-y-2">
                   {col.links.map((link) => (
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="font-body text-sm text-muted transition-colors hover:text-accent"
+                        className="font-body text-xs text-muted transition-colors hover:text-accent"
                       >
                         {link.label}
                       </Link>
@@ -112,11 +108,9 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-14 flex flex-col items-start justify-between gap-3 border-t border-line pt-8 sm:flex-row sm:items-center">
+        <div className="mt-8 flex flex-col items-start justify-between gap-2 border-t border-line pt-5 sm:flex-row sm:items-center">
           <p className={cn(t.label, 'text-faint')}>© {new Date().getFullYear()} reka bytes</p>
-          <p className={cn(t.label, 'text-faint')}>
-            made in {OPERATOR.country.toLowerCase()}
-          </p>
+          <p className={cn(t.label, 'text-faint')}>made in {OPERATOR.country.toLowerCase()}</p>
         </div>
       </div>
     </footer>

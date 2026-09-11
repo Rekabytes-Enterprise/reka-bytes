@@ -21,7 +21,12 @@ export function BlockRenderer({
       {blocks.map((block, index) => {
         const Component = getBlockComponent(block.type);
         if (!Component) return <UnsupportedBlock key={index} kind={block.type} />;
-        const props: BlockComponentProps = { block, lessonId, blockIndex: index, onLessonCompleted };
+        const props: BlockComponentProps = {
+          block,
+          lessonId,
+          blockIndex: index,
+          onLessonCompleted,
+        };
         return (
           <div key={index} data-testid={`block-${block.type}`}>
             <Component {...props} />

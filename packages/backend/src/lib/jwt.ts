@@ -26,7 +26,7 @@ export async function signSession(payload: SessionPayload): Promise<string> {
 
 export async function verifySession(token: string): Promise<SessionPayload | null> {
   try {
-    const claims = (await verify(token, env.JWT_SECRET, "HS256")) as JwtClaims;
+    const claims = (await verify(token, env.JWT_SECRET, 'HS256')) as JwtClaims;
     if (!claims.sub || typeof claims.sub !== 'string') return null;
     if (claims.role !== 'USER' && claims.role !== 'ADMIN') return null;
     return { sub: claims.sub, role: claims.role };

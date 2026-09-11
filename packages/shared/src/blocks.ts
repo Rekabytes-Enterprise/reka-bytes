@@ -210,9 +210,7 @@ export function parseBlock(raw: unknown): LessonBlock | null {
  */
 export function parseBlocks(raw: unknown): LessonBlock[] {
   if (!Array.isArray(raw)) return [];
-  return raw
-    .map(parseBlock)
-    .filter((b): b is LessonBlock => b !== null);
+  return raw.map(parseBlock).filter((b): b is LessonBlock => b !== null);
 }
 
 // ── Flattening (markdown fallback / search / quiz input) ────────
@@ -235,7 +233,11 @@ export function flattenBlocksToMarkdown(blocks: LessonBlock[]): string {
         break;
       case 'key-terms':
         parts.push(
-          ['**Key terms**', '', ...block.terms.map((t) => `- **${t.term}** — ${t.definition}`)].join('\n'),
+          [
+            '**Key terms**',
+            '',
+            ...block.terms.map((t) => `- **${t.term}** — ${t.definition}`),
+          ].join('\n'),
         );
         break;
       case 'comparison': {
@@ -271,9 +273,7 @@ export function flattenBlocksToMarkdown(blocks: LessonBlock[]): string {
         );
         break;
       case 'exercise':
-        parts.push(
-          [`**Try it:** ${block.prompt}`, '', '```', block.solution, '```'].join('\n'),
-        );
+        parts.push([`**Try it:** ${block.prompt}`, '', '```', block.solution, '```'].join('\n'));
         break;
       case 'simulation':
         parts.push(`_[interactive exercise: ${block.sim}]_`);

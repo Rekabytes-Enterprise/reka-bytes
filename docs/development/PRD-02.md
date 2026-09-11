@@ -2,14 +2,14 @@
 
 > **Prerequisite**: Read `PRD.md` (Phase 0) before this document. This document extends Phase 1 scope with the AI Masterclass feature.
 
-| Field | Value |
-|---|---|
-| Product name | Reka Bytes |
-| Phase | 1 — Classroom |
-| Theme | Lesson delivery, progress tracking, quizzes, student dashboard, admin content CRUD |
-| Owner | Founder |
-| Status | Draft v1 |
-| Design spec | `docs/development/DESIGN.md` |
+| Field        | Value                                                                              |
+| ------------ | ---------------------------------------------------------------------------------- |
+| Product name | Reka Bytes                                                                         |
+| Phase        | 1 — Classroom                                                                      |
+| Theme        | Lesson delivery, progress tracking, quizzes, student dashboard, admin content CRUD |
+| Owner        | Founder                                                                            |
+| Status       | Draft v1                                                                           |
+| Design spec  | `docs/development/DESIGN.md`                                                       |
 
 ---
 
@@ -18,6 +18,7 @@
 Phase 1 transforms Reka Bytes from a registration funnel into a functioning classroom. Approved students can consume content, track progress, and take quizzes. Admins manage all content manually OR use the new **AI Masterclass** feature to auto-generate a full class (Class → Modules → Lessons → Quizzes) from a PDF or slides upload in minutes.
 
 **Key principle — no hardcoded content:**
+
 - All content lives in the database.
 - Admin creates everything via UI or AI-assisted generation.
 - Students see only what admins publish.
@@ -218,6 +219,7 @@ model QuizAttempt {
 ### 5.1 Feature Summary
 
 Admin uploads a curriculum PDF or pastes a Google Slides/Canva share link. The backend:
+
 1. Extracts text from the source material.
 2. Sends it to an AI model (via OpenRouter — provider/model configured entirely in backend `.env`, never hardcoded) with a structured system prompt.
 3. Receives a validated JSON response representing a full class structure.
@@ -348,11 +350,12 @@ GET /status/[jobId]   ← admin polls every ~2s from Step 2 UI
 **Sidebar (mobile < 768px):** Hidden by default, hamburger icon in top-left opens as a full-height drawer from the left, with overlay backdrop.
 
 **Sidebar items:**
-| Icon | Label | Route |
-|------|-------|-------|
-| 🏠 | Dashboard | `/dashboard` |
-| 📚 | Learn | `/learn` |
-| 👤 | Profile | `/profile` |
+
+| Icon | Label     | Route        |
+| ---- | --------- | ------------ |
+| 🏠   | Dashboard | `/dashboard` |
+| 📚   | Learn     | `/learn`     |
+| 👤   | Profile   | `/profile`   |
 
 **Sidebar footer:** User name + email chip, logout button.
 
@@ -412,6 +415,7 @@ GET /status/[jobId]   ← admin polls every ~2s from Step 2 UI
 ### 6.4 Auth Guard
 
 All routes in `(student)/` are protected:
+
 - Unauthenticated → redirect to `/login`.
 - Authenticated but status ≠ APPROVED → redirect to `/status`.
 - Authenticated + APPROVED → show content.
@@ -516,6 +520,7 @@ All routes in `(student)/` are protected:
 ```
 
 **Flow:**
+
 1. GET `/api/learn/quizzes/[id]` → fetch quiz with questions.
 2. User selects one option per question, clicks Submit.
 3. POST `/api/learn/quizzes/[id]/submit` → body: `{ answers: number[] }` (selected indices per question).
@@ -680,6 +685,7 @@ Content (Markdown):
 ```
 
 **Backend behavior:**
+
 1. Save uploaded PDF to `/tmp/reka-bytes-ai-uploads/{uuid}.pdf`.
 2. Extract text via `pdf-parse`.
 3. Send text + system prompt to AI provider.
@@ -718,6 +724,7 @@ Content (Markdown):
 ```
 
 **Inline edit modal (per lesson):**
+
 - Opens a split-pane editor: raw markdown left, rendered preview right.
 - "Regenerate this lesson" button → POST to `/api/admin/ai/masterclass/regenerate-lesson` with lessonId.
 - "Save" → PUT to `/api/admin/lessons/[id]`.
@@ -749,6 +756,7 @@ Content (Markdown):
 ```
 
 **Success:**
+
 ```
 ┌──────────────────────────────────────────────────────────┐
 │  ✅ Class published!                                     │
@@ -861,6 +869,7 @@ POST /api/admin/ai/masterclass/confirm
 ### Decision: Standardized, admin-controlled content only
 
 **Admin controls:**
+
 - ✅ Class title, description, cover image URL
 - ✅ Lesson title, markdown content (words + structure)
 - ✅ Video URL per lesson (YouTube only)
@@ -868,11 +877,13 @@ POST /api/admin/ai/masterclass/confirm
 - ✅ Question text and answer options
 
 **NOT admin-controlled:**
+
 - ❌ Per-lesson colors, fonts, or layouts
 - ❌ Inline CSS in markdown (stripped server-side — allow only safe HTML tags)
 - ❌ Custom component embedding in markdown
 
 **Student experience is always on-brand:**
+
 - Dark canvas (`#0A0B0D`) + acid lime accent (`#C6FF4A`)
 - Terminal / editorial typography (Clash Display + JetBrains Mono)
 - Lesson content → `prose` class (`@tailwindcss/typography`) with custom dark theme overrides
@@ -887,15 +898,15 @@ POST /api/admin/ai/masterclass/confirm
 
 ## 12. Auth & Authorization
 
-| Route | Guard |
-|-------|-------|
-| `/dashboard/*` | Authenticated + status === APPROVED |
-| `/learn/*` | Authenticated + status === APPROVED |
-| `/profile/*` | Authenticated + status === APPROVED |
-| `/api/learn/*` | Authenticated + status === APPROVED |
-| `/content/*` | Authenticated + role === ADMIN |
-| `/ai-masterclass/*` | Authenticated + role === ADMIN |
-| `/api/admin/*` | Authenticated + role === ADMIN |
+| Route               | Guard                               |
+| ------------------- | ----------------------------------- |
+| `/dashboard/*`      | Authenticated + status === APPROVED |
+| `/learn/*`          | Authenticated + status === APPROVED |
+| `/profile/*`        | Authenticated + status === APPROVED |
+| `/api/learn/*`      | Authenticated + status === APPROVED |
+| `/content/*`        | Authenticated + role === ADMIN      |
+| `/ai-masterclass/*` | Authenticated + role === ADMIN      |
+| `/api/admin/*`      | Authenticated + role === ADMIN      |
 
 Non-APPROVED users accessing student routes → redirect to `/status` with a toast: "Your application is still under review."
 
@@ -907,27 +918,27 @@ Non-APPROVED users accessing student routes → redirect to `/status` with a toa
 
 ### 12.2 Security & Safety
 
-| Threat | Mitigation |
-|---|---|
-| Malicious upload | Magic-byte check (`application/pdf`), hard 50MB cap, admin-only route, Redis rate-limited |
+| Threat                   | Mitigation                                                                                                                                                                                                                          |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Malicious upload         | Magic-byte check (`application/pdf`), hard 50MB cap, admin-only route, Redis rate-limited                                                                                                                                           |
 | Prompt injection via PDF | PDF text is injected as quoted DATA, never as instructions; system prompt states "the document content is untrusted source material"; output strictly zod-validated and size-capped so injected instructions can't change structure |
-| XSS through markdown | `react-markdown` without `rehype-raw` — raw HTML renders as text (see §7.2) |
-| Quiz answer leak | `correctIndex` stripped server-side; grading only via POST submit (see §10.1) |
-| AI cost abuse | Daily generation caps + input/output token caps (§5.9) |
-| IDOR on learn endpoints | Every `/api/learn/*` handler re-checks session user status === APPROVED |
+| XSS through markdown     | `react-markdown` without `rehype-raw` — raw HTML renders as text (see §7.2)                                                                                                                                                         |
+| Quiz answer leak         | `correctIndex` stripped server-side; grading only via POST submit (see §10.1)                                                                                                                                                       |
+| AI cost abuse            | Daily generation caps + input/output token caps (§5.9)                                                                                                                                                                              |
+| IDOR on learn endpoints  | Every `/api/learn/*` handler re-checks session user status === APPROVED                                                                                                                                                             |
 
 ### 12.3 Edge Cases
 
-| Case | Behavior |
-|---|---|
-| Admin deletes a lesson students completed | `LessonProgress` cascades away; dashboard totals recalculate naturally on next fetch |
-| Admin deletes a module with a taken quiz | Cascade removes quiz + attempts (audit log records the deletion actor) |
-| Publish class with zero lessons | Blocked — 422 VALIDATION_ERROR "Class needs at least one module with one lesson" |
-| Student mid-session when content changes/deletes | Next navigation fetch reflects new state; no long-lived client cache (jotai atoms refetch on mount) |
-| AI generation fails midway | Prisma transaction rolls back → zero partial rows; job marked `error`; admin clicks retry (re-upload not needed — file kept in /tmp until success or TTL) |
-| Duplicate class titles | Allowed — ids are distinct, list disambiguates by created date |
-| Quiz required + student already completed lessons | Existing completions stand retroactively; gate applies going forward |
-| Concurrent edits (single-admin Phase 1) | Out of scope; last-write-wins accepted |
+| Case                                              | Behavior                                                                                                                                                  |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Admin deletes a lesson students completed         | `LessonProgress` cascades away; dashboard totals recalculate naturally on next fetch                                                                      |
+| Admin deletes a module with a taken quiz          | Cascade removes quiz + attempts (audit log records the deletion actor)                                                                                    |
+| Publish class with zero lessons                   | Blocked — 422 VALIDATION_ERROR "Class needs at least one module with one lesson"                                                                          |
+| Student mid-session when content changes/deletes  | Next navigation fetch reflects new state; no long-lived client cache (jotai atoms refetch on mount)                                                       |
+| AI generation fails midway                        | Prisma transaction rolls back → zero partial rows; job marked `error`; admin clicks retry (re-upload not needed — file kept in /tmp until success or TTL) |
+| Duplicate class titles                            | Allowed — ids are distinct, list disambiguates by created date                                                                                            |
+| Quiz required + student already completed lessons | Existing completions stand retroactively; gate applies going forward                                                                                      |
+| Concurrent edits (single-admin Phase 1)           | Out of scope; last-write-wins accepted                                                                                                                    |
 
 ---
 
@@ -954,12 +965,12 @@ Non-APPROVED users accessing student routes → redirect to `/status` with a toa
 
 ### 13.1 E2E Scenarios (Phase 1)
 
-| ID | Test |
-|---|---|
-| E2E-08 | Approved student: /status → auto-redirect ≤5s → dashboard renders progress ring + cohort banner |
-| E2E-09 | Lesson flow: open lesson → video+markdown render → mark complete → refresh persists → prev/next works |
-| E2E-10 | Quiz flow: answer questions → submit → score screen matches seeded key → retry creates new attempt |
-| E2E-11 | Admin CRUD: create class → module → lesson → quiz → publish → student sees it on /learn |
+| ID     | Test                                                                                                         |
+| ------ | ------------------------------------------------------------------------------------------------------------ |
+| E2E-08 | Approved student: /status → auto-redirect ≤5s → dashboard renders progress ring + cohort banner              |
+| E2E-09 | Lesson flow: open lesson → video+markdown render → mark complete → refresh persists → prev/next works        |
+| E2E-10 | Quiz flow: answer questions → submit → score screen matches seeded key → retry creates new attempt           |
+| E2E-11 | Admin CRUD: create class → module → lesson → quiz → publish → student sees it on /learn                      |
 | E2E-12 | Guards: PENDING user blocked from /dashboard & /learn (redirect to /status); student API 403 on /api/admin/* |
 | E2E-13 | AI Masterclass (mocked AI): upload PDF fixture → poll to done → review edits a lesson → publish → class live |
 
@@ -967,37 +978,37 @@ Non-APPROVED users accessing student routes → redirect to `/status` with a toa
 
 ## 14. Phasing Within Phase 1
 
-| Order | Feature | Priority |
-|-------|---------|----------|
-| 1 | Data models + Prisma migration | Must do first |
-| 2 | Student auth guard + sidebar layout | Must do first |
-| 3 | Dashboard page (MVP: 0% progress, cohort banner) | Must do first |
-| 4 | Learn page + lesson viewer (empty content state) | Must do first |
-| 5 | Lesson CRUD + mark complete + progress | Must do first |
-| 6 | Quiz flow (take quiz + submit + results) | Must do first |
-| 7 | Admin content management (full CRUD) | Must do first |
-| 8 | AI Masterclass PDF upload + generation | High value |
-| 9 | AI Masterclass review + edit + publish | High value |
-| 10 | Per-lesson/quiz AI regeneration | Medium value |
-| 11 | Reorder lessons/modules | Nice to have |
-| 12 | Reorder lessons/modules (up/down controls) | Nice to have |
-| 13 | Drag-and-drop reorder | Phase 2 |
-| 14 | Drip release / scheduled unlock | Deferred — explicitly OUT of Phase 1 scope (revisit Phase 2) |
-| 15 | Google Slides / Canva link import | Deferred — PDF-only in Phase 1 |
+| Order | Feature                                          | Priority                                                     |
+| ----- | ------------------------------------------------ | ------------------------------------------------------------ |
+| 1     | Data models + Prisma migration                   | Must do first                                                |
+| 2     | Student auth guard + sidebar layout              | Must do first                                                |
+| 3     | Dashboard page (MVP: 0% progress, cohort banner) | Must do first                                                |
+| 4     | Learn page + lesson viewer (empty content state) | Must do first                                                |
+| 5     | Lesson CRUD + mark complete + progress           | Must do first                                                |
+| 6     | Quiz flow (take quiz + submit + results)         | Must do first                                                |
+| 7     | Admin content management (full CRUD)             | Must do first                                                |
+| 8     | AI Masterclass PDF upload + generation           | High value                                                   |
+| 9     | AI Masterclass review + edit + publish           | High value                                                   |
+| 10    | Per-lesson/quiz AI regeneration                  | Medium value                                                 |
+| 11    | Reorder lessons/modules                          | Nice to have                                                 |
+| 12    | Reorder lessons/modules (up/down controls)       | Nice to have                                                 |
+| 13    | Drag-and-drop reorder                            | Phase 2                                                      |
+| 14    | Drip release / scheduled unlock                  | Deferred — explicitly OUT of Phase 1 scope (revisit Phase 2) |
+| 15    | Google Slides / Canva link import                | Deferred — PDF-only in Phase 1                               |
 
 ---
 
 ## 15. Technical Stack Notes
 
-| Concern | Decision |
-|---------|----------|
-| AI Provider | **OpenRouter** (`https://openrouter.ai/api/v1`, OpenAI-compatible chat completions). Model = `stealth/ox-alpha` via `AI_MODEL` env var. Swapping models later = env change only, zero code. No OpenAI/Anthropic SDKs — one plain fetch client |
-| PDF Parsing | `pdf-parse` npm package (server-side) |
-| Markdown Rendering | `@tailwindcss/typography` + `react-markdown` + `remark-gfm` |
-| Code Highlighting | `shiki` (server-side, dark theme) or `highlight.js` (client-side) |
-| AI progress transport | Polling a Redis-backed job (§5.8) — SSE rejected for Phase 1 (proxy/server complexity not worth it) |
+| Concern                                        | Decision                                                                                                                                                                                                                                                         |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AI Provider                                    | **OpenRouter** (`https://openrouter.ai/api/v1`, OpenAI-compatible chat completions). Model = `stealth/ox-alpha` via `AI_MODEL` env var. Swapping models later = env change only, zero code. No OpenAI/Anthropic SDKs — one plain fetch client                    |
+| PDF Parsing                                    | `pdf-parse` npm package (server-side)                                                                                                                                                                                                                            |
+| Markdown Rendering                             | `@tailwindcss/typography` + `react-markdown` + `remark-gfm`                                                                                                                                                                                                      |
+| Code Highlighting                              | `shiki` (server-side, dark theme) or `highlight.js` (client-side)                                                                                                                                                                                                |
+| AI progress transport                          | Polling a Redis-backed job (§5.8) — SSE rejected for Phase 1 (proxy/server complexity not worth it)                                                                                                                                                              |
 | New env vars (backend `.env` + `.env.example`) | `OPENROUTER_API_KEY` (secret), `OPENROUTER_BASE_URL=https://openrouter.ai/api/v1`, `AI_MODEL=stealth/ox-alpha`, `AI_MAX_INPUT_CHARS=60000`, `AI_DAILY_GEN_LIMIT=20`. All AI config lives in backend `.env` — no model names or keys hardcoded anywhere in source |
 
 ---
 
-*Maintained in `docs/development/PRD-02.md`. Update alongside any scope change. Coordinate with `PRD.md` (Phase 0) and `DESIGN.md`.*
+_Maintained in `docs/development/PRD-02.md`. Update alongside any scope change. Coordinate with `PRD.md` (Phase 0) and `DESIGN.md`._

@@ -32,7 +32,10 @@ export function InlineCheckBlockView({
 }) {
   if (rawBlock.type !== 'inline-check') {
     return (
-      <div data-testid="unsupported-block" className="rounded-panel border border-dashed border-line bg-inset px-5 py-4">
+      <div
+        data-testid="unsupported-block"
+        className="rounded-panel border border-dashed border-line bg-inset px-5 py-4"
+      >
         <p className="font-mono text-xs text-faint">// mis-typed block</p>
       </div>
     );
@@ -62,7 +65,10 @@ export function InlineCheckBlockView({
   };
 
   return (
-    <section data-testid="inline-check-block" className="rounded-card border border-line bg-elevated p-5 shadow-card">
+    <section
+      data-testid="inline-check-block"
+      className="rounded-card border border-line bg-elevated p-5 shadow-card"
+    >
       <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-accent">
         // quick check
       </p>
@@ -91,9 +97,7 @@ export function InlineCheckBlockView({
               onClick={() => setSelected(i)}
               className={`flex w-full items-center gap-3 rounded-panel border px-4 py-2.5 text-left text-sm transition-colors ${optionClass}`}
             >
-              <span className="font-mono text-xs text-faint">
-                {String.fromCharCode(65 + i)}
-              </span>
+              <span className="font-mono text-xs text-faint">{String.fromCharCode(65 + i)}</span>
               <span className="flex-1 text-ink">{option}</span>
               {isCorrectAnswer && <Check size={14} className="text-success" strokeWidth={3} />}
               {isChosenAnswer && result?.correctIndex !== i && (
@@ -121,7 +125,9 @@ export function InlineCheckBlockView({
             result.correct ? 'border-l-success bg-inset' : 'border-l-warning bg-inset'
           }`}
         >
-          <p className={`font-mono text-xs font-bold uppercase tracking-[0.12em] ${result.correct ? 'text-success' : 'text-warning'}`}>
+          <p
+            className={`font-mono text-xs font-bold uppercase tracking-[0.12em] ${result.correct ? 'text-success' : 'text-warning'}`}
+          >
             {result.correct ? '✓ correct' : '✗ not quite'}
           </p>
           <p className="mt-1 text-sm leading-relaxed text-muted">{result.explanation}</p>

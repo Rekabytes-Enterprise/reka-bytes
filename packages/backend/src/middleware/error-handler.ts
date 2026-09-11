@@ -24,17 +24,20 @@ export async function errorHandler(err: unknown, c: Context) {
 
   if (isAppError(err)) {
     return c.json(
-      { error: { code: err.code, message: err.message, ...(err.details ? { details: err.details } : {}) } },
+      {
+        error: {
+          code: err.code,
+          message: err.message,
+          ...(err.details ? { details: err.details } : {}),
+        },
+      },
       err.status as 400,
     );
   }
 
   // Unknown — log full detail server-side, never leak internals
   console.error('[unhandled]', err);
-  return c.json(
-    { error: { code: 'INTERNAL', message: 'Something went wrong on our side' } },
-    500,
-  );
+  return c.json({ error: { code: 'INTERNAL', message: 'Something went wrong on our side' } }, 500);
 }
 
 /** Wrap a handler so thrown errors hit the central handler (hono app.onError covers this too). */

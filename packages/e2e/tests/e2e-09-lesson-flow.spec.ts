@@ -1,5 +1,13 @@
 import { test, expect } from '@playwright/test';
-import { FRONT, uniqueEmail, approveStudent, cleanupUsers, seedClassroom, cleanupClassroom, loginCookie } from './helpers';
+import {
+  FRONT,
+  uniqueEmail,
+  approveStudent,
+  cleanupUsers,
+  seedClassroom,
+  cleanupClassroom,
+  loginCookie,
+} from './helpers';
 import { pgClient } from './db';
 
 const PASSWORD = 'password123';
@@ -27,7 +35,9 @@ test.describe('E2E-09 · lesson viewer flow', () => {
     const ctx = await browser.newContext({ baseURL: FRONT });
     // seed session cookie directly (login already covered elsewhere)
     const cookie = await loginCookie(email, PASSWORD);
-    await ctx.addCookies([{ name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' }]);
+    await ctx.addCookies([
+      { name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' },
+    ]);
     const page = await ctx.newPage();
 
     // module tree
@@ -58,10 +68,14 @@ test.describe('E2E-09 · lesson viewer flow', () => {
     await ctx.close();
   });
 
-  test('typed blocks render: inline-check grades server-side, mermaid degrades safely', async ({ browser }) => {
+  test('typed blocks render: inline-check grades server-side, mermaid degrades safely', async ({
+    browser,
+  }) => {
     const ctx = await browser.newContext({ baseURL: FRONT });
     const cookie = await loginCookie(email, PASSWORD);
-    await ctx.addCookies([{ name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' }]);
+    await ctx.addCookies([
+      { name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' },
+    ]);
     const page = await ctx.newPage();
 
     // Give the seeded lesson a typed block body (valid mermaid + BROKEN mermaid
@@ -98,18 +112,24 @@ test.describe('E2E-09 · lesson viewer flow', () => {
 
     // Mermaid: valid source renders an SVG…
     await expect(page.getByTestId('mermaid-block').first()).toBeVisible();
-    await expect(page.getByTestId('block-mermaid').first()).toContainText('svg', { ignoreCase: false });
+    await expect(page.getByTestId('block-mermaid').first()).toContainText('svg', {
+      ignoreCase: false,
+    });
     const svgCount = await page.getByTestId('block-mermaid').first().locator('svg').count();
     expect(svgCount).toBeGreaterThan(0);
     // …broken source falls back to a visible code block, never blank
-    await expect(page.getByTestId('block-mermaid').nth(1)).toContainText('diagram failed to render');
+    await expect(page.getByTestId('block-mermaid').nth(1)).toContainText(
+      'diagram failed to render',
+    );
     await expect(page.getByTestId('block-mermaid').nth(1)).toContainText('not valid mermaid');
 
     // Inline check: graded server-side, feedback revealed after submit
     await page.getByTestId('inline-check-block').getByRole('button').first().click();
     await page.getByRole('button', { name: 'check answer' }).click();
     await expect(page.getByTestId('inline-check-block')).toContainText('✓ correct');
-    await expect(page.getByTestId('inline-check-block')).toContainText('It installs project packages.');
+    await expect(page.getByTestId('inline-check-block')).toContainText(
+      'It installs project packages.',
+    );
 
     // Recap block rendered
     await expect(page.getByTestId('recap-block')).toBeVisible();
@@ -120,7 +140,9 @@ test.describe('E2E-09 · lesson viewer flow', () => {
   test('/learn shows the graphical module map', async ({ browser }) => {
     const ctx = await browser.newContext({ baseURL: FRONT });
     const cookie = await loginCookie(email, PASSWORD);
-    await ctx.addCookies([{ name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' }]);
+    await ctx.addCookies([
+      { name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' },
+    ]);
     const page = await ctx.newPage();
 
     await page.goto('/learn');

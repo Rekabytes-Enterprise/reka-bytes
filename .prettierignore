@@ -1,0 +1,30 @@
+# dependencies & builds (installed/produced, not authored)
+node_modules
+**/node_modules
+**/.next
+**/dist
+**/out
+**/tsconfig.tsbuildinfo
+
+# generated code — never reformat
+packages/db/src/generated
+packages/baml/baml_client
+
+# e2e artifacts & reports
+packages/e2e/artifacts
+packages/e2e/test-results
+packages/e2e/playwright-report
+playwright-report
+test-results
+
+# env — examples are hand-authored config, not code style
+**/.env
+**/.env.*
+**/.env.example
+**/.env.local.example
+
+# lockfile & misc
+pnpm-lock.yaml
+.pi
+.DS_Store
+*.log

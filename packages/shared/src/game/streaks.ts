@@ -65,7 +65,9 @@ export function computeStreak(timestamps: readonly Date[], now: Date): StreakInf
  * days between two active days AND returned after that gap.
  */
 export function hadComeback(timestamps: readonly Date[]): boolean {
-  const sortedMs = [...new Set([...timestamps].filter((t) => Number.isFinite(t.getTime())).map(dayKey))]
+  const sortedMs = [
+    ...new Set([...timestamps].filter((t) => Number.isFinite(t.getTime())).map(dayKey)),
+  ]
     .map(keyToUtcMs)
     .sort((a, b) => a - b);
   for (let i = 1; i < sortedMs.length; i += 1) {

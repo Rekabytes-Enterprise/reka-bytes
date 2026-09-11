@@ -96,11 +96,7 @@ export function ByteStream({ className }: { className?: string }) {
 
     const buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array([-1, -1, 3, -1, -1, 3]),
-      gl.STATIC_DRAW,
-    );
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
     const loc = gl.getAttribLocation(program, 'a_pos');
     gl.enableVertexAttribArray(loc);
     gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
@@ -144,7 +140,7 @@ export function ByteStream({ className }: { className?: string }) {
       gl.uniform2f(uRes, canvas.width, canvas.height);
       gl.uniform1f(uTime, (now - start) / 1000);
       gl.uniform2f(uMouse, mouse.x, mouse.y);
-      gl.clearColor(0.980, 0.980, 0.969, 1); // #FAFAF7 (paper canvas)
+      gl.clearColor(0.98, 0.98, 0.969, 1); // #FAFAF7 (paper canvas)
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.enable(gl.BLEND);
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
@@ -164,9 +160,7 @@ export function ByteStream({ className }: { className?: string }) {
 
   if (reducedMotion) {
     // Static fallback — blueprint grid instead of animation
-    return (
-      <div aria-hidden className={`blueprint-grid bg-inset ${className ?? ''}`} />
-    );
+    return <div aria-hidden className={`blueprint-grid bg-inset ${className ?? ''}`} />;
   }
 
   return <canvas ref={canvasRef} aria-hidden className={className} />;

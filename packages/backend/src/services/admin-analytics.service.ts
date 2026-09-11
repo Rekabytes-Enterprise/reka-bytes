@@ -24,7 +24,10 @@ import type {
 
 // ── Students ────────────────────────────────────────────────────
 
-export async function listStudents(opts: { query?: string; status?: string }): Promise<StudentListItemDTO[]> {
+export async function listStudents(opts: {
+  query?: string;
+  status?: string;
+}): Promise<StudentListItemDTO[]> {
   const status = opts.status && opts.status !== 'ALL' ? (opts.status as UserStatus) : undefined;
   const users = await prisma.user.findMany({
     where: {
@@ -46,7 +49,12 @@ export async function listStudents(opts: { query?: string; status?: string }): P
 
   const [progressCounts, quizAgg, checkLatest] = await Promise.all([
     prisma.lessonProgress.groupBy({ by: ['userId'], _count: { _all: true } }),
-    prisma.quizAttempt.groupBy({ by: ['userId'], _count: { _all: true }, _avg: { score: true }, _max: { createdAt: true } }),
+    prisma.quizAttempt.groupBy({
+      by: ['userId'],
+      _count: { _all: true },
+      _avg: { score: true },
+      _max: { createdAt: true },
+    }),
     prisma.blockEvent.groupBy({ by: ['userId'], _max: { createdAt: true } }),
   ]);
 
@@ -56,7 +64,9 @@ export async function listStudents(opts: { query?: string; status?: string }): P
 
   return users.map((u) => {
     const quiz = quizMap.get(u.id);
-    const dates = [quiz?._max.createdAt ?? null, checkMap.get(u.id) ?? null].filter(Boolean) as Date[];
+    const dates = [quiz?._max.createdAt ?? null, checkMap.get(u.id) ?? null].filter(
+      Boolean,
+    ) as Date[];
     const last = dates.length > 0 ? new Date(Math.max(...dates.map((d) => d.getTime()))) : null;
     return {
       id: u.id,
@@ -86,7 +96,11 @@ export async function studentDetail(userId: string): Promise<StudentDetailDTO> {
       select: {
         completedAt: true,
         lesson: {
-          select: { id: true, title: true, module: { select: { title: true, class: { select: { title: true } } } } },
+          select: {
+            id: true,
+            title: true,
+            module: { select: { title: true, class: { select: { title: true } } } },
+          },
         },
       },
     }),
@@ -94,7 +108,10 @@ export async function studentDetail(userId: string): Promise<StudentDetailDTO> {
       where: { userId },
       orderBy: { createdAt: 'desc' },
       select: {
-        id: true, score: true, passed: true, createdAt: true,
+        id: true,
+        score: true,
+        passed: true,
+        createdAt: true,
         quiz: { select: { title: true, module: { select: { title: true } } } },
       },
     }),
@@ -152,7 +169,9 @@ export async function analyticsClasses(): Promise<AnalyticsClassListItemDTO[]> {
   const classes = await prisma.class.findMany({
     orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
     select: {
-      id: true, title: true, published: true,
+      id: true,
+      title: true,
+      published: true,
       modules: {
         select: {
           lessons: { select: { id: true } },
@@ -164,16 +183,29 @@ export async function analyticsClasses(): Promise<AnalyticsClassListItemDTO[]> {
 
   const lessonIds = classes.flatMap((c) => c.modules.flatMap((m) => m.lessons.map((l) => l.id)));
   const progressGrouped = lessonIds.length
-    ? await prisma.lessonProgress.groupBy({ by: ['lessonId'], where: { lessonId: { in: lessonIds } }, _count: { _all: true } })
+    ? await prisma.lessonProgress.groupBy({
+        by: ['lessonId'],
+        where: { lessonId: { in: lessonIds } },
+        _count: { _all: true },
+      })
     : [];
   const progressByLesson = new Map(progressGrouped.map((p) => [p.lessonId, p._count._all]));
 
   return classes.map((c) => {
     const lessonCount = c.modules.reduce((s, m) => s + m.lessons.length, 0);
-    const completionCount = c.modules.reduce((s, m) => s + m.lessons.reduce((ls, l) => ls + (progressByLesson.get(l.id) ?? 0), 0), 0);
+    const completionCount = c.modules.reduce(
+      (s, m) => s + m.lessons.reduce((ls, l) => ls + (progressByLesson.get(l.id) ?? 0), 0),
+      0,
+    );
     const attempts = c.modules.flatMap((m) => m.quiz?.attempts ?? []);
-    const avg = attempts.length > 0 ? Math.round(attempts.reduce((s, a) => s + a.score, 0) / attempts.length) : null;
-    const passRate = attempts.length > 0 ? Math.round((attempts.filter((a) => a.passed).length / attempts.length) * 100) : null;
+    const avg =
+      attempts.length > 0
+        ? Math.round(attempts.reduce((s, a) => s + a.score, 0) / attempts.length)
+        : null;
+    const passRate =
+      attempts.length > 0
+        ? Math.round((attempts.filter((a) => a.passed).length / attempts.length) * 100)
+        : null;
     return {
       id: c.id,
       title: c.title,
@@ -191,7 +223,8 @@ export async function analyticsClassDetail(classId: string): Promise<AnalyticsCl
   const cls = await prisma.class.findUnique({
     where: { id: classId },
     select: {
-      id: true, title: true,
+      id: true,
+      title: true,
       modules: {
         orderBy: [{ order: 'asc' as const }, { createdAt: 'asc' as const }],
         select: {
@@ -202,8 +235,12 @@ export async function analyticsClassDetail(classId: string): Promise<AnalyticsCl
           },
           quiz: {
             select: {
-              id: true, title: true,
-              questions: { orderBy: { order: 'asc' }, select: { id: true, question: true, correctIndex: true } },
+              id: true,
+              title: true,
+              questions: {
+                orderBy: { order: 'asc' },
+                select: { id: true, question: true, correctIndex: true },
+              },
               attempts: { select: { answers: true } },
             },
           },
@@ -215,7 +252,11 @@ export async function analyticsClassDetail(classId: string): Promise<AnalyticsCl
 
   const allLessonIds = cls.modules.flatMap((m) => m.lessons.map((l) => l.id));
   const progressGrouped = allLessonIds.length
-    ? await prisma.lessonProgress.groupBy({ by: ['lessonId'], where: { lessonId: { in: allLessonIds } }, _count: { _all: true } })
+    ? await prisma.lessonProgress.groupBy({
+        by: ['lessonId'],
+        where: { lessonId: { in: allLessonIds } },
+        _count: { _all: true },
+      })
     : [];
   const progressByLesson = new Map(progressGrouped.map((p) => [p.lessonId, p._count._all]));
 
@@ -240,7 +281,9 @@ export async function analyticsClassDetail(classId: string): Promise<AnalyticsCl
 
   const lessons: AnalyticsLessonDTO[] = cls.modules.flatMap((m) =>
     m.lessons.map((l) => {
-      const blocks = Array.isArray(l.blocks) ? (l.blocks as Array<{ type?: string; question?: string }>) : [];
+      const blocks = Array.isArray(l.blocks)
+        ? (l.blocks as Array<{ type?: string; question?: string }>)
+        : [];
       const checks: AnalyticsCheckStatDTO[] = blocks
         .map((b, i) => ({ b, i }))
         .filter(({ b }) => b?.type === 'inline-check')
@@ -253,7 +296,8 @@ export async function analyticsClassDetail(classId: string): Promise<AnalyticsCl
             question: b.question ?? '(untitled check)',
             attempts: agg?.attempts ?? 0,
             correctCount: agg?.correct ?? 0,
-            percentCorrect: agg && agg.attempts > 0 ? Math.round((agg.correct / agg.attempts) * 100) : null,
+            percentCorrect:
+              agg && agg.attempts > 0 ? Math.round((agg.correct / agg.attempts) * 100) : null,
           };
         });
       return {
@@ -271,7 +315,12 @@ export async function analyticsClassDetail(classId: string): Promise<AnalyticsCl
   for (const m of cls.modules) {
     if (!m.quiz) continue;
     const { questions, attempts, id, title } = m.quiz;
-    const perQuestion = questions.map((q) => ({ id: q.id, question: q.question, attempts: 0, correct: 0 }));
+    const perQuestion = questions.map((q) => ({
+      id: q.id,
+      question: q.question,
+      attempts: 0,
+      correct: 0,
+    }));
     for (const a of attempts) {
       const answers = Array.isArray(a.answers) ? (a.answers as number[]) : [];
       answers.forEach((chosen, qi) => {

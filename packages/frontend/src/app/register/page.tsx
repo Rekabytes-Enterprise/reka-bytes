@@ -102,9 +102,7 @@ export default function RegisterPage() {
     } catch (e) {
       if (isApiClientError(e)) {
         if (e.details) {
-          setErrors(
-            Object.fromEntries(Object.entries(e.details).map(([k, v]) => [k, v[0] ?? ''])),
-          );
+          setErrors(Object.fromEntries(Object.entries(e.details).map(([k, v]) => [k, v[0] ?? ''])));
           setStep(0);
         }
         pushToast({ variant: 'error', title: e.message });
@@ -125,8 +123,8 @@ export default function RegisterPage() {
           </span>
           <h1 className="mt-8 font-display text-4xl font-semibold">Application received.</h1>
           <p className="mt-4 font-body text-sm leading-relaxed text-muted">
-            We review every application personally — usually within a day or two.
-            Log in anytime to check your status.
+            We review every application personally — usually within a day or two. Log in anytime to
+            check your status.
           </p>
           <div className="mt-10 flex gap-4">
             <Button onClick={() => router.push('/login')}>Go to login</Button>
@@ -143,240 +141,245 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-dvh flex-col">
       <main className="mx-auto grid w-full max-w-[1240px] flex-1 grid-cols-1 gap-12 px-6 py-16 lg:grid-cols-[240px_1fr] lg:px-10">
-      {/* live cohort capacity */}
-      <div className="order-first lg:col-span-2">
-        <SeatsMeter variant="chip" />
-      </div>
-
-      {/* progress rail */}
-      <aside aria-label="Progress">
-        <ol className="flex gap-4 lg:flex-col">
-          {STEPS.map((label, i) => (
-            <li key={label} className="flex items-center gap-3">
-              <span
-                className={cn(
-                  'font-mono text-sm font-bold',
-                  i === step ? 'text-accent' : i < step ? 'text-success' : 'text-faint',
-                )}
-              >
-                {i < step ? '✓' : `0${i + 1}`}
-              </span>
-              <span
-                className={cn(
-                  'font-mono text-xs font-bold uppercase tracking-[0.12em]',
-                  i === step ? 'text-ink' : 'text-faint',
-                )}
-              >
-                {label}
-              </span>
-            </li>
-          ))}
-        </ol>
-      </aside>
-
-      {/* form area */}
-      <div>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={step}
-            initial={{ opacity: 0, x: 24 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -24 }}
-            transition={{ duration: 0.22, ease: 'easeOut' }}
-          >
-            {step === 0 && (
-              <section>
-                <h1 className="font-display text-3xl font-semibold">Create your account</h1>
-                <p className="mt-2 font-body text-sm text-muted">
-                  Step 1 of 3 — who are we talking to?
-                </p>
-                <div className="mt-10 flex flex-col gap-6">
-                  <Field label="Full name" error={errors.name}>
-                    {(id) => (
-                      <Input
-                        id={id}
-                        value={account.name}
-                        invalid={!!errors.name}
-                        onChange={(e) => setAccount({ ...account, name: e.target.value })}
-                        placeholder="Aisyah Rahman"
-                        autoComplete="name"
-                      />
-                    )}
-                  </Field>
-                  <Field label="Email" error={errors.email}>
-                    {(id) => (
-                      <Input
-                        id={id}
-                        type="email"
-                        value={account.email}
-                        invalid={!!errors.email}
-                        onChange={(e) => setAccount({ ...account, email: e.target.value })}
-                        placeholder="you@example.com"
-                        autoComplete="email"
-                      />
-                    )}
-                  </Field>
-                  <Field label="Password" error={errors.password} hint="Minimum 8 characters">
-                    {(id) => (
-                      <Input
-                        id={id}
-                        type="password"
-                        value={account.password}
-                        invalid={!!errors.password}
-                        onChange={(e) => setAccount({ ...account, password: e.target.value })}
-                        autoComplete="new-password"
-                      />
-                    )}
-                  </Field>
-                </div>
-              </section>
-            )}
-
-            {step === 1 && (
-              <section>
-                <h1 className="font-display text-3xl font-semibold">Tell us where you're at</h1>
-                <p className="mt-2 font-body text-sm text-muted">
-                  Step 2 of 3 — honest answers only; this shapes how we teach you.
-                </p>
-                <div className="mt-12 flex flex-col gap-12">
-                  {QUESTION_META.map((q) => (
-                    <fieldset key={q.id} className="border-0 p-0">
-                      <legend className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted">
-                        {q.id.toUpperCase()} · {q.label}
-                        {!q.required && <span className="ml-2 text-faint">(optional)</span>}
-                        {q.type === 'multi' && (
-                          <span className="mt-1 block font-body text-xs font-normal normal-case tracking-normal text-accent-dim">
-                            Choose all that apply
-                          </span>
-                        )}
-                      </legend>
-
-                      {q.type === 'single' && (
-                        <SingleChoice
-                          options={q.options ?? []}
-                          value={typeof answers[q.id] === 'string' ? (answers[q.id] as string) : ''}
-                          onChange={(v) => setAnswer(q.id, v)}
-                          invalid={!!errors[q.id]}
-                          name={q.id}
-                        />
-                      )}
-                      {q.type === 'multi' && (
-                        <MultiChoice
-                          options={q.options ?? []}
-                          values={Array.isArray(answers[q.id]) ? (answers[q.id] as string[]) : []}
-                          onToggle={(opt) => {
-                            const cur = Array.isArray(answers[q.id]) ? (answers[q.id] as string[]) : [];
-                            setAnswer(
-                              q.id,
-                              cur.includes(opt) ? cur.filter((o) => o !== opt) : [...cur, opt],
-                            );
-                          }}
-                          invalid={!!errors[q.id]}
-                        />
-                      )}
-                      {q.type === 'text' && (
-                        <Textarea
-                          value={typeof answers[q.id] === 'string' ? (answers[q.id] as string) : ''}
-                          invalid={!!errors[q.id]}
-                          placeholder={q.placeholder}
-                          onChange={(e) => setAnswer(q.id, e.target.value)}
-                        />
-                      )}
-                      {errors[q.id] && (
-                        <p role="alert" className="mt-2 font-mono text-xs text-danger">
-                          // {errors[q.id]}
-                        </p>
-                      )}
-                    </fieldset>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {step === 2 && (
-              <section>
-                <h1 className="font-display text-3xl font-semibold">Review & submit</h1>
-                <p className="mt-2 font-body text-sm text-muted">
-                  Step 3 of 3 — double-check before it lands in the review queue.
-                </p>
-                <dl className="mt-10 divide-y divide-line border-y border-line">
-                  {[
-                    ['Name', account.name],
-                    ['Email', account.email],
-                  ].map(([k, v]) => (
-                    <div key={k} className="grid grid-cols-[140px_1fr] gap-4 py-4">
-                      <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">{k}</dt>
-                      <dd className="font-body text-sm">{v}</dd>
-                    </div>
-                  ))}
-                  {QUESTION_META.map((q) => (
-                    <div key={q.id} className="grid grid-cols-[140px_1fr] gap-4 py-4">
-                      <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
-                        {q.id.toUpperCase()}
-                      </dt>
-                      <dd className="font-body text-sm text-muted">
-                        {Array.isArray(answerList[q.id])
-                          ? (answerList[q.id] as string[]).join(', ') || '—'
-                          : (answerList[q.id] as string) || '—'}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-                <p className="mt-8 font-body text-xs text-muted">
-                  By submitting, you confirm the information above is accurate and consent to
-                  Reka Bytes processing your personal data for the purposes described in our{' '}
-                  <Link
-                    href="/privacy"
-                    className="text-accent underline-offset-4 hover:underline"
-                  >
-                    Privacy Policy
-                  </Link>
-                  . You also agree to our{' '}
-                  <Link
-                    href="/terms"
-                    className="text-accent underline-offset-4 hover:underline"
-                  >
-                    Terms of Use
-                  </Link>{' '}
-                  and{' '}
-                  <Link
-                    href="/cookies"
-                    className="text-accent underline-offset-4 hover:underline"
-                  >
-                    Cookies Policy
-                  </Link>
-                  .
-                </p>
-              </section>
-            )}
-          </motion.div>
-        </AnimatePresence>
-
-        {/* controls */}
-        <div className="mt-14 flex items-center justify-between border-t border-line pt-8">
-          <Button
-            type="button"
-            variant="ghost"
-            disabled={step === 0 || submitting}
-            onClick={() => setStep((s) => Math.max(0, s - 1) as Step)}
-          >
-            <ArrowLeft className="size-4" aria-hidden /> Back
-          </Button>
-          {step < 2 ? (
-            <Button type="button" onClick={goNext}>
-              Continue <ArrowRight className="size-4" aria-hidden />
-            </Button>
-          ) : (
-            <Button type="button" onClick={submit} disabled={submitting}>
-              {submitting ? 'Submitting…' : 'Submit application'}
-            </Button>
-          )}
+        {/* live cohort capacity */}
+        <div className="order-first lg:col-span-2">
+          <SeatsMeter variant="chip" />
         </div>
-      </div>
-    </main>
 
-    <Footer />
-  </div>
+        {/* progress rail */}
+        <aside aria-label="Progress">
+          <ol className="flex gap-4 lg:flex-col">
+            {STEPS.map((label, i) => (
+              <li key={label} className="flex items-center gap-3">
+                <span
+                  className={cn(
+                    'font-mono text-sm font-bold',
+                    i === step ? 'text-accent' : i < step ? 'text-success' : 'text-faint',
+                  )}
+                >
+                  {i < step ? '✓' : `0${i + 1}`}
+                </span>
+                <span
+                  className={cn(
+                    'font-mono text-xs font-bold uppercase tracking-[0.12em]',
+                    i === step ? 'text-ink' : 'text-faint',
+                  )}
+                >
+                  {label}
+                </span>
+              </li>
+            ))}
+          </ol>
+        </aside>
+
+        {/* form area */}
+        <div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={step}
+              initial={{ opacity: 0, x: 24 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -24 }}
+              transition={{ duration: 0.22, ease: 'easeOut' }}
+            >
+              {step === 0 && (
+                <section>
+                  <h1 className="font-display text-3xl font-semibold">Create your account</h1>
+                  <p className="mt-2 font-body text-sm text-muted">
+                    Step 1 of 3 — who are we talking to?
+                  </p>
+                  <div className="mt-10 flex flex-col gap-6">
+                    <Field label="Full name" error={errors.name}>
+                      {(id) => (
+                        <Input
+                          id={id}
+                          value={account.name}
+                          invalid={!!errors.name}
+                          onChange={(e) => setAccount({ ...account, name: e.target.value })}
+                          placeholder="Aisyah Rahman"
+                          autoComplete="name"
+                        />
+                      )}
+                    </Field>
+                    <Field label="Email" error={errors.email}>
+                      {(id) => (
+                        <Input
+                          id={id}
+                          type="email"
+                          value={account.email}
+                          invalid={!!errors.email}
+                          onChange={(e) => setAccount({ ...account, email: e.target.value })}
+                          placeholder="you@example.com"
+                          autoComplete="email"
+                        />
+                      )}
+                    </Field>
+                    <Field label="Password" error={errors.password} hint="Minimum 8 characters">
+                      {(id) => (
+                        <Input
+                          id={id}
+                          type="password"
+                          value={account.password}
+                          invalid={!!errors.password}
+                          onChange={(e) => setAccount({ ...account, password: e.target.value })}
+                          autoComplete="new-password"
+                        />
+                      )}
+                    </Field>
+                  </div>
+                </section>
+              )}
+
+              {step === 1 && (
+                <section>
+                  <h1 className="font-display text-3xl font-semibold">Tell us where you're at</h1>
+                  <p className="mt-2 font-body text-sm text-muted">
+                    Step 2 of 3 — honest answers only; this shapes how we teach you.
+                  </p>
+                  <div className="mt-12 flex flex-col gap-12">
+                    {QUESTION_META.map((q) => (
+                      <fieldset key={q.id} className="border-0 p-0">
+                        <legend className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted">
+                          {q.id.toUpperCase()} · {q.label}
+                          {!q.required && <span className="ml-2 text-faint">(optional)</span>}
+                          {q.type === 'multi' && (
+                            <span className="mt-1 block font-body text-xs font-normal normal-case tracking-normal text-accent-dim">
+                              Choose all that apply
+                            </span>
+                          )}
+                        </legend>
+
+                        {q.type === 'single' && (
+                          <SingleChoice
+                            options={q.options ?? []}
+                            value={
+                              typeof answers[q.id] === 'string' ? (answers[q.id] as string) : ''
+                            }
+                            onChange={(v) => setAnswer(q.id, v)}
+                            invalid={!!errors[q.id]}
+                            name={q.id}
+                          />
+                        )}
+                        {q.type === 'multi' && (
+                          <MultiChoice
+                            options={q.options ?? []}
+                            values={Array.isArray(answers[q.id]) ? (answers[q.id] as string[]) : []}
+                            onToggle={(opt) => {
+                              const cur = Array.isArray(answers[q.id])
+                                ? (answers[q.id] as string[])
+                                : [];
+                              setAnswer(
+                                q.id,
+                                cur.includes(opt) ? cur.filter((o) => o !== opt) : [...cur, opt],
+                              );
+                            }}
+                            invalid={!!errors[q.id]}
+                          />
+                        )}
+                        {q.type === 'text' && (
+                          <Textarea
+                            value={
+                              typeof answers[q.id] === 'string' ? (answers[q.id] as string) : ''
+                            }
+                            invalid={!!errors[q.id]}
+                            placeholder={q.placeholder}
+                            onChange={(e) => setAnswer(q.id, e.target.value)}
+                          />
+                        )}
+                        {errors[q.id] && (
+                          <p role="alert" className="mt-2 font-mono text-xs text-danger">
+                            // {errors[q.id]}
+                          </p>
+                        )}
+                      </fieldset>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {step === 2 && (
+                <section>
+                  <h1 className="font-display text-3xl font-semibold">Review & submit</h1>
+                  <p className="mt-2 font-body text-sm text-muted">
+                    Step 3 of 3 — double-check before it lands in the review queue.
+                  </p>
+                  <dl className="mt-10 divide-y divide-line border-y border-line">
+                    {[
+                      ['Name', account.name],
+                      ['Email', account.email],
+                    ].map(([k, v]) => (
+                      <div key={k} className="grid grid-cols-[140px_1fr] gap-4 py-4">
+                        <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
+                          {k}
+                        </dt>
+                        <dd className="font-body text-sm">{v}</dd>
+                      </div>
+                    ))}
+                    {QUESTION_META.map((q) => (
+                      <div key={q.id} className="grid grid-cols-[140px_1fr] gap-4 py-4">
+                        <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
+                          {q.id.toUpperCase()}
+                        </dt>
+                        <dd className="font-body text-sm text-muted">
+                          {Array.isArray(answerList[q.id])
+                            ? (answerList[q.id] as string[]).join(', ') || '—'
+                            : (answerList[q.id] as string) || '—'}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <p className="mt-8 font-body text-xs text-muted">
+                    By submitting, you confirm the information above is accurate and consent to Reka
+                    Bytes processing your personal data for the purposes described in our{' '}
+                    <Link
+                      href="/privacy"
+                      className="text-accent underline-offset-4 hover:underline"
+                    >
+                      Privacy Policy
+                    </Link>
+                    . You also agree to our{' '}
+                    <Link href="/terms" className="text-accent underline-offset-4 hover:underline">
+                      Terms of Use
+                    </Link>{' '}
+                    and{' '}
+                    <Link
+                      href="/cookies"
+                      className="text-accent underline-offset-4 hover:underline"
+                    >
+                      Cookies Policy
+                    </Link>
+                    .
+                  </p>
+                </section>
+              )}
+            </motion.div>
+          </AnimatePresence>
+
+          {/* controls */}
+          <div className="mt-14 flex items-center justify-between border-t border-line pt-8">
+            <Button
+              type="button"
+              variant="ghost"
+              disabled={step === 0 || submitting}
+              onClick={() => setStep((s) => Math.max(0, s - 1) as Step)}
+            >
+              <ArrowLeft className="size-4" aria-hidden /> Back
+            </Button>
+            {step < 2 ? (
+              <Button type="button" onClick={goNext}>
+                Continue <ArrowRight className="size-4" aria-hidden />
+              </Button>
+            ) : (
+              <Button type="button" onClick={submit} disabled={submitting}>
+                {submitting ? 'Submitting…' : 'Submit application'}
+              </Button>
+            )}
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
   );
 }
 

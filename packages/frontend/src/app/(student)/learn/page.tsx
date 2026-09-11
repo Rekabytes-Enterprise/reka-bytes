@@ -10,7 +10,11 @@ export default function LearnPage() {
   const { data: classes, loading } = useApiQuery<StudentClassDTO[]>('/api/learn/classes');
 
   if (loading || !classes) {
-    return <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">// loading classes…</p>;
+    return (
+      <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">
+        // loading classes…
+      </p>
+    );
   }
   if (classes.length === 0) {
     return (
@@ -26,7 +30,9 @@ export default function LearnPage() {
   return (
     <div data-testid="learn-tree">
       <header>
-        <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-dim">classroom</p>
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-dim">
+          classroom
+        </p>
         <h1 className="mt-2 font-display text-3xl font-semibold">Learn</h1>
       </header>
 

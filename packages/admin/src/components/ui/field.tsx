@@ -15,7 +15,10 @@ export function Field({ label, error, hint, children, className }: FieldProps) {
   const id = useId();
   return (
     <div className={cn('flex flex-col gap-2', className)}>
-      <label htmlFor={id} className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted">
+      <label
+        htmlFor={id}
+        className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted"
+      >
         {label}
       </label>
       {children(id)}

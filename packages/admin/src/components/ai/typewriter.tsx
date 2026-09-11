@@ -8,12 +8,23 @@ import { motion } from 'framer-motion';
  * changes — used for the newest progress log line. The block cursor blinks
  * while `busy`; it disappears when idle/done.
  */
-export function TypewriterLine({ text, busy, className }: { text: string; busy?: boolean; className?: string }) {
+export function TypewriterLine({
+  text,
+  busy,
+  className,
+}: {
+  text: string;
+  busy?: boolean;
+  className?: string;
+}) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     setCount(0);
-    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
       setCount(text.length);
       return;
     }

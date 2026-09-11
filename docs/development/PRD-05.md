@@ -8,14 +8,15 @@
 
 ## 1. Overview
 
-**Problem**: generated lessons render as well-typeset articles (`BlockRenderer` → document flow). They *read* like a blog. Learning research and competitor reality (Duolingo, Brilliant) both say retention comes from a **do-loop**: short concept → interact → feedback → advance. We already have the hard parts built:
+**Problem**: generated lessons render as well-typeset articles (`BlockRenderer` → document flow). They _read_ like a blog. Learning research and competitor reality (Duolingo, Brilliant) both say retention comes from a **do-loop**: short concept → interact → feedback → advance. We already have the hard parts built:
 
 - Typed block pipeline (flat `LessonBlockRaw`, one enum→type mapping in `toLessonBlocks`)
 - Server-side grading + answers-stripped DTOs (`sanitizeBlocksForStudent`)
 - Append-only telemetry (`BlockEvent`) and idempotent XP ledger (`XpEvent`)
 - Celebration host, reduced-motion gates, design system
 
-**Concept**: *"you learn by doing"* — three pillars:
+**Concept**: _"you learn by doing"_ — three pillars:
+
 1. **Interaction density** — a learner touches something every ~1–2 minutes; reading segments stay short.
 2. **Instant feedback loops** — try again without shame; attempt ≠ failure, solving = XP.
 3. **Visible momentum mid-lesson** — "n/m solved" chip, progress dots, micro-celebrations before the end-of-lesson ceremony.
@@ -28,19 +29,19 @@
 
 All six share the same contract shape where possible: `{ type, prompt-ish fields, canonical data, feedback copy }`. zod schemas live in `packages/shared/src/blocks.ts`; sanitized variants follow the existing `WithoutAnswers<T>` pattern.
 
-| # | Block type | Learner does | Model emits (canonical truth) | Derived by us (never model-generated) |
-|---|---|---|---|---|
-| 1 | `order-steps` | reorder items into correct sequence (drag + up/down button fallback) | ordered steps array, each `{ label, rationale }` | shuffled presentation order (stable seed `hash(lessonId:blockIndex)`), submit-grading |
-| 2 | `match-pairs` | connect terms ↔ definitions/examples | pairs array + explicit distractors | left/right column presentation order (seeded shuffle) |
-| 3 | `fill-blank` | pick words for sentence gaps | sentences with marked gap positions, correct words, distractor bank | rendered form with chips/buttons |
-| 4 | `classify` | sort items into concept buckets | bucket definitions, items (incl. tricky/ambiguous-but-resolvable) | item presentation order (seeded shuffle) |
-| 5 | `mini-scenario` | choose an action, see the consequence | situation text, 2–3 choices, outcome text + takeaway per choice | nothing (choice → server returns its outcome) |
-| 6 | `tap-to-reveal` | click hotspots/cards to uncover insights | card front/hint + reveal content list | reveal-until-all-done counter (self-paced, ungraded) |
+| #   | Block type      | Learner does                                                         | Model emits (canonical truth)                                       | Derived by us (never model-generated)                                                 |
+| --- | --------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| 1   | `order-steps`   | reorder items into correct sequence (drag + up/down button fallback) | ordered steps array, each `{ label, rationale }`                    | shuffled presentation order (stable seed `hash(lessonId:blockIndex)`), submit-grading |
+| 2   | `match-pairs`   | connect terms ↔ definitions/examples                                 | pairs array + explicit distractors                                  | left/right column presentation order (seeded shuffle)                                 |
+| 3   | `fill-blank`    | pick words for sentence gaps                                         | sentences with marked gap positions, correct words, distractor bank | rendered form with chips/buttons                                                      |
+| 4   | `classify`      | sort items into concept buckets                                      | bucket definitions, items (incl. tricky/ambiguous-but-resolvable)   | item presentation order (seeded shuffle)                                              |
+| 5   | `mini-scenario` | choose an action, see the consequence                                | situation text, 2–3 choices, outcome text + takeaway per choice     | nothing (choice → server returns its outcome)                                         |
+| 6   | `tap-to-reveal` | click hotspots/cards to uncover insights                             | card front/hint + reveal content list                               | reveal-until-all-done counter (self-paced, ungraded)                                  |
 
 **Design rules baked into schemas:**
 
 - **Flat classes only** (BAML gotcha from v2/v3): every new class is a flat set of fields with an ALL-CAPS literal discriminant; NO nested unions in BAML output. Type mapping stays centralized in `toLessonBlocks`.
-- **Model emits truth, code derives disorder.** Same discipline that made `contentMarkdown` derived-only: the model gives the *correct* order/pairs/words once; shuffles are deterministic seeded transforms so every reload renders identically and solutions always exist. Never ask the model to emit "shuffled order".
+- **Model emits truth, code derives disorder.** Same discipline that made `contentMarkdown` derived-only: the model gives the _correct_ order/pairs/words once; shuffles are deterministic seeded transforms so every reload renders identically and solutions always exist. Never ask the model to emit "shuffled order".
 - **Anything gradable follows the leak-proof rule**: correct answers, pair mappings, ordered sequence, blank solutions, and scenario outcomes are stripped by `sanitizeBlocksForStudent` and revealed only through the submit endpoint response. Exception: `tap-to-reveal` is exploration, not assessment — reveals ship inline.
 - **Degradation**: if the model produces an unbuildable config (e.g., <3 pairs, empty buckets), backend validation falls back to `exercise` prose with a log line; renderer additionally renders unknown/future types as prose (forward compatibility).
 
@@ -55,7 +56,7 @@ All six share the same contract shape where possible: `{ type, prompt-ish fields
 
 ### 3.1 `GenerateOutline` gains an interactions plan
 
-Outline per lesson adds a `plannedInteractions[]`: `{ kind: ..., purpose }` entries (1–3 per lesson). Prompt instructs: place interactions where source material offers *classifiable/sequenceable/comparable* content; prefer concepts over trivia; align each with a lesson section.
+Outline per lesson adds a `plannedInteractions[]`: `{ kind: ..., purpose }` entries (1–3 per lesson). Prompt instructs: place interactions where source material offers _classifiable/sequenceable/comparable_ content; prefer concepts over trivia; align each with a lesson section.
 
 Admin still approves the outline at `awaiting_approval` — the checkpoint now shows the pedagogy plan too (wizard step 3 chips).
 
@@ -64,7 +65,7 @@ Admin still approves the outline at `awaiting_approval` — the checkpoint now s
 `WriteLesson` receives the outline's planned interactions for that lesson and is instructed to emit corresponding blocks **inside the normal teaching structure** (e.g., `order-steps` lands after a process explanation, not appended arbitrarily). Rules added to prompts:
 
 - Every interaction's data must be derivable from the analyzed source PDF content (course-specific vocabulary/terms defined earlier in the lesson).
-- Distractors must be *plausible but wrong*; rationales teach, not mock.
+- Distractors must be _plausible but wrong_; rationales teach, not mock.
 - If a planned interaction cannot be honestly built from source material → emit the fallback (`exercise`) instead. Never invent filler interactions.
 
 ### 3.3 No new BAML pass
@@ -79,16 +80,16 @@ Unchanged semantics: outline regen re-plans interactions; per-lesson regen re-em
 
 ## 4. Backend + data changes
 
-| Area | Change |
-|---|---|
-| `packages/shared/src/blocks.ts` | 6 new block schemas + `WithoutAnswers` variants; single discriminated union grows (11 → 17 types) |
-| `toLessonBlocks` | map new ALL-CAPS enum values → lowercase types (one place, as today) |
-| `sanitizeBlocksForStudent` | strip: correct sequence indices, pair mapping, blank solutions, classify memberships, choice outcomes (mini-scenario treated exactly like quiz `explanation`); NOT stripping tap-to-reveal |
-| Grading endpoint | generalize `checkInlineAnswer` → accept `kind` + answer payload; per-type validators (pure functions in shared so frontend unit tests can reuse scoring logic); response returns `{ correct?, solutionData/outcomeText, feedbackCopy }` |
-| Auto-complete | current rule (lesson completes when every inline-check **attempted**) extends to all gradable interaction blocks; `tap-to-reveal` requires completion (all cards revealed) — consistent "attempted beats perfect" philosophy |
-| `BlockEvent` | no migration needed — `kind` column already exists; record `kind: 'order-steps'` etc. with payload `{blockIndex, answerSummary, correct}` |
-| XP ledger | new reason `INTERACTIVE_SOLVED` (+15 XP, **first-solve only per block**, idempotent via existing `@@unique([userId, reason, refId])`; `refId = lessonId:blockIndex`). Zero-X repeat attempts retained as streak activity (anti-farm posture matches inline-checks) |
-| Quiz generation | untouched (quizzes keep generating FROM written lessons) |
+| Area                            | Change                                                                                                                                                                                                                                                             |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `packages/shared/src/blocks.ts` | 6 new block schemas + `WithoutAnswers` variants; single discriminated union grows (11 → 17 types)                                                                                                                                                                  |
+| `toLessonBlocks`                | map new ALL-CAPS enum values → lowercase types (one place, as today)                                                                                                                                                                                               |
+| `sanitizeBlocksForStudent`      | strip: correct sequence indices, pair mapping, blank solutions, classify memberships, choice outcomes (mini-scenario treated exactly like quiz `explanation`); NOT stripping tap-to-reveal                                                                         |
+| Grading endpoint                | generalize `checkInlineAnswer` → accept `kind` + answer payload; per-type validators (pure functions in shared so frontend unit tests can reuse scoring logic); response returns `{ correct?, solutionData/outcomeText, feedbackCopy }`                            |
+| Auto-complete                   | current rule (lesson completes when every inline-check **attempted**) extends to all gradable interaction blocks; `tap-to-reveal` requires completion (all cards revealed) — consistent "attempted beats perfect" philosophy                                       |
+| `BlockEvent`                    | no migration needed — `kind` column already exists; record `kind: 'order-steps'` etc. with payload `{blockIndex, answerSummary, correct}`                                                                                                                          |
+| XP ledger                       | new reason `INTERACTIVE_SOLVED` (+15 XP, **first-solve only per block**, idempotent via existing `@@unique([userId, reason, refId])`; `refId = lessonId:blockIndex`). Zero-X repeat attempts retained as streak activity (anti-farm posture matches inline-checks) |
+| Quiz generation                 | untouched (quizzes keep generating FROM written lessons)                                                                                                                                                                                                           |
 
 Badge stretch (optional R4): `INTERACTOR` — solve N distinct interactions, computed by counting `XpEvent` rows with reason `INTERACTIVE_SOLVED` (derived predicate, zero storage, consistent with badges.ts).
 
@@ -120,12 +121,12 @@ Unknown block types render as prose paragraphs (defensive registry default) so f
 
 ## 7. Execution order & verification
 
-| Ring | Delivers | Verify |
-|---|---|---|
-| **R1** | shared schemas + sanitize + validators + `toLessonBlocks` + BAML classes/prompts + db generate if needed | `pnpm -r typecheck`, `pnpm -r lint`, `pnpm --filter @reka-bytes/shared test` |
-| **R2** | 6 renderer components + state hooks + registry + unknown-type fallback | typecheck/lint/build frontend, manual smoke vs fixture lesson |
-| **R3** | grading endpoint generalization + auto-complete/XP wiring + header chip + celebrations | shared tests + curl probes against user-run dev servers; e2e-09/10/14/16 regressions remain green (user-approved run only) |
-| **R4** | wizard step 3/4 surfaces + AI_MOCK fixture refresh + optional INTERACTOR badge | build admin + frontend, e2e suite full pass (user-approved run only) |
+| Ring   | Delivers                                                                                                 | Verify                                                                                                                     |
+| ------ | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| **R1** | shared schemas + sanitize + validators + `toLessonBlocks` + BAML classes/prompts + db generate if needed | `pnpm -r typecheck`, `pnpm -r lint`, `pnpm --filter @reka-bytes/shared test`                                               |
+| **R2** | 6 renderer components + state hooks + registry + unknown-type fallback                                   | typecheck/lint/build frontend, manual smoke vs fixture lesson                                                              |
+| **R3** | grading endpoint generalization + auto-complete/XP wiring + header chip + celebrations                   | shared tests + curl probes against user-run dev servers; e2e-09/10/14/16 regressions remain green (user-approved run only) |
+| **R4** | wizard step 3/4 surfaces + AI_MOCK fixture refresh + optional INTERACTOR badge                           | build admin + frontend, e2e suite full pass (user-approved run only)                                                       |
 
 New e2e spec (written in R4, executed only with permission): mock-generated lesson containing ≥3 interaction types → student solves them → lesson auto-completes → `XpEvent` row with reason `INTERACTIVE_SOLVED` exists → dashboard reflects XP.
 

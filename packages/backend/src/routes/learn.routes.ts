@@ -55,12 +55,17 @@ export const learnRoutes = new Hono<AppEnv>()
     '/lessons/:id/check',
     zValidator(
       'json',
-      z.object({ blockIndex: z.number().int().min(0).max(200), answer: z.number().int().min(0).max(7) }),
+      z.object({
+        blockIndex: z.number().int().min(0).max(200),
+        answer: z.number().int().min(0).max(7),
+      }),
     ),
     async (c) => {
       const user = requireRealStudent(c);
       const { blockIndex, answer } = c.req.valid('json');
-      return c.json({ data: await checkInlineAnswer(c.req.param('id'), user.id, blockIndex, answer) });
+      return c.json({
+        data: await checkInlineAnswer(c.req.param('id'), user.id, blockIndex, answer),
+      });
     },
   )
   .get('/quizzes/:id', async (c) => c.json({ data: await getPublicQuiz(c.req.param('id')) }))

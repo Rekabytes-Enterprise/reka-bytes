@@ -38,14 +38,15 @@ const pausedAtAtom = atom(Date.now()); // when we arrived on step 3
 
 // Derived (read-only, no useState needed in component)
 const failedAtom = atom((get) => get(jobAtom)?.status === 'error');
-const totalLessonsAtom = atom((get) =>
-  get(outlineAtom)?.modules.reduce((s, m) => s + m.lessons.length, 0) ?? 0,
+const totalLessonsAtom = atom(
+  (get) => get(outlineAtom)?.modules.reduce((s, m) => s + m.lessons.length, 0) ?? 0,
 );
-const totalMinutesAtom = atom((get) =>
-  get(outlineAtom)?.modules.reduce(
-    (s, m) => s + m.lessons.reduce((ls, l) => ls + l.estimatedMinutes, 0),
-    0,
-  ) ?? 0,
+const totalMinutesAtom = atom(
+  (get) =>
+    get(outlineAtom)?.modules.reduce(
+      (s, m) => s + m.lessons.reduce((ls, l) => ls + l.estimatedMinutes, 0),
+      0,
+    ) ?? 0,
 );
 
 // ── Component ─────────────────────────────────────────────────────────────
@@ -151,7 +152,10 @@ export default function Step3Page() {
       setOutlineVersion((v) => v + 1); // replay stagger
       pushToast({ variant: 'success', title: 'New outline ready' });
     } catch (e) {
-      pushToast({ variant: 'error', title: isApiClientError(e) ? e.message : 'Regeneration failed' });
+      pushToast({
+        variant: 'error',
+        title: isApiClientError(e) ? e.message : 'Regeneration failed',
+      });
     } finally {
       setRegenerating(false);
     }
@@ -162,7 +166,10 @@ export default function Step3Page() {
       <div className="mx-auto max-w-[720px]">
         <div className="border border-line bg-elevated p-8">
           <div className="flex items-center justify-between">
-            <p className="font-mono text-xs uppercase tracking-[0.12em] text-accent" data-testid="ai-outline-label">
+            <p
+              className="font-mono text-xs uppercase tracking-[0.12em] text-accent"
+              data-testid="ai-outline-label"
+            >
               <PauseCircle size={13} className="mr-1.5 inline text-accent" aria-hidden />
               paused — review your outline
             </p>
@@ -206,8 +213,8 @@ export default function Step3Page() {
                 data-testid="ai-outline-summary"
               >
                 <BookOpenText size={12} className="mr-1.5 inline text-accent" aria-hidden />
-                {outline.modules.length} modules · {totalLessons} lessons · ~{Math.round(totalMinutes / 5) * 5} min
-                of content
+                {outline.modules.length} modules · {totalLessons} lessons · ~
+                {Math.round(totalMinutes / 5) * 5} min of content
               </p>
 
               <ul className="mt-4 space-y-3" data-testid="ai-outline-panel">
@@ -223,12 +230,21 @@ export default function Step3Page() {
                     >
                       <p className="font-body text-sm font-semibold text-ink">{mod.title}</p>
                       {mod.description ? (
-                        <p className="mt-1 font-body text-xs leading-relaxed text-muted">{mod.description}</p>
+                        <p className="mt-1 font-body text-xs leading-relaxed text-muted">
+                          {mod.description}
+                        </p>
                       ) : null}
                       <ul className="mt-3 space-y-1.5">
                         {mod.lessons.map((lesson) => (
-                          <li key={lesson.title} className="flex items-baseline gap-2 font-body text-xs text-muted">
-                            <ChevronRight size={11} className="mt-[3px] shrink-0 text-faint" aria-hidden />
+                          <li
+                            key={lesson.title}
+                            className="flex items-baseline gap-2 font-body text-xs text-muted"
+                          >
+                            <ChevronRight
+                              size={11}
+                              className="mt-[3px] shrink-0 text-faint"
+                              aria-hidden
+                            />
                             <span className="text-ink/90">{lesson.title}</span>
                             <span className="ml-auto shrink-0 font-mono text-[10px] text-faint">
                               {lesson.estimatedMinutes} min

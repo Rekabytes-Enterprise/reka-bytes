@@ -28,7 +28,8 @@ function splitSections(md: string): { heading: string; body: string }[] {
   for (const line of lines) {
     const m = /^##\s+(.+)$/.exec(line);
     if (m) {
-      if (current) sections.push({ heading: current.heading, body: current.body.join('\n').trim() });
+      if (current)
+        sections.push({ heading: current.heading, body: current.body.join('\n').trim() });
       current = { heading: m[1].trim(), body: [] };
     } else if (current) {
       current.body.push(line);
@@ -59,7 +60,12 @@ function parsePoints(body: string): string[] {
     .filter((l) => /^\s*[-*]\s+/.test(l))
     .map((l) => l.replace(/^\s*[-*]\s+/, '').trim())
     .filter(Boolean);
-  return points.length > 0 ? points : body.split(/\n{2,}/).map((p) => p.replace(/\s+/g, ' ').trim()).filter(Boolean);
+  return points.length > 0
+    ? points
+    : body
+        .split(/\n{2,}/)
+        .map((p) => p.replace(/\s+/g, ' ').trim())
+        .filter(Boolean);
 }
 
 function convert(markdown: string): LessonBlock[] | null {
@@ -129,7 +135,9 @@ async function main() {
 
     if (mode === 'split') converted++;
     else fellBack++;
-    console.log(`  ${lesson.title}: ${mode} (${blocks.length} blocks, flat ${flat.length}/${md.length} chars)`);
+    console.log(
+      `  ${lesson.title}: ${mode} (${blocks.length} blocks, flat ${flat.length}/${md.length} chars)`,
+    );
   }
 
   console.log(`Done. converted=${converted} fallback=${fellBack}`);

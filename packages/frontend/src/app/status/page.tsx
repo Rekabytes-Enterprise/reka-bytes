@@ -4,11 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAtomValue, useSetAtom } from 'jotai';
-import {
-  apiFetch,
-  isApiClientError,
-  type SessionUser,
-} from '@reka-bytes/shared';
+import { apiFetch, isApiClientError, type SessionUser } from '@reka-bytes/shared';
 import { sessionAtom } from '@/atoms/auth';
 import { StatusBadge } from '@/components/ui/status-badge';
 
@@ -83,7 +79,10 @@ export default function StatusPage() {
   if (state === 'loading') {
     return (
       <main className="mx-auto flex min-h-dvh max-w-xl items-center px-6">
-        <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint" data-testid="status-loading">
+        <p
+          className="font-mono text-xs uppercase tracking-[0.12em] text-faint"
+          data-testid="status-loading"
+        >
           // loading status…
         </p>
       </main>
@@ -97,7 +96,10 @@ export default function StatusPage() {
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-xl flex-col justify-center px-6">
-      <div className="border border-line bg-elevated p-12" data-testid={`status-card-${user.status}`}>
+      <div
+        className="border border-line bg-elevated p-12"
+        data-testid={`status-card-${user.status}`}
+      >
         <div className="flex items-center justify-between gap-4">
           <StatusBadge status={user.status} />
           <button
@@ -112,9 +114,13 @@ export default function StatusPage() {
         <p className="mt-5 font-body text-sm leading-relaxed text-muted">{copy.body}</p>
 
         <dl className="mt-10 grid grid-cols-[120px_1fr] gap-y-3 border-t border-line pt-8">
-          <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">Name</dt>
+          <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
+            Name
+          </dt>
           <dd className="font-body text-sm">{user.name}</dd>
-          <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">Email</dt>
+          <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
+            Email
+          </dt>
           <dd className="font-body text-sm">{user.email}</dd>
         </dl>
 
@@ -135,7 +141,10 @@ export default function StatusPage() {
             </button>
           </div>
         ) : (
-          <Link href="/" className="mt-10 inline-block font-mono text-xs uppercase tracking-[0.12em] text-accent hover:underline">
+          <Link
+            href="/"
+            className="mt-10 inline-block font-mono text-xs uppercase tracking-[0.12em] text-accent hover:underline"
+          >
             ← back to reka·bytes
           </Link>
         )}

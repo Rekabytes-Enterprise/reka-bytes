@@ -5,6 +5,7 @@ import { typeStyles } from '@reka-bytes/shared';
 import { cn } from '@/lib/utils';
 import { SectionHeader } from '@/components/landing/section-header';
 import { Footer } from '@/components/layout/footer';
+import { SiteNav } from '@/components/layout/site-nav';
 import { Breadcrumb } from '@/components/layout/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { CONTACT, FOUNDER, OPERATOR, SOCIAL, mailtoHref } from '@/lib/legal';
@@ -29,6 +30,8 @@ export default function AboutPage() {
 
   return (
     <main>
+      <SiteNav />
+
       {/* ── Header ────────────────────────────────────────────────────── */}
       <section className="border-b border-line">
         <div className="mx-auto max-w-[1240px] px-6 py-20 lg:px-10 lg:py-24">
@@ -39,10 +42,9 @@ export default function AboutPage() {
             className="mt-8 border-b-0 pb-0"
           />
           <p className={cn(t.body, 'mt-8 max-w-2xl text-muted')}>
-            Reka Bytes is a small academy for people who build software with AI and want
-            to actually understand what they shipped. No CS degree required — but no
-            hand-waving either. Founded and taught by a software engineer in{' '}
-            {OPERATOR.country}.
+            Reka Bytes is a small academy for people who build software with AI and want to actually
+            understand what they shipped. No CS degree required — but no hand-waving either. Founded
+            and taught by a software engineer in {OPERATOR.country}.
           </p>
         </div>
       </section>
@@ -69,25 +71,22 @@ export default function AboutPage() {
           </figure>
 
           <div className="lg:col-span-7 lg:col-start-6">
-            <h2 className={cn(t.displayM)}>
-              {FOUNDER.name ?? <Tbc>Your name here</Tbc>}
-            </h2>
+            <h2 className={cn(t.displayM)}>{FOUNDER.name ?? <Tbc>Your name here</Tbc>}</h2>
             <p className="mt-3 font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-dim">
               Software Engineer · Google Certified Project Manager · Founder
             </p>
 
             <p className={cn(t.body, 'mt-8 text-muted')}>
-              I graduated in software engineering and I write production code every day.
-              I also spent time on the other side of the table as a Google Certified
-              Project Manager — which is a strange combination, and it turns out to be the
-              whole reason Reka Bytes exists.
+              I graduated in software engineering and I write production code every day. I also
+              spent time on the other side of the table as a Google Certified Project Manager —
+              which is a strange combination, and it turns out to be the whole reason Reka Bytes
+              exists.
             </p>
             <p className={cn(t.body, 'mt-5 text-muted')}>
-              Most people I meet who are building with AI have never had anyone explain
-              what the code actually is. Not because they lack ability — because nobody
-              taught them that way. So I started teaching it this way: one small cohort,
-              fundamentals first, and the AI used as the accelerator rather than the
-              syllabus.
+              Most people I meet who are building with AI have never had anyone explain what the
+              code actually is. Not because they lack ability — because nobody taught them that way.
+              So I started teaching it this way: one small cohort, fundamentals first, and the AI
+              used as the accelerator rather than the syllabus.
             </p>
 
             <blockquote className="mt-10 border-l-2 border-accent-dim pl-6">
@@ -136,19 +135,18 @@ export default function AboutPage() {
           <div className="mt-14 grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-5">
               <p className={cn(t.body, 'text-muted')}>
-                The gap is not motivation. People are shipping more software than ever.
-                The gap is that the moment something breaks, the project belongs to the AI
-                again — and the person who paid for it has no way in.
+                The gap is not motivation. People are shipping more software than ever. The gap is
+                that the moment something breaks, the project belongs to the AI again — and the
+                person who paid for it has no way in.
               </p>
               <p className={cn(t.body, 'mt-6 text-muted')}>
-                I kept noticing the same thing. People were shipping real software with AI,
-                and almost none of them could explain what they’d built. The advice
-                available to them came in two flavours: go learn computer science properly,
-                which takes years they don’t have — or don’t worry about it, just prompt,
-                which is how you end up owning an app you can’t fix. Both are wrong. You can
-                be productive on day one and still understand your own system, if someone
-                teaches it in the right order. That’s the thing I wanted to exist, so I built
-                it.
+                I kept noticing the same thing. People were shipping real software with AI, and
+                almost none of them could explain what they’d built. The advice available to them
+                came in two flavours: go learn computer science properly, which takes years they
+                don’t have — or don’t worry about it, just prompt, which is how you end up owning an
+                app you can’t fix. Both are wrong. You can be productive on day one and still
+                understand your own system, if someone teaches it in the right order. That’s the
+                thing I wanted to exist, so I built it.
               </p>
             </div>
             <ul className="lg:col-span-6 lg:col-start-7">
@@ -223,7 +221,10 @@ export default function AboutPage() {
                   'You would rather be slowed down properly than shipped fast and broken.',
                   'You can commit real hours across a short cohort.',
                 ].map((line) => (
-                  <li key={line} className="flex items-start gap-3 border-l-2 border-accent-dim pl-5">
+                  <li
+                    key={line}
+                    className="flex items-start gap-3 border-l-2 border-accent-dim pl-5"
+                  >
                     <span className={cn(t.bodySm, 'text-muted')}>{line}</span>
                   </li>
                 ))}
@@ -300,23 +301,28 @@ export default function AboutPage() {
             COMPANY RECORD
           </p>
           <dl className="mt-8 grid grid-cols-1 gap-x-16 sm:grid-cols-2">
-            {([
-              ['Trading name', OPERATOR.productName],
-              ['Legal entity', OPERATOR.name],
-              ['Registration', OPERATOR.registrationNo ?? <Tbc>SSM no.</Tbc>],
-              ['Legal status', OPERATOR.entityNote ?? <Tbc>Entity form</Tbc>],
-              ['Based in', OPERATOR.country],
+            {(
               [
-                'Contact',
-                mailtoHref() ? (
-                  <a href={mailtoHref()!} className="text-accent underline-offset-4 hover:underline">
-                    {CONTACT.email}
-                  </a>
-                ) : (
-                  <Tbc>contact email</Tbc>
-                ),
-              ],
-            ] as [string, React.ReactNode][]).map(([k, v]) => (
+                ['Trading name', OPERATOR.productName],
+                ['Legal entity', OPERATOR.name],
+                ['Registration', OPERATOR.registrationNo ?? <Tbc>SSM no.</Tbc>],
+                ['Legal status', OPERATOR.entityNote ?? <Tbc>Entity form</Tbc>],
+                ['Based in', OPERATOR.country],
+                [
+                  'Contact',
+                  mailtoHref() ? (
+                    <a
+                      href={mailtoHref()!}
+                      className="text-accent underline-offset-4 hover:underline"
+                    >
+                      {CONTACT.email}
+                    </a>
+                  ) : (
+                    <Tbc>contact email</Tbc>
+                  ),
+                ],
+              ] as [string, React.ReactNode][]
+            ).map(([k, v]) => (
               <div
                 key={k}
                 className="flex flex-wrap items-baseline gap-x-4 border-b border-line py-4"

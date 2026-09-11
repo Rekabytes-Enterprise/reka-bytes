@@ -15,7 +15,13 @@ const STEPS = ['Upload', 'Generate', 'Outline', 'Review', 'Publish'] as const;
  * MotionConfig makes every framer-motion animation below respect the
  * user's prefers-reduced-motion setting.
  */
-export function WizardShell({ step, children }: { step: 1 | 2 | 3 | 4 | 5; children: React.ReactNode }) {
+export function WizardShell({
+  step,
+  children,
+}: {
+  step: 1 | 2 | 3 | 4 | 5;
+  children: React.ReactNode;
+}) {
   const guard = useAdminGuard();
   const classTitle = useAtomValue(aiClassTitleAtom);
   useAIWizardHydrate();

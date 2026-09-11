@@ -14,12 +14,15 @@ import { useAdminQuery } from '@/hooks/api-query';
 export default function AdminDashboard() {
   // Two parallel useAdminQuery atoms — no Promise.all effect, no cancelled flags.
   const { data: stats, loading: statsLoading } = useAdminQuery<AdminStatsDTO>('/api/admin/stats');
-  const { data: applications, loading: appsLoading } = useAdminQuery<ApplicationDTO[]>('/api/admin/applications');
+  const { data: applications, loading: appsLoading } =
+    useAdminQuery<ApplicationDTO[]>('/api/admin/applications');
 
   if (statsLoading || appsLoading) {
     return (
       <main>
-        <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">// loading console…</p>
+        <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">
+          // loading console…
+        </p>
       </main>
     );
   }
@@ -53,7 +56,10 @@ export default function AdminDashboard() {
 
       {/* stats */}
       {stats && (
-        <section className="mt-8 grid grid-cols-2 gap-px border border-line bg-line sm:grid-cols-4" data-testid="admin-stats">
+        <section
+          className="mt-8 grid grid-cols-2 gap-px border border-line bg-line sm:grid-cols-4"
+          data-testid="admin-stats"
+        >
           {[
             ['Approved', `${stats.approved}/${stats.cap}`, 'text-success'],
             ['Pending', String(stats.pending), 'text-warning'],
@@ -61,7 +67,9 @@ export default function AdminDashboard() {
             ['Total', String(stats.totalApplications), 'text-ink'],
           ].map(([label, value, color]) => (
             <div key={label} className="bg-elevated p-6">
-              <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">{label}</p>
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
+                {label}
+              </p>
               <p className={cn('mt-2 font-display text-3xl font-semibold', color)}>{value}</p>
             </div>
           ))}
@@ -71,7 +79,9 @@ export default function AdminDashboard() {
       {/* recent applications */}
       <section className="mt-10">
         <div className="flex items-center justify-between">
-          <h2 className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-faint">recent applications</h2>
+          <h2 className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-faint">
+            recent applications
+          </h2>
           <Link
             href="/applications"
             className="inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[0.12em] text-accent hover:underline"
@@ -90,13 +100,17 @@ export default function AdminDashboard() {
                   <p className="font-body text-sm font-medium text-ink">{app.user.name}</p>
                   <p className="font-mono text-xs text-muted">{app.user.email}</p>
                 </div>
-                <p className="font-mono text-xs text-faint">{new Date(app.createdAt).toLocaleDateString()}</p>
+                <p className="font-mono text-xs text-faint">
+                  {new Date(app.createdAt).toLocaleDateString()}
+                </p>
                 <StatusBadge status={app.user.status} />
               </Link>
             </li>
           ))}
           {(applications ?? []).length === 0 && (
-            <li className="py-8 font-mono text-xs uppercase tracking-[0.12em] text-faint">// no applications yet</li>
+            <li className="py-8 font-mono text-xs uppercase tracking-[0.12em] text-faint">
+              // no applications yet
+            </li>
           )}
         </ul>
       </section>

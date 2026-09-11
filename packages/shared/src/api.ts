@@ -56,7 +56,11 @@ export async function apiFetch<T>(path: string, init: ApiFetchInit = {}): Promis
   try {
     json = await res.json();
   } catch {
-    throw new ApiClientError(res.status, 'MALFORMED_RESPONSE', 'Server returned an unexpected response.');
+    throw new ApiClientError(
+      res.status,
+      'MALFORMED_RESPONSE',
+      'Server returned an unexpected response.',
+    );
   }
 
   const envelope = json as ApiEnvelope<T>;
@@ -66,5 +70,9 @@ export async function apiFetch<T>(path: string, init: ApiFetchInit = {}): Promis
   }
   if ('data' in envelope) return envelope.data;
 
-  throw new ApiClientError(res.status, 'MALFORMED_RESPONSE', 'Server returned an unexpected response.');
+  throw new ApiClientError(
+    res.status,
+    'MALFORMED_RESPONSE',
+    'Server returned an unexpected response.',
+  );
 }

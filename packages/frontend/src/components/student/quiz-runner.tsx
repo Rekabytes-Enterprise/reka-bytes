@@ -44,7 +44,7 @@ export function QuizRunner({ quizId }: { quizId: string }) {
     try {
       const res = await apiFetch<QuizSubmitResultDTO>(`/api/learn/quizzes/${quizId}/submit`, {
         method: 'POST',
-        body: ({ answers }),
+        body: { answers },
         headers: { 'Content-Type': 'application/json' },
       });
       setResult(res);
@@ -63,14 +63,19 @@ export function QuizRunner({ quizId }: { quizId: string }) {
     return (
       <div>
         <p className="font-mono text-xs uppercase tracking-[0.12em] text-danger">{error}</p>
-        <Link href="/learn" className="mt-4 inline-block font-mono text-xs uppercase tracking-[0.12em] text-accent hover:underline">
+        <Link
+          href="/learn"
+          className="mt-4 inline-block font-mono text-xs uppercase tracking-[0.12em] text-accent hover:underline"
+        >
           ← back to learn
         </Link>
       </div>
     );
   }
   if (!quiz) {
-    return <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">// loading quiz…</p>;
+    return (
+      <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">// loading quiz…</p>
+    );
   }
 
   // ── Results ──
@@ -81,16 +86,21 @@ export function QuizRunner({ quizId }: { quizId: string }) {
           data-testid={result.passed ? 'quiz-pass-banner' : 'quiz-fail-banner'}
           className={cn(
             'rounded-card border p-8 text-center shadow-card',
-            result.passed
-              ? 'border-success/50 bg-elevated'
-              : 'border-danger/50 bg-elevated',
+            result.passed ? 'border-success/50 bg-elevated' : 'border-danger/50 bg-elevated',
           )}
         >
-          <p className={cn('font-display text-5xl font-semibold', result.passed ? 'text-success' : 'text-danger')}>
+          <p
+            className={cn(
+              'font-display text-5xl font-semibold',
+              result.passed ? 'text-success' : 'text-danger',
+            )}
+          >
             {result.score}%
           </p>
           <p className="mt-3 font-mono text-sm uppercase tracking-[0.12em] text-muted">
-            {result.passed ? `passed — threshold ${quiz.passingScore}%` : `not passed — you need ${quiz.passingScore}%`}
+            {result.passed
+              ? `passed — threshold ${quiz.passingScore}%`
+              : `not passed — you need ${quiz.passingScore}%`}
           </p>
         </div>
 
@@ -156,7 +166,12 @@ export function QuizRunner({ quizId }: { quizId: string }) {
 
       {error && <p className="mt-4 font-mono text-xs text-danger">{error}</p>}
 
-      <motion.div key={current} initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.2 }}>
+      <motion.div
+        key={current}
+        initial={{ opacity: 0, x: 24 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.2 }}
+      >
         <p className="mt-8 font-mono text-xs uppercase tracking-[0.12em] text-accent-dim">
           question {current + 1} of {quiz.questions.length}
         </p>
@@ -204,7 +219,8 @@ export function QuizRunner({ quizId }: { quizId: string }) {
           {last ? (
             <button
               type="button"
-              disabled={answers.some((a) => a < 0)}              onClick={submit}
+              disabled={answers.some((a) => a < 0)}
+              onClick={submit}
               data-testid="quiz-submit"
               className="rounded-full bg-accent px-8 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-ink transition-all hover:-translate-y-0.5 hover:bg-accent-hover disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-40"
             >

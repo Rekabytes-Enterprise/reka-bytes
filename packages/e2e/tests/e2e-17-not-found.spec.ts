@@ -39,9 +39,7 @@ test.describe('e2e-17 · 404 block-not-found', () => {
       // (never a sleep; the canvas paints post-hydration).
       const canvas = page.getByTestId('error-404-canvas');
       await expect(canvas).toBeVisible();
-      await expect
-        .poll(() => canvas.getAttribute('data-drawn'), { timeout: 10_000 })
-        .toBe('1');
+      await expect.poll(() => canvas.getAttribute('data-drawn'), { timeout: 10_000 }).toBe('1');
 
       await expect(page.getByTestId('error-404-home')).toHaveAttribute('href', '/');
       // NB: <footer> inside <main> loses its implicit `contentinfo` landmark
@@ -82,9 +80,7 @@ test.describe('e2e-17 · 404 block-not-found', () => {
 
     const canvas = page.getByTestId('error-404-canvas');
     await expect(canvas).toBeVisible();
-    await expect
-      .poll(() => canvas.getAttribute('data-drawn'), { timeout: 10_000 })
-      .toBe('1');
+    await expect.poll(() => canvas.getAttribute('data-drawn'), { timeout: 10_000 }).toBe('1');
 
     await page.screenshot({ path: 'artifacts/not-found-reduced-motion.png', fullPage: true });
   });
@@ -94,9 +90,7 @@ test.describe('e2e-17 · 404 block-not-found', () => {
     // two captures 400ms apart must differ — shimmer, bob and petals all move.
     await page.goto('/news');
     const canvas = page.getByTestId('error-404-canvas');
-    await expect
-      .poll(() => canvas.getAttribute('data-drawn'), { timeout: 10_000 })
-      .toBe('1');
+    await expect.poll(() => canvas.getAttribute('data-drawn'), { timeout: 10_000 }).toBe('1');
 
     const a = await canvas.screenshot();
     await page.waitForTimeout(400);
@@ -108,9 +102,7 @@ test.describe('e2e-17 · 404 block-not-found', () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/showcase');
     const canvas = page.getByTestId('error-404-canvas');
-    await expect
-      .poll(() => canvas.getAttribute('data-drawn'), { timeout: 10_000 })
-      .toBe('1');
+    await expect.poll(() => canvas.getAttribute('data-drawn'), { timeout: 10_000 }).toBe('1');
 
     // Fit-to-box scaling must not clip the canopy top or platform bottom.
     await page.screenshot({ path: 'artifacts/not-found-mobile.png', fullPage: true });
@@ -119,9 +111,7 @@ test.describe('e2e-17 · 404 block-not-found', () => {
   test('drag orbits, wheel zooms, click wanders', async ({ page }) => {
     await page.goto('/project');
     const canvas = page.getByTestId('error-404-canvas');
-    await expect
-      .poll(() => canvas.getAttribute('data-drawn'), { timeout: 10_000 })
-      .toBe('1');
+    await expect.poll(() => canvas.getAttribute('data-drawn'), { timeout: 10_000 }).toBe('1');
 
     // data-view = "<azimuth-degrees>|<zoom>" — written by the scene each frame
     const readView = async (): Promise<{ az: number; zoom: number }> => {

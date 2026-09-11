@@ -24,7 +24,9 @@ describe('evaluateBadges', () => {
   });
 
   it('thresholds unlock their badge exactly', () => {
-    const cases: Array<[keyof BadgeInput, BadgeInput['completedLessons'] | number | boolean, string]> = [
+    const cases: Array<
+      [keyof BadgeInput, BadgeInput['completedLessons'] | number | boolean, string]
+    > = [
       ['completedLessons', 1, 'first-steps'],
       ['modulesCompleted', 1, 'module-slayer'],
       ['classesCompleted', 1, 'class-conqueror'],
@@ -38,7 +40,10 @@ describe('evaluateBadges', () => {
     ];
     for (const [field, value, expected] of cases) {
       const keys = unlockedBadgeKeys(unlock({ [field]: value }));
-      assert.ok(keys.includes(expected as never), `${expected} should unlock via ${field}=${String(value)}`);
+      assert.ok(
+        keys.includes(expected as never),
+        `${expected} should unlock via ${field}=${String(value)}`,
+      );
     }
   });
 

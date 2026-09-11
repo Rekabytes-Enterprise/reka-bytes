@@ -35,7 +35,6 @@
   --shadow-card: 0 1px 0 rgb(255 255 255 / 0.9) inset, 0 8px 24px rgb(20 22 26 / 0.08);
   --shadow-lift: 0 1px 0 rgb(255 255 255 / 0.9) inset, 0 12px 32px rgb(20 22 26 / 0.14);
 
-
   /* Fonts — runtime vars injected by next/font + fontshare link in layout */
   --font-display: 'Clash Display', var(--font-jetbrains), ui-sans-serif, sans-serif;
   --font-body: var(--font-inter), system-ui, sans-serif;
@@ -70,7 +69,11 @@ body {
 /* Accent glow wash — signals ACHIEVEMENT (hero/CTA cards only), never decoration (PRD-04 §2.3).
    Light theme: brand lime wash at higher alpha so the chartreuse tint actually reads on paper. */
 .glow-accent {
-  background-image: radial-gradient(ellipse 80% 100% at 50% -20%, rgb(198 255 74 / 0.16), transparent 70%);
+  background-image: radial-gradient(
+    ellipse 80% 100% at 50% -20%,
+    rgb(198 255 74 / 0.16),
+    transparent 70%
+  );
 }
 
 /* Card surface composition (PRD-04 §2.4) — rounded card + top highlight + ambient shadow.
@@ -84,8 +87,12 @@ body {
 
 /* Marquee ticker */
 @keyframes rb-ticker {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 .ticker-track {
   animation: rb-ticker 30s linear infinite;
@@ -129,41 +136,96 @@ body {
    Phase is staggered per tile through --badge-delay (set by BadgeArt) — carried
    INSIDE each animation shorthand, since shorthand resets animation-delay. */
 @keyframes rb-badge-sway {
-  0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(7deg); }
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(7deg);
+  }
 }
 @keyframes rb-badge-rock {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-5deg); }
-  75% { transform: rotate(5deg); }
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-5deg);
+  }
+  75% {
+    transform: rotate(5deg);
+  }
 }
 @keyframes rb-badge-flicker {
-  0%, 100% { transform: scale(1, 1) rotate(0deg); }
-  30% { transform: scale(1.08, 0.9) rotate(-3deg); }
-  60% { transform: scale(0.92, 1.08) rotate(3deg); }
+  0%,
+  100% {
+    transform: scale(1, 1) rotate(0deg);
+  }
+  30% {
+    transform: scale(1.08, 0.9) rotate(-3deg);
+  }
+  60% {
+    transform: scale(0.92, 1.08) rotate(3deg);
+  }
 }
 @keyframes rb-badge-twinkle {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.1; transform: scale(0.5); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.1;
+    transform: scale(0.5);
+  }
 }
 @keyframes rb-badge-glow {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
 }
 @keyframes rb-badge-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(1.7); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.7);
+  }
 }
 @keyframes rb-badge-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-2.5px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2.5px);
+  }
 }
 /* Diagonal light band sweeps across the chip, then rests (opacity 0 while parked). */
 @keyframes rb-badge-sheen {
-  0% { transform: translateX(0) rotate(18deg); opacity: 0; }
-  8% { opacity: 1; }
-  55% { transform: translateX(76px) rotate(18deg); opacity: 1; }
-  56%, 100% { transform: translateX(76px) rotate(18deg); opacity: 0; }
+  0% {
+    transform: translateX(0) rotate(18deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  55% {
+    transform: translateX(76px) rotate(18deg);
+    opacity: 1;
+  }
+  56%,
+  100% {
+    transform: translateX(76px) rotate(18deg);
+    opacity: 0;
+  }
 }
 
 .badge-anim {
@@ -174,17 +236,33 @@ body {
 .badge-origin-bottom {
   transform-origin: 50% 100%;
 }
-svg.badge-live .badge-anim-sway { animation: rb-badge-sway 3s ease-in-out var(--badge-delay, 0s) infinite; }
-svg.badge-live .badge-anim-rock { animation: rb-badge-rock 2.6s ease-in-out var(--badge-delay, 0s) infinite; }
-svg.badge-live .badge-anim-flicker { animation: rb-badge-flicker 1.8s ease-in-out var(--badge-delay, 0s) infinite; }
+svg.badge-live .badge-anim-sway {
+  animation: rb-badge-sway 3s ease-in-out var(--badge-delay, 0s) infinite;
+}
+svg.badge-live .badge-anim-rock {
+  animation: rb-badge-rock 2.6s ease-in-out var(--badge-delay, 0s) infinite;
+}
+svg.badge-live .badge-anim-flicker {
+  animation: rb-badge-flicker 1.8s ease-in-out var(--badge-delay, 0s) infinite;
+}
 svg.badge-live .badge-anim-flicker-core {
   animation: rb-badge-flicker 1.2s ease-in-out calc(var(--badge-delay, 0s) - 0.5s) infinite;
 }
-svg.badge-live .badge-anim-twinkle { animation: rb-badge-twinkle 2s ease-in-out var(--badge-delay, 0s) infinite; }
-svg.badge-live .badge-anim-glow { animation: rb-badge-glow 2.4s ease-in-out var(--badge-delay, 0s) infinite; }
-svg.badge-live .badge-anim-pulse { animation: rb-badge-pulse 1.8s ease-in-out var(--badge-delay, 0s) infinite; }
-svg.badge-live .badge-anim-bob { animation: rb-badge-bob 2.8s ease-in-out var(--badge-delay, 0s) infinite; }
-svg.badge-live .badge-anim-sheen { animation: rb-badge-sheen 3.6s linear var(--badge-delay, 0s) infinite; }
+svg.badge-live .badge-anim-twinkle {
+  animation: rb-badge-twinkle 2s ease-in-out var(--badge-delay, 0s) infinite;
+}
+svg.badge-live .badge-anim-glow {
+  animation: rb-badge-glow 2.4s ease-in-out var(--badge-delay, 0s) infinite;
+}
+svg.badge-live .badge-anim-pulse {
+  animation: rb-badge-pulse 1.8s ease-in-out var(--badge-delay, 0s) infinite;
+}
+svg.badge-live .badge-anim-bob {
+  animation: rb-badge-bob 2.8s ease-in-out var(--badge-delay, 0s) infinite;
+}
+svg.badge-live .badge-anim-sheen {
+  animation: rb-badge-sheen 3.6s linear var(--badge-delay, 0s) infinite;
+}
 
 @media (prefers-reduced-motion: reduce) {
   svg.badge-live [class*='badge-anim-'] {

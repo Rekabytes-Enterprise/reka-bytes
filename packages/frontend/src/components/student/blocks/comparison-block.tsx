@@ -4,7 +4,10 @@ import type { ComparisonBlock } from '@reka-bytes/shared';
 
 export function ComparisonBlockView({ block }: { block: ComparisonBlock }) {
   return (
-    <div data-testid="comparison-block" className="overflow-x-auto rounded-panel border border-line">
+    <div
+      data-testid="comparison-block"
+      className="overflow-x-auto rounded-panel border border-line"
+    >
       <table className="w-full border-collapse text-left text-sm">
         <thead>
           <tr className="bg-elevated">

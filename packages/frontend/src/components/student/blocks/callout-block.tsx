@@ -17,9 +17,7 @@ export function CalloutBlockView({ block }: { block: CalloutBlock }) {
       data-testid="callout-block"
       className={`rounded-panel border border-line border-l-2 ${style.border} bg-inset px-5 py-4`}
     >
-      <p
-        className={`font-mono text-[10px] font-bold uppercase tracking-[0.16em] ${style.text}`}
-      >
+      <p className={`font-mono text-[10px] font-bold uppercase tracking-[0.16em] ${style.text}`}>
         // {block.title}
       </p>
       <div className="prose prose-lesson mt-2 max-w-none">

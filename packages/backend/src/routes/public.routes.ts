@@ -11,7 +11,8 @@ export const publicRoutes = new Hono()
     try {
       const { redis } = await import('../lib/redis');
       const cached = await redis.get(cacheKey);
-      if (cached) return c.json({ data: JSON.parse(cached) as Awaited<ReturnType<typeof getSeats>> });
+      if (cached)
+        return c.json({ data: JSON.parse(cached) as Awaited<ReturnType<typeof getSeats>> });
 
       const seats = await getSeats();
       await redis.set(cacheKey, JSON.stringify(seats), 'EX', 15);

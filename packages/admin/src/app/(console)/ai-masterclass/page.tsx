@@ -15,6 +15,8 @@ export default function AIMasterclassIndex() {
     router.replace('/ai-masterclass/step/1');
   }, [router]);
   return (
-    <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">// opening AI masterclass…</p>
+    <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">
+      // opening AI masterclass…
+    </p>
   );
 }

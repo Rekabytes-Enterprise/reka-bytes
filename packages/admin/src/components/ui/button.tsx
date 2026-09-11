@@ -18,8 +18,7 @@ export function Button({ variant = 'primary', className, children, ...props }: B
         variant === 'primary' && 'bg-accent text-accent-ink hover:bg-accent-hover',
         variant === 'ghost' &&
           'border border-line-strong text-ink hover:border-accent hover:text-accent',
-        variant === 'danger' &&
-          'bg-danger text-white hover:bg-danger/90',
+        variant === 'danger' && 'bg-danger text-white hover:bg-danger/90',
         className,
       )}
       {...props}

@@ -3,7 +3,13 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Check, ChevronDown, ClipboardList, ListChecks, RefreshCw } from 'lucide-react';
-import { apiFetch, isApiClientError, type AIGenJobStatusDTO, type AIAnalysisDTO, type ClassTreeDTO } from '@reka-bytes/shared';
+import {
+  apiFetch,
+  isApiClientError,
+  type AIGenJobStatusDTO,
+  type AIAnalysisDTO,
+  type ClassTreeDTO,
+} from '@reka-bytes/shared';
 import { WizardShell } from '@/components/ai/wizard-shell';
 import { useAIWizard } from '@/components/ai/state';
 import { usePushToast } from '@/components/system/toaster';
@@ -85,7 +91,10 @@ export default function Step4Page() {
       });
       pushToast({ variant: 'success', title: 'Lesson regenerated' });
     } catch (e) {
-      pushToast({ variant: 'error', title: isApiClientError(e) ? e.message : 'Regeneration failed' });
+      pushToast({
+        variant: 'error',
+        title: isApiClientError(e) ? e.message : 'Regeneration failed',
+      });
     } finally {
       setRegenerating(null);
     }
@@ -96,7 +105,9 @@ export default function Step4Page() {
       {error ? (
         <p className="font-mono text-xs text-danger">{error}</p>
       ) : !cls ? (
-        <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">// loading preview…</p>
+        <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">
+          // loading preview…
+        </p>
       ) : (
         <>
           <p
@@ -104,9 +115,8 @@ export default function Step4Page() {
             data-testid="ai-review-summary"
           >
             <ClipboardList size={13} className="mr-1.5 inline text-accent" aria-hidden />
-            {cls.modules.length} modules ·{' '}
-            {cls.modules.reduce((s, m) => s + m.lessons.length, 0)} lessons ·{' '}
-            {cls.modules.filter((m) => m.quiz).length} quizzes generated
+            {cls.modules.length} modules · {cls.modules.reduce((s, m) => s + m.lessons.length, 0)}{' '}
+            lessons · {cls.modules.filter((m) => m.quiz).length} quizzes generated
           </p>
 
           {analysis && <AnalysisPanel analysis={analysis} defaultOpen={false} />}
@@ -125,7 +135,9 @@ export default function Step4Page() {
           </ul>
 
           <div className="mt-10 flex items-center justify-between border-t border-line pt-6">
-            <p className="font-mono text-xs text-faint">titles are editable inline before publish</p>
+            <p className="font-mono text-xs text-faint">
+              titles are editable inline before publish
+            </p>
             <button
               type="button"
               onClick={() => router.push('/ai-masterclass/step/5')}
@@ -150,7 +162,13 @@ interface ModuleCardProps {
 }
 
 /** Collapsible module card — header summarizes, body lists lessons + quiz. */
-function ModuleCard({ module: mod, defaultOpen, regenerating, onRename, onRegenerate }: ModuleCardProps) {
+function ModuleCard({
+  module: mod,
+  defaultOpen,
+  regenerating,
+  onRename,
+  onRegenerate,
+}: ModuleCardProps) {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <li className="border border-line bg-elevated">
@@ -182,7 +200,11 @@ function ModuleCard({ module: mod, defaultOpen, regenerating, onRename, onRegene
                 className="flex items-center gap-3 border-b border-line/50 py-2 font-body text-xs text-muted last:border-b-0"
               >
                 <Check size={12} className="shrink-0 text-success" aria-hidden />
-                <InlineText value={lesson.title} editLabel="edit" onSave={(next) => onRename(lesson.id, next)} />
+                <InlineText
+                  value={lesson.title}
+                  editLabel="edit"
+                  onSave={(next) => onRename(lesson.id, next)}
+                />
                 <span className="shrink-0 font-mono text-faint">{lesson.durationMinutes} min</span>
                 <button
                   type="button"

@@ -7,6 +7,7 @@ import { SeatsMeter } from '@/components/landing/seats-meter';
 import { Ticker } from '@/components/system/ticker';
 import { Button } from '@/components/ui/button';
 import { Footer } from '@/components/layout/footer';
+import { SiteNav } from '@/components/layout/site-nav';
 import { typeStyles } from '@reka-bytes/shared';
 import { cn } from '@/lib/utils';
 
@@ -50,28 +51,35 @@ export default function LandingPage() {
 
   return (
     <main>
+      <SiteNav />
+
       <Hero />
       <Ticker />
 
       {/* WHY */}
       <section className="mx-auto max-w-[1240px] px-6 py-28 lg:py-36 lg:px-10">
-        <SectionHeader
-          name="WHY"
-          title="Vibe coding without fundamentals is building on sand."
-        />
+        <SectionHeader name="WHY" title="Vibe coding without fundamentals is building on sand." />
         <div className="mt-14 grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-4">
             <p className={cn(t.body, 'text-muted lg:sticky lg:top-16')}>
-              Most vibe coders ship fast — then get stuck the moment something breaks.
-              Not because they lack talent, but because nobody showed them what&apos;s
-              under the hood.
+              Most vibe coders ship fast — then get stuck the moment something breaks. Not because
+              they lack talent, but because nobody showed them what&apos;s under the hood.
             </p>
           </div>
           <ul className="lg:col-span-7 lg:col-start-6">
             {[
-              ['The black box problem', 'The AI generated it, but you can’t explain it — to users, to investors, or to the next prompt.'],
-              ['Fragile by default', 'No architecture means every new feature risks breaking the last one.'],
-              ['Debugging blind', 'When the error appears, “paste it back into the chat” only works so long.'],
+              [
+                'The black box problem',
+                'The AI generated it, but you can’t explain it — to users, to investors, or to the next prompt.',
+              ],
+              [
+                'Fragile by default',
+                'No architecture means every new feature risks breaking the last one.',
+              ],
+              [
+                'Debugging blind',
+                'When the error appears, “paste it back into the chat” only works so long.',
+              ],
             ].map(([title, body], i) => (
               <li key={title} className="border-b border-line py-8 first:border-t">
                 <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
@@ -116,16 +124,19 @@ export default function LandingPage() {
           <div className="relative aspect-[3/4] overflow-hidden border border-line bg-inset lg:col-span-5 lg:aspect-auto lg:min-h-[30rem]">
             <div className="blueprint-grid absolute inset-0 opacity-60" aria-hidden />
             <InstructorFlow className="absolute inset-0 size-full" />
-            <p className="absolute bottom-4 left-4 font-mono text-[10px] uppercase tracking-[0.12em] text-faint" aria-hidden>
+            <p
+              className="absolute bottom-4 left-4 font-mono text-[10px] uppercase tracking-[0.12em] text-faint"
+              aria-hidden
+            >
               fig.02 — the reka loop
             </p>
           </div>
           <div className="lg:col-span-6 lg:col-start-7">
             <h3 className={cn(t.displayM)}>Built by someone who ships for a living.</h3>
             <p className={cn(t.body, 'mt-8 text-muted')}>
-              Reka Bytes is taught by a graduated software engineer who is also a
-              Google Certified Project Manager — someone who writes production code
-              daily and knows how to structure learning so it sticks.
+              Reka Bytes is taught by a graduated software engineer who is also a Google Certified
+              Project Manager — someone who writes production code daily and knows how to structure
+              learning so it sticks.
             </p>
             <ul className="mt-10 flex flex-col gap-4">
               {[
@@ -150,10 +161,13 @@ export default function LandingPage() {
       <section className="border-t border-line bg-elevated">
         <div className="mx-auto grid max-w-[1240px] grid-cols-1 items-center gap-16 px-6 py-28 lg:py-32 lg:grid-cols-8 lg:px-10">
           <div className="lg:col-span-5">
-            <SectionHeader name="JOIN COHORT 001" title="Five seats. Real fundamentals. No fluff." />
+            <SectionHeader
+              name="JOIN COHORT 001"
+              title="Five seats. Real fundamentals. No fluff."
+            />
             <p className={cn(t.body, 'mt-8 max-w-lg text-muted')}>
-              Applications are reviewed personally. Once approved, you get access to
-              the class and the private Discord where the cohort builds together.
+              Applications are reviewed personally. Once approved, you get access to the class and
+              the private Discord where the cohort builds together.
             </p>
             <Link href="/register" className="mt-12 inline-block">
               <Button data-testid="join-register-cta">Apply now →</Button>

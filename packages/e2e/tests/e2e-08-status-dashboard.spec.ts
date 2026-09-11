@@ -30,7 +30,9 @@ test.describe('E2E-08 · status → dashboard redirect', () => {
     await expect(page.getByTestId('student-dashboard')).toBeVisible();
     // Dashboard renders either the empty state (no published classes) or the
     // continue-learning card (classes exist) — both are valid post-approval.
-    await expect(page.getByTestId('empty-classroom').or(page.getByTestId('continue-cta'))).toBeVisible();
+    await expect(
+      page.getByTestId('empty-classroom').or(page.getByTestId('continue-cta')),
+    ).toBeVisible();
   });
 
   test('skip button navigates immediately; no loop on return to /status', async ({ browser }) => {

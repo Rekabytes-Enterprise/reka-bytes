@@ -19,10 +19,7 @@ interface BadgeGridProps {
 export function BadgeGrid({ badges }: BadgeGridProps) {
   const byKey = new Map<BadgeKey, BadgeState>(badges.map((b) => [b.key, b]));
   return (
-    <ul
-      className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5"
-      data-testid="badge-grid"
-    >
+    <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5" data-testid="badge-grid">
       {BADGES.map((meta, i) => {
         const unlocked = byKey.get(meta.key)?.unlocked ?? false;
         const color = BADGE_COLORS[meta.key];

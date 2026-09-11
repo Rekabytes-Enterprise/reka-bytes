@@ -18,6 +18,17 @@ export const prisma = globalForPrisma.prisma ?? createClient();
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
-export type { User, Application, AuditLog, Class, Module, Lesson, Quiz, QuizQuestion, LessonProgress, QuizAttempt } from './generated/prisma/client';
+export type {
+  User,
+  Application,
+  AuditLog,
+  Class,
+  Module,
+  Lesson,
+  Quiz,
+  QuizQuestion,
+  LessonProgress,
+  QuizAttempt,
+} from './generated/prisma/client';
 export { Role, UserStatus, Prisma } from './generated/prisma/client';
 export * from './json';

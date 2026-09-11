@@ -33,12 +33,18 @@ test.describe('E2E-10 · quiz flow', () => {
   test('take quiz → pass → retry fails with wrong answers', async ({ browser }) => {
     const ctx = await browser.newContext({ baseURL: FRONT });
     const cookie = await loginCookie(email, PASSWORD);
-    await ctx.addCookies([{ name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' }]);
+    await ctx.addCookies([
+      { name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' },
+    ]);
     const page = await ctx.newPage();
 
     // ── cheat check: correctIndex absent from GET response ──
     const [res] = await Promise.all([
-      page.waitForResponse((r) => r.url().includes(`/api/learn/quizzes/${classroom.quizId}`) && r.request().method() === 'GET'),
+      page.waitForResponse(
+        (r) =>
+          r.url().includes(`/api/learn/quizzes/${classroom.quizId}`) &&
+          r.request().method() === 'GET',
+      ),
       page.goto(`/learn/quiz/${classroom.quizId}`),
     ]);
     const bodyText = await res.text();
@@ -61,7 +67,9 @@ test.describe('E2E-10 · quiz flow', () => {
     // retry — answer everything wrong (flip each answer)
     await page.getByTestId('quiz-retry').click();
     for (let i = 0; i < classroom.correctAnswers.length; i++) {
-      await page.getByTestId(`quiz-option-${i}-${classroom.correctAnswers[i] === 0 ? 1 : 0}`).click();
+      await page
+        .getByTestId(`quiz-option-${i}-${classroom.correctAnswers[i] === 0 ? 1 : 0}`)
+        .click();
       if (i < classroom.correctAnswers.length - 1) {
         await page.getByTestId('quiz-next').click();
       }

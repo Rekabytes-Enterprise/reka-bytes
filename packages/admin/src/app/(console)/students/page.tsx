@@ -7,7 +7,12 @@
  */
 import { useCallback, useState } from 'react';
 import { Search } from 'lucide-react';
-import { apiFetch, type StudentDetailDTO, type StudentListItemDTO, type UserStatus } from '@reka-bytes/shared';
+import {
+  apiFetch,
+  type StudentDetailDTO,
+  type StudentListItemDTO,
+  type UserStatus,
+} from '@reka-bytes/shared';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { usePushToast } from '@/components/system/toaster';
 import { useAdminQuery } from '@/hooks/api-query';
@@ -31,7 +36,12 @@ export default function StudentsPage() {
       setDetail(null);
       apiFetch<StudentDetailDTO>(`/api/admin/students/${id}`)
         .then(setDetail)
-        .catch((e: unknown) => pushToast({ variant: 'error', title: e instanceof Error ? e.message : 'Failed to load student' }));
+        .catch((e: unknown) =>
+          pushToast({
+            variant: 'error',
+            title: e instanceof Error ? e.message : 'Failed to load student',
+          }),
+        );
     },
     [pushToast],
   );
@@ -47,7 +57,9 @@ export default function StudentsPage() {
     <main>
       <header className="flex flex-wrap items-center justify-between gap-4 border-b border-line pb-8">
         <div>
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-dim">reka·bytes / admin</p>
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-dim">
+            reka·bytes / admin
+          </p>
           <h1 className="mt-2 font-display text-3xl font-semibold">Students</h1>
         </div>
         <div className="flex items-center gap-3">
@@ -79,7 +91,9 @@ export default function StudentsPage() {
       </header>
 
       {loading ? (
-        <p className="mt-8 font-mono text-xs uppercase tracking-[0.12em] text-faint">// loading students…</p>
+        <p className="mt-8 font-mono text-xs uppercase tracking-[0.12em] text-faint">
+          // loading students…
+        </p>
       ) : students ? (
         <>
           <table className="mt-8 w-full border border-line text-left" data-testid="students-table">
@@ -107,10 +121,18 @@ export default function StudentsPage() {
                     <p className="font-body text-sm font-medium text-ink">{s.name}</p>
                     <p className="font-mono text-xs text-faint">{s.email}</p>
                   </td>
-                  <td className="px-4 py-3"><StatusBadge status={s.status} /></td>
-                  <td className="px-4 py-3 text-right font-mono text-sm text-ink">{s.lessonsCompleted}</td>
-                  <td className="px-4 py-3 text-right font-mono text-sm text-ink">{s.quizAttempts}</td>
-                  <td className="px-4 py-3 text-right font-mono text-sm text-ink">{s.avgQuizScore != null ? `${s.avgQuizScore}%` : '—'}</td>
+                  <td className="px-4 py-3">
+                    <StatusBadge status={s.status} />
+                  </td>
+                  <td className="px-4 py-3 text-right font-mono text-sm text-ink">
+                    {s.lessonsCompleted}
+                  </td>
+                  <td className="px-4 py-3 text-right font-mono text-sm text-ink">
+                    {s.quizAttempts}
+                  </td>
+                  <td className="px-4 py-3 text-right font-mono text-sm text-ink">
+                    {s.avgQuizScore != null ? `${s.avgQuizScore}%` : '—'}
+                  </td>
                   <td className="px-4 py-3 text-right font-mono text-xs text-faint">
                     {s.lastActivityAt ? new Date(s.lastActivityAt).toLocaleDateString() : '—'}
                   </td>
@@ -128,9 +150,14 @@ export default function StudentsPage() {
 
           {/* Detail panel */}
           {selectedId && (
-            <section className="mt-8 border border-line bg-elevated p-6" data-testid="student-detail">
+            <section
+              className="mt-8 border border-line bg-elevated p-6"
+              data-testid="student-detail"
+            >
               {detail === null ? (
-                <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">// loading detail…</p>
+                <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">
+                  // loading detail…
+                </p>
               ) : (
                 <>
                   <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
@@ -140,8 +167,14 @@ export default function StudentsPage() {
                     </div>
                     <div className="flex items-center gap-4">
                       <StatusBadge status={detail.status} />
-                      <span className="font-mono text-xs text-faint">{detail.lessonsCompleted} lessons completed</span>
-                      <button type="button" onClick={() => setSelectedId(null)} className="font-mono text-xs text-muted hover:text-ink">
+                      <span className="font-mono text-xs text-faint">
+                        {detail.lessonsCompleted} lessons completed
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedId(null)}
+                        className="font-mono text-xs text-muted hover:text-ink"
+                      >
                         close ✕
                       </button>
                     </div>
@@ -149,16 +182,27 @@ export default function StudentsPage() {
 
                   <div className="mt-6 grid gap-8 lg:grid-cols-2">
                     <div>
-                      <h3 className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-faint">quiz attempts</h3>
+                      <h3 className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-faint">
+                        quiz attempts
+                      </h3>
                       <ul className="mt-3 space-y-2">
-                        {detail.quizAttempts.length === 0 && <li className="font-mono text-xs text-faint">// none yet</li>}
+                        {detail.quizAttempts.length === 0 && (
+                          <li className="font-mono text-xs text-faint">// none yet</li>
+                        )}
                         {detail.quizAttempts.map((a) => (
-                          <li key={a.id} className="flex items-center justify-between border border-line px-4 py-2.5">
+                          <li
+                            key={a.id}
+                            className="flex items-center justify-between border border-line px-4 py-2.5"
+                          >
                             <div className="min-w-0">
                               <p className="truncate font-body text-sm">{a.quizTitle}</p>
-                              <p className="font-mono text-[10px] text-faint">{a.moduleTitle} · {new Date(a.createdAt).toLocaleDateString()}</p>
+                              <p className="font-mono text-[10px] text-faint">
+                                {a.moduleTitle} · {new Date(a.createdAt).toLocaleDateString()}
+                              </p>
                             </div>
-                            <span className={`font-mono text-xs font-bold ${a.passed ? 'text-success' : 'text-danger'}`}>
+                            <span
+                              className={`font-mono text-xs font-bold ${a.passed ? 'text-success' : 'text-danger'}`}
+                            >
                               {a.score}% {a.passed ? '✓' : '✗'}
                             </span>
                           </li>
@@ -167,24 +211,42 @@ export default function StudentsPage() {
                     </div>
 
                     <div>
-                      <h3 className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-faint">completed lessons</h3>
+                      <h3 className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-faint">
+                        completed lessons
+                      </h3>
                       <ul className="mt-3 space-y-2">
-                        {detail.progress.length === 0 && <li className="font-mono text-xs text-faint">// none yet</li>}
+                        {detail.progress.length === 0 && (
+                          <li className="font-mono text-xs text-faint">// none yet</li>
+                        )}
                         {detail.progress.map((p) => (
                           <li key={p.lessonId} className="border border-line px-4 py-2.5">
                             <p className="font-body text-sm">{p.lessonTitle}</p>
-                            <p className="font-mono text-[10px] text-faint">{p.classTitle} · {p.moduleTitle} · {new Date(p.completedAt).toLocaleDateString()}</p>
+                            <p className="font-mono text-[10px] text-faint">
+                              {p.classTitle} · {p.moduleTitle} ·{' '}
+                              {new Date(p.completedAt).toLocaleDateString()}
+                            </p>
                           </li>
                         ))}
                       </ul>
 
-                      <h3 className="mt-6 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-faint">recent knowledge checks</h3>
+                      <h3 className="mt-6 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-faint">
+                        recent knowledge checks
+                      </h3>
                       <ul className="mt-3 space-y-1.5">
-                        {detail.recentChecks.length === 0 && <li className="font-mono text-xs text-faint">// none yet</li>}
+                        {detail.recentChecks.length === 0 && (
+                          <li className="font-mono text-xs text-faint">// none yet</li>
+                        )}
                         {detail.recentChecks.slice(0, 10).map((c, i) => (
-                          <li key={i} className="flex items-center justify-between font-mono text-xs">
-                            <span className="truncate text-muted">{c.lessonTitle} · check #{c.blockIndex + 1}</span>
-                            <span className={c.correct ? 'text-success' : 'text-danger'}>{c.correct ? '✓' : '✗'}</span>
+                          <li
+                            key={i}
+                            className="flex items-center justify-between font-mono text-xs"
+                          >
+                            <span className="truncate text-muted">
+                              {c.lessonTitle} · check #{c.blockIndex + 1}
+                            </span>
+                            <span className={c.correct ? 'text-success' : 'text-danger'}>
+                              {c.correct ? '✓' : '✗'}
+                            </span>
                           </li>
                         ))}
                       </ul>
@@ -196,7 +258,9 @@ export default function StudentsPage() {
           )}
         </>
       ) : (
-        <p className="mt-8 font-mono text-xs uppercase tracking-[0.12em] text-faint">// failed to load students</p>
+        <p className="mt-8 font-mono text-xs uppercase tracking-[0.12em] text-faint">
+          // failed to load students
+        </p>
       )}
     </main>
   );

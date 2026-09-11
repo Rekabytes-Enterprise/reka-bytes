@@ -15,7 +15,9 @@ test.describe('E2E-15 · admin console', () => {
 
   test('sidebar + students directory', async ({ browser }) => {
     const ctx = await browser.newContext({ baseURL: ADMIN });
-    await ctx.addCookies([{ name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' }]);
+    await ctx.addCookies([
+      { name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' },
+    ]);
     const page = await ctx.newPage();
 
     // Sidebar renders on a console page
@@ -44,21 +46,46 @@ test.describe('E2E-15 · admin console', () => {
 
   test('sidebar sweep: every link renders, sidebar persists on back', async ({ browser }) => {
     const ctx = await browser.newContext({ baseURL: ADMIN });
-    await ctx.addCookies([{ name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' }]);
+    await ctx.addCookies([
+      { name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' },
+    ]);
     const page = await ctx.newPage();
 
     await page.goto('/');
 
     const pages: Array<{ nav: string; assert: () => Promise<void> }> = [
-      { nav: 'dashboard', assert: async () => await expect(page.getByTestId('admin-stats')).toBeVisible({ timeout: 15_000 }) },
-      { nav: 'applications', assert: async () => await expect(page.getByTestId('applications-list')).toBeVisible({ timeout: 15_000 }) },
-      { nav: 'content', assert: async () => await expect(page.getByRole('heading', { name: 'Content Manager' })).toBeVisible({ timeout: 15_000 }) },
+      {
+        nav: 'dashboard',
+        assert: async () =>
+          await expect(page.getByTestId('admin-stats')).toBeVisible({ timeout: 15_000 }),
+      },
+      {
+        nav: 'applications',
+        assert: async () =>
+          await expect(page.getByTestId('applications-list')).toBeVisible({ timeout: 15_000 }),
+      },
+      {
+        nav: 'content',
+        assert: async () =>
+          await expect(page.getByRole('heading', { name: 'Content Manager' })).toBeVisible({
+            timeout: 15_000,
+          }),
+      },
       {
         nav: 'ai-masterclass',
-        assert: async () => await expect(page).toHaveURL(/ai-masterclass\/step\/1/, { timeout: 15_000 }),
+        assert: async () =>
+          await expect(page).toHaveURL(/ai-masterclass\/step\/1/, { timeout: 15_000 }),
       },
-      { nav: 'students', assert: async () => await expect(page.getByTestId('students-table')).toBeVisible({ timeout: 15_000 }) },
-      { nav: 'analytics', assert: async () => await expect(page.getByTestId('analytics-class-picker')).toBeVisible({ timeout: 15_000 }) },
+      {
+        nav: 'students',
+        assert: async () =>
+          await expect(page.getByTestId('students-table')).toBeVisible({ timeout: 15_000 }),
+      },
+      {
+        nav: 'analytics',
+        assert: async () =>
+          await expect(page.getByTestId('analytics-class-picker')).toBeVisible({ timeout: 15_000 }),
+      },
     ];
 
     for (const { nav, assert } of pages) {
@@ -92,7 +119,9 @@ test.describe('E2E-15 · admin console', () => {
   test('content: class delete button removes a class', async ({ browser }) => {
     const seeded = await seedClassroom('E2E Delete Me Class');
     const ctx = await browser.newContext({ baseURL: ADMIN });
-    await ctx.addCookies([{ name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' }]);
+    await ctx.addCookies([
+      { name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' },
+    ]);
     const page = await ctx.newPage();
 
     await page.goto('/content');
@@ -116,7 +145,9 @@ test.describe('E2E-15 · admin console', () => {
     // row disappears from the UI…
     await expect(row).toHaveCount(0, { timeout: 15_000 });
     // …and from the DB
-    const remaining = await pgClient.query(`SELECT id FROM "Class" WHERE id = $1`, [seeded.classId]);
+    const remaining = await pgClient.query(`SELECT id FROM "Class" WHERE id = $1`, [
+      seeded.classId,
+    ]);
     expect(remaining.rows.length).toBe(0);
 
     await ctx.close();
@@ -124,12 +155,16 @@ test.describe('E2E-15 · admin console', () => {
 
   test('analytics: class picker + heatmap + quiz stats', async ({ browser }) => {
     const ctx = await browser.newContext({ baseURL: ADMIN });
-    await ctx.addCookies([{ name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' }]);
+    await ctx.addCookies([
+      { name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' },
+    ]);
     const page = await ctx.newPage();
 
     await page.goto('/analytics');
     await expect(page.getByTestId('analytics-class-picker')).toBeVisible({ timeout: 15_000 });
-    await expect(page.getByTestId('analytics-class-picker').locator('button').first()).toBeVisible();
+    await expect(
+      page.getByTestId('analytics-class-picker').locator('button').first(),
+    ).toBeVisible();
 
     await expect(page.getByTestId('analytics-detail')).toBeVisible({ timeout: 15_000 });
     await expect(page.getByText('lesson completion', { exact: false })).toBeVisible();

@@ -1,17 +1,17 @@
 # Reka Bytes
 
 > **Reka** × **Bytes** — where creativity meets computer science fundamentals.
-> Academy teaching people how to vibe code *properly*.
+> Academy teaching people how to vibe code _properly_.
 
 ## Stack
 
-| Layer | Tech | Port |
-|---|---|---|
-| Backend API | Hono + Prisma 7 + PostgreSQL 17 + Redis 7 | **4300** |
-| Frontend | Next.js 16 / React 19 / Tailwind 4 / jotai / framer-motion | **4301** |
-| Admin | Next.js 16 | **4302** |
-| Shared | zod schemas, types, error contract, theme tokens | — |
-| E2E | Playwright (video + screenshots) | — |
+| Layer       | Tech                                                       | Port     |
+| ----------- | ---------------------------------------------------------- | -------- |
+| Backend API | Hono + Prisma 7 + PostgreSQL 17 + Redis 7                  | **4300** |
+| Frontend    | Next.js 16 / React 19 / Tailwind 4 / jotai / framer-motion | **4301** |
+| Admin       | Next.js 16                                                 | **4302** |
+| Shared      | zod schemas, types, error contract, theme tokens           | —        |
+| E2E         | Playwright (video + screenshots)                           | —        |
 
 Node 22 · pnpm 11.
 

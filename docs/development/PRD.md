@@ -3,13 +3,13 @@
 > **Reka** × **Bytes** — where creativity meets computer science fundamentals.
 > Reka Bytes = the fundamentals behind vibe coding, taught properly.
 
-| Field | Value |
-|---|---|
-| Product name | Reka Bytes |
-| Type | Academy / cohort-based vibe-coding school |
-| Owner | Founder (Software Engineer, Google Certified Project Manager) |
-| Status | Draft v2 — phased roadmap |
-| Design spec | `docs/development/DESIGN.md` |
+| Field        | Value                                                         |
+| ------------ | ------------------------------------------------------------- |
+| Product name | Reka Bytes                                                    |
+| Type         | Academy / cohort-based vibe-coding school                     |
+| Owner        | Founder (Software Engineer, Google Certified Project Manager) |
+| Status       | Draft v2 — phased roadmap                                     |
+| Design spec  | `docs/development/DESIGN.md`                                  |
 
 ---
 
@@ -29,14 +29,14 @@ Reka Bytes teaches **non-CS people how to vibe code properly** — pairing the s
 
 ## 3. Roadmap Overview
 
-| Phase | Name | Theme | Status |
-|---|---|---|---|
-| **0** | Foundation | Landing + registration + admin approval (5-seat cohort) | ← current |
-| **1** | Classroom | Lesson delivery, progress tracking, quizzes | planned |
-| **2** | Craft | Assignments, project reviews, certificates, showcase | planned |
-| **3** | Community & Growth | Waitlist, payments, cohort 2+, email lifecycle | planned |
-| **4** | Academy | Multiple classes, instructor tools, analytics, public site content | planned |
-| **5** | Scale | PWA/mobile polish, public API, alumni network, marketplace | future |
+| Phase | Name               | Theme                                                              | Status    |
+| ----- | ------------------ | ------------------------------------------------------------------ | --------- |
+| **0** | Foundation         | Landing + registration + admin approval (5-seat cohort)            | ← current |
+| **1** | Classroom          | Lesson delivery, progress tracking, quizzes                        | planned   |
+| **2** | Craft              | Assignments, project reviews, certificates, showcase               | planned   |
+| **3** | Community & Growth | Waitlist, payments, cohort 2+, email lifecycle                     | planned   |
+| **4** | Academy            | Multiple classes, instructor tools, analytics, public site content | planned   |
+| **5** | Scale              | PWA/mobile polish, public API, alumni network, marketplace         | future    |
 
 Each phase ships **complete and usable on its own** — no half-built features carry over.
 
@@ -47,6 +47,7 @@ Each phase ships **complete and usable on its own** — no half-built features c
 **Goal:** prove the funnel: visitor → applicant → approved student, with manual admin review.
 
 ### Scope
+
 1. **Landing page** (`/`) — hero, value prop, curriculum outline (Basics), instructor bio, live seats-left counter, register CTA.
 2. **Registration** (`/register`) — account details + 12-question intake questionnaire (Section 6), zod-validated, framer-motion step transitions.
 3. **Auth** (`/login`) — email/password, httpOnly JWT cookie.
@@ -57,6 +58,7 @@ Each phase ships **complete and usable on its own** — no half-built features c
 8. **Platform rules** (always-on, all phases): REST API, jotai state, framer-motion, shared global error envelope, no `as any`, `useEffect` last resort, per-package `.env`.
 
 ### Acceptance Criteria
+
 - [ ] `docker compose up -d` → healthy postgres + redis only; apps run via `pnpm dev` per package (ports 4300/4301/4302).
 - [ ] Full funnel works end-to-end; 6th registration blocked at cap (UI + API 409).
 - [ ] Admin can review, approve/reject; decisions persist + audit-logged; cap cannot be exceeded concurrently.
@@ -65,15 +67,16 @@ Each phase ships **complete and usable on its own** — no half-built features c
 - [ ] ESLint passes with `no-explicit-any` enforced; every package ships `.env.example`.
 
 ### E2E Scenarios
-| ID | Test |
-|---|---|
-| E2E-01 | Visitor journey: landing renders → seats counter → navigate to register |
-| E2E-02 | Full registration: account + questionnaire → pending screen → login shows PENDING |
-| E2E-03 | Validation errors: invalid form → inline errors, no network call |
-| E2E-04 | Admin approve: review answers → approve → student sees APPROVED |
-| E2E-05 | Admin reject: reject with note → student sees REJECTED |
+
+| ID     | Test                                                                                |
+| ------ | ----------------------------------------------------------------------------------- |
+| E2E-01 | Visitor journey: landing renders → seats counter → navigate to register             |
+| E2E-02 | Full registration: account + questionnaire → pending screen → login shows PENDING   |
+| E2E-03 | Validation errors: invalid form → inline errors, no network call                    |
+| E2E-04 | Admin approve: review answers → approve → student sees APPROVED                     |
+| E2E-05 | Admin reject: reject with note → student sees REJECTED                              |
 | E2E-06 | Seat cap: 5 approved seeded → register page shows "Cohort full"; API register → 409 |
-| E2E-07 | Auth guards: unauth redirect; non-admin blocked from admin |
+| E2E-07 | Auth guards: unauth redirect; non-admin blocked from admin                          |
 
 ---
 
@@ -82,6 +85,7 @@ Each phase ships **complete and usable on its own** — no half-built features c
 **Goal:** approved students actually learn — the Basics class becomes real content.
 
 ### Scope
+
 - **Lesson structure**: Basics class = modules → lessons. Content model: markdown/MDX body + video embed URL + estimated duration + order.
 - **Lesson viewer** (`/learn`): sidebar module tree, lesson page with prose styling, video embed, "mark complete" toggle, prev/next navigation.
 - **Progress tracking**: per-user lesson completion; module progress bar; "continue where you left off" on dashboard.
@@ -91,9 +95,11 @@ Each phase ships **complete and usable on its own** — no half-built features c
 - **Drip release** (optional flag): lessons unlock on a schedule or sequentially — config per class.
 
 ### Data (new models)
+
 `Class, Module, Lesson, Quiz, QuizQuestion, QuizAttempt, LessonProgress`
 
 ### Acceptance Criteria
+
 - [ ] Student sees only approved-gated content; pending/rejected users blocked from `/learn`.
 - [ ] Progress persists across sessions; dashboard reflects it accurately.
 - [ ] Quiz pass/fail gates module completion (when enabled); attempts recorded.
@@ -107,6 +113,7 @@ Each phase ships **complete and usable on its own** — no half-built features c
 **Goal:** turn knowledge into demonstrated skill — assignments, feedback, proof of work.
 
 ### Scope
+
 - **Assignments**: per-module practical tasks ("vibe-code X, then explain the architecture AI generated"). Submission = repo URL + deployed URL + short reflection text.
 - **Review workflow**: student submits → admin reviews → grade (pass / needs-revision + feedback note) → student sees feedback in dashboard; resubmit loop.
 - **Certificates**: on completing all modules + passing all quizzes + all assignments passed → auto-generated certificate (unique verification code, public verify page `/verify/:code`).
@@ -114,9 +121,11 @@ Each phase ships **complete and usable on its own** — no half-built features c
 - **Notifications (in-app)**: bell icon + atom-fed notification center (assignment graded, new lesson available, cohort announcement). No email yet.
 
 ### Data (new models)
+
 `Assignment, Submission, Review, Certificate, ShowcaseProfile, Notification`
 
 ### Acceptance Criteria
+
 - [ ] Full submit → review → feedback → resubmit loop works; statuses always visible to student.
 - [ ] Certificate only issues when all gates pass; verification page resolves valid codes, 404s invalid ones.
 - [ ] Showcase is opt-in; student controls visibility.
@@ -129,6 +138,7 @@ Each phase ships **complete and usable on its own** — no half-built features c
 **Goal:** open the funnel beyond 5 seats and make the business sustainable.
 
 ### Scope
+
 - **Waitlist**: cohort-full state captures emails (with interest tags); admin can view/export; auto-invite next cohort.
 - **Payments**: Stripe checkout for class enrollment (one-time price per cohort); webhook-verified enrollment; free cohort flag retained for early users.
 - **Cohort 2+**: cohort entity becomes first-class — dates, seat cap, price, assigned class; registration targets a cohort.
@@ -137,9 +147,11 @@ Each phase ships **complete and usable on its own** — no half-built features c
 - **Referral**: approved students get a personal referral code; referred applicants skip to top of waitlist review.
 
 ### Data (new models)
+
 `WaitlistEntry, Cohort, Enrollment, Payment, EmailLog, InviteLink, ReferralCode`
 
 ### Acceptance Criteria
+
 - [ ] Waitlist → cohort invite → payment → enrolled flow works end-to-end.
 - [ ] Stripe webhook is the single source of truth for paid enrollment (idempotent).
 - [ ] Emails send on the right triggers; failures logged + retryable from admin.
@@ -152,6 +164,7 @@ Each phase ships **complete and usable on its own** — no half-built features c
 **Goal:** more than one class, more than one instructor — real academy operations.
 
 ### Scope
+
 - **Multiple classes**: beyond Basics — e.g., "Architecture for Vibe Coders", "Debugging AI Code", "APIs & Databases Crash Course". Class catalog page with syllabus, prerequisites, pricing.
 - **Instructor role + tools**: second admin tier (instructor) with content + review permissions but no user/payment admin.
 - **Analytics dashboard (admin)**: funnel metrics (visitors → registration → approval → completion), lesson drop-off points, quiz difficulty stats, cohort completion rates.
@@ -160,6 +173,7 @@ Each phase ships **complete and usable on its own** — no half-built features c
 - **Feedback loops**: NPS-style pulse after each module; lesson-level ratings.
 
 ### Acceptance Criteria
+
 - [ ] ≥2 classes live with independent cohorts, content, and pricing.
 - [ ] Instructor can run content + reviews without touching admin-only areas.
 - [ ] Analytics dashboard answers: where do students drop off, which quizzes are too hard.
@@ -180,30 +194,33 @@ Each phase ships **complete and usable on its own** — no half-built features c
 
 ## 4. Users & Roles
 
-| Role | Description | Capabilities |
-|---|---|---|
-| Visitor | Anyone landing on the site | View landing, class info, register/waitlist |
-| Applicant | Registered, not yet approved | See pending status |
-| Student | Approved (later: enrolled) user | Class content, dashboard, submissions, certificates |
-| Graduate | Completed a class | Showcase profile, alumni features (P2+) |
-| Instructor | Content staff (P4) | Content CRUD, assignment reviews; no user/payment admin |
-| Admin | Internal operator | Everything: applications, decisions, cohorts, payments, analytics |
+| Role       | Description                     | Capabilities                                                      |
+| ---------- | ------------------------------- | ----------------------------------------------------------------- |
+| Visitor    | Anyone landing on the site      | View landing, class info, register/waitlist                       |
+| Applicant  | Registered, not yet approved    | See pending status                                                |
+| Student    | Approved (later: enrolled) user | Class content, dashboard, submissions, certificates               |
+| Graduate   | Completed a class               | Showcase profile, alumni features (P2+)                           |
+| Instructor | Content staff (P4)              | Content CRUD, assignment reviews; no user/payment admin           |
+| Admin      | Internal operator               | Everything: applications, decisions, cohorts, payments, analytics |
 
 ## 5. User Flows (Phase 0)
 
 ### 5.1 Registration
+
 1. `/` → pitch + seats-left counter → Register CTA.
 2. `/register` → account details + questionnaire → zod validation client + server.
 3. Backend checks seat cap atomically → creates `User (PENDING)` + `Application`.
 4. Success screen → user can log in and watch status on `/status`.
 
 ### 5.2 Admin Review
+
 1. Admin logs into admin app (:4302) → application list + cap meter.
 2. Opens detail → questionnaire answers + derived profile chips.
 3. Approve / Reject (+ internal note) → status flips → audit-logged.
 4. Discord invite sent manually via internal SOP (system does not automate in P0).
 
 ### 5.3 Edge Cases
+
 - Cap reached → registration closes with "Cohort full" (waitlist arrives P3).
 - Duplicate email → friendly error. Concurrent approvals → race-safe transaction.
 - Applicant pre-decision → pending state; rejected → rejected state, no appeal in P0.
@@ -212,20 +229,20 @@ Each phase ships **complete and usable on its own** — no half-built features c
 
 Stored as schema-versioned JSON per application.
 
-| # | Question | Type | Options |
-|---|---|---|---|
-| Q1 | Have you used AI tools before? | single | Never / Tried a few times / Use weekly / Use daily |
-| Q2 | Which AI models have you used? | multi | ChatGPT (GPT-4/o-series) / Claude / Gemini / DeepSeek / Grok / Llama (local) / Other |
-| Q3 | What does "vibe coding" mean to you? | long text | free form (min 20 chars) |
-| Q4 | Which vibe-coding tools have you tried? | multi | Lovable / Bolt.new / Replit Agent / v0 / Cursor / Windsurf / Claude Code / Copilot / Cline / None yet |
-| Q5 | Comfort reading code (not writing)? | single | Can't read / A little / Comfortable / Comfortable + small edits |
-| Q6 | Do you understand what an API is? | single | No idea / Heard of it / Basics / Built one |
-| Q7 | Databases (tables/rows)? | single | No idea / Heard of it / Basics / Used one |
-| Q8 | Git / GitHub usage? | single | Never / Cloned only / Commit & push / Branches & PRs |
-| Q9 | Deployed anything live? | single | Never / No-code tool / CLI or platform (Vercel/Railway) |
-| Q10 | Biggest vibe-coded project so far? | medium text | free form |
-| Q11 | What do you most want to learn? | multi | Architecture / Debugging AI code / Databases / APIs / Git & deploy / Prompting / Security |
-| Q12 | Weekly time commitment? | single | <3h / 3–5h / 5–10h / >10h |
+| #   | Question                                | Type        | Options                                                                                               |
+| --- | --------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------- |
+| Q1  | Have you used AI tools before?          | single      | Never / Tried a few times / Use weekly / Use daily                                                    |
+| Q2  | Which AI models have you used?          | multi       | ChatGPT (GPT-4/o-series) / Claude / Gemini / DeepSeek / Grok / Llama (local) / Other                  |
+| Q3  | What does "vibe coding" mean to you?    | long text   | free form (min 20 chars)                                                                              |
+| Q4  | Which vibe-coding tools have you tried? | multi       | Lovable / Bolt.new / Replit Agent / v0 / Cursor / Windsurf / Claude Code / Copilot / Cline / None yet |
+| Q5  | Comfort reading code (not writing)?     | single      | Can't read / A little / Comfortable / Comfortable + small edits                                       |
+| Q6  | Do you understand what an API is?       | single      | No idea / Heard of it / Basics / Built one                                                            |
+| Q7  | Databases (tables/rows)?                | single      | No idea / Heard of it / Basics / Used one                                                             |
+| Q8  | Git / GitHub usage?                     | single      | Never / Cloned only / Commit & push / Branches & PRs                                                  |
+| Q9  | Deployed anything live?                 | single      | Never / No-code tool / CLI or platform (Vercel/Railway)                                               |
+| Q10 | Biggest vibe-coded project so far?      | medium text | free form                                                                                             |
+| Q11 | What do you most want to learn?         | multi       | Architecture / Debugging AI code / Databases / APIs / Git & deploy / Prompting / Security             |
+| Q12 | Weekly time commitment?                 | single      | <3h / 3–5h / 5–10h / >10h                                                                             |
 
 Required: Q1, Q2, Q4; Q3 min length. Answers visible to admin only; used for pacing + (P4) analytics.
 
@@ -253,22 +270,22 @@ Each package owns its `.env` (gitignored; `.env.example` committed).
 
 ### 7.2 Stack & Versions
 
-| Concern | Choice |
-|---|---|
-| Runtime | Node 22, pnpm 11.9.0 |
-| Frontend/Admin | Next.js 16.2.9, React 19.2.7, TypeScript 5 (strict), Tailwind CSS ^4 |
-| State | jotai (only) — server data via typed fetchers into atoms |
-| Animation | framer-motion |
-| 3D/WebGL hero | OGL or three.js (see DESIGN.md) |
-| Icons/utils | lucide-react, clsx, tailwind-merge |
-| Validation | zod 4.4.x |
-| Backend | hono @4.12 (@hono/node-server), tsx 4.23, dotenv 17.4 |
-| DB | Prisma 7.9, PostgreSQL 17 (Docker) |
-| Cache/limits | Redis 7 (Docker), ioredis 5.11 |
-| Auth | JWT httpOnly cookies, argon2 hashing, role-guarded routes |
-| Payments (P3) | Stripe + webhooks |
-| Email (P3) | Resend |
-| E2E | Playwright — `video: 'on'`, `screenshot: 'on'`, `trace: 'retain-on-failure'` → `packages/e2e/artifacts/` |
+| Concern        | Choice                                                                                                   |
+| -------------- | -------------------------------------------------------------------------------------------------------- |
+| Runtime        | Node 22, pnpm 11.9.0                                                                                     |
+| Frontend/Admin | Next.js 16.2.9, React 19.2.7, TypeScript 5 (strict), Tailwind CSS ^4                                     |
+| State          | jotai (only) — server data via typed fetchers into atoms                                                 |
+| Animation      | framer-motion                                                                                            |
+| 3D/WebGL hero  | OGL or three.js (see DESIGN.md)                                                                          |
+| Icons/utils    | lucide-react, clsx, tailwind-merge                                                                       |
+| Validation     | zod 4.4.x                                                                                                |
+| Backend        | hono @4.12 (@hono/node-server), tsx 4.23, dotenv 17.4                                                    |
+| DB             | Prisma 7.9, PostgreSQL 17 (Docker)                                                                       |
+| Cache/limits   | Redis 7 (Docker), ioredis 5.11                                                                           |
+| Auth           | JWT httpOnly cookies, argon2 hashing, role-guarded routes                                                |
+| Payments (P3)  | Stripe + webhooks                                                                                        |
+| Email (P3)     | Resend                                                                                                   |
+| E2E            | Playwright — `video: 'on'`, `screenshot: 'on'`, `trace: 'retain-on-failure'` → `packages/e2e/artifacts/` |
 
 ### 7.3 Docker & Dev Commands
 
@@ -311,4 +328,4 @@ packages/admin     → pnpm dev   (next dev -p 4302)
 
 ---
 
-*Maintained in `docs/development/PRD.md`. Update alongside any scope change.*
+_Maintained in `docs/development/PRD.md`. Update alongside any scope change._

@@ -80,7 +80,12 @@ export const QUESTION_META: QuestionMeta[] = [
     label: 'Do you use Git / GitHub?',
     type: 'single',
     required: false,
-    options: ['Never', 'Cloned repos only', 'Commit & push regularly', 'Comfortable with branches & PRs'],
+    options: [
+      'Never',
+      'Cloned repos only',
+      'Commit & push regularly',
+      'Comfortable with branches & PRs',
+    ],
   },
   {
     id: 'q9',
@@ -138,16 +143,16 @@ function buildAnswersSchema() {
   for (const q of QUESTION_META) {
     if (q.type === 'multi') {
       const base = z.array(z.string());
-      shape[q.id] = q.required
-        ? base.min(1, 'Pick at least one option')
-        : base.default([]);
+      shape[q.id] = q.required ? base.min(1, 'Pick at least one option') : base.default([]);
     } else if (q.type === 'text') {
       let s = z.string();
       if (q.minLength) s = s.min(q.minLength, `Write at least ${q.minLength} characters`);
       shape[q.id] = q.required ? s : s.optional().default('');
     } else {
       const base = z.string();
-      shape[q.id] = q.required ? base.min(1, 'This question is required') : base.optional().default('');
+      shape[q.id] = q.required
+        ? base.min(1, 'This question is required')
+        : base.optional().default('');
     }
   }
   return z.object(shape);

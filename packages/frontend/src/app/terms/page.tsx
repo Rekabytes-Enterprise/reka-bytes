@@ -4,6 +4,7 @@ import { typeStyles } from '@reka-bytes/shared';
 import { cn } from '@/lib/utils';
 import { SectionHeader } from '@/components/landing/section-header';
 import { Footer } from '@/components/layout/footer';
+import { SiteNav } from '@/components/layout/site-nav';
 import { Breadcrumb } from '@/components/layout/breadcrumb';
 import {
   CONTACT,
@@ -41,6 +42,8 @@ export default function TermsPage() {
 
   return (
     <main>
+      <SiteNav />
+
       <section className="border-b border-line">
         <div className="mx-auto max-w-[1240px] px-6 py-20 lg:px-10 lg:py-24">
           <Breadcrumb items={[{ label: 'home', href: '/' }, { label: 'terms' }]} />
@@ -69,11 +72,11 @@ export default function TermsPage() {
             title="Acceptance"
             body={
               <p className={cn(t.body, 'text-muted')}>
-                These Terms of Use (&ldquo;Terms&rdquo;) form a binding agreement between you
-                and <span className="text-ink">{OPERATOR.name}</span> (the &ldquo;operator&rdquo;). By creating an
-                account, submitting an application, or otherwise accessing our learning
-                platform, you confirm that you have read, understood, and agreed to these
-                Terms and to our{' '}
+                These Terms of Use (&ldquo;Terms&rdquo;) form a binding agreement between you and{' '}
+                <span className="text-ink">{OPERATOR.name}</span> (the &ldquo;operator&rdquo;). By
+                creating an account, submitting an application, or otherwise accessing our learning
+                platform, you confirm that you have read, understood, and agreed to these Terms and
+                to our{' '}
                 <Link href="/privacy" className="text-accent underline-offset-4 hover:underline">
                   Privacy Policy
                 </Link>
@@ -90,11 +93,10 @@ export default function TermsPage() {
               <p className={cn(t.body, 'text-muted')}>
                 Reka Bytes provides an online educational platform (&ldquo;the Service&rdquo;)
                 comprising curated classes, interactive lessons, quizzes, an AI-assisted
-                course-generation tool (the &ldquo;AI Masterclass&rdquo;), and a private
-                community space for approved cohort members. The Service is provided on an
-                &ldquo;as-is, as-available&rdquo; basis and we may modify, suspend, or
-                discontinue any part of it at any time, with reasonable notice where
-                practicable.
+                course-generation tool (the &ldquo;AI Masterclass&rdquo;), and a private community
+                space for approved cohort members. The Service is provided on an &ldquo;as-is,
+                as-available&rdquo; basis and we may modify, suspend, or discontinue any part of it
+                at any time, with reasonable notice where practicable.
               </p>
             }
           />
@@ -106,8 +108,8 @@ export default function TermsPage() {
             body={
               <>
                 <p className={cn(t.body, 'text-muted')}>
-                  You must be at least 18 years old (or 13 with verifiable parental
-                  consent) to use the Service. You agree to:
+                  You must be at least 18 years old (or 13 with verifiable parental consent) to use
+                  the Service. You agree to:
                 </p>
                 <ul className={cn(t.body, 'mt-4 list-disc space-y-2 pl-6 text-muted')}>
                   <li>
@@ -115,16 +117,13 @@ export default function TermsPage() {
                     applying.
                   </li>
                   <li>
-                    Maintain the security of your account, including your password, and
-                    notify us promptly of any unauthorised access.
+                    Maintain the security of your account, including your password, and notify us
+                    promptly of any unauthorised access.
                   </li>
+                  <li>Accept responsibility for all activities that occur under your account.</li>
                   <li>
-                    Accept responsibility for all activities that occur under your
-                    account.
-                  </li>
-                  <li>
-                    Not share your account credentials or allow another person to access
-                    the Service through your account.
+                    Not share your account credentials or allow another person to access the Service
+                    through your account.
                   </li>
                 </ul>
               </>
@@ -142,32 +141,28 @@ export default function TermsPage() {
                 </p>
                 <ul className={cn(t.body, 'mt-4 list-disc space-y-2 pl-6 text-muted')}>
                   <li>
-                    Reverse-engineer, decompile, or otherwise attempt to derive source code
-                    or underlying ideas of the Service (to the extent permitted by
-                    applicable law).
+                    Reverse-engineer, decompile, or otherwise attempt to derive source code or
+                    underlying ideas of the Service (to the extent permitted by applicable law).
                   </li>
                   <li>
-                    Upload, submit, or transmit content that is unlawful, infringing,
-                    defamatory, obscene, hateful, or otherwise harmful — including
-                    uploading material you do not have the right to share in the AI
+                    Upload, submit, or transmit content that is unlawful, infringing, defamatory,
+                    obscene, hateful, or otherwise harmful — including uploading material you do not
+                    have the right to share in the AI Masterclass.
+                  </li>
+                  <li>
+                    Use the Service to build or train competing products, or to perform automated
+                    scraping, prompt-injection, or model-extraction attacks against the AI
                     Masterclass.
                   </li>
                   <li>
-                    Use the Service to build or train competing products, or to perform
-                    automated scraping, prompt-injection, or model-extraction attacks
-                    against the AI Masterclass.
+                    Interfere with or disrupt the Service, its security features, or any other
+                    user&apos;s enjoyment of it.
                   </li>
-                  <li>
-                    Interfere with or disrupt the Service, its security features, or any
-                    other user&apos;s enjoyment of it.
-                  </li>
-                  <li>
-                    Misrepresent your identity or affiliation with any person or entity.
-                  </li>
+                  <li>Misrepresent your identity or affiliation with any person or entity.</li>
                 </ul>
                 <p className={cn(t.bodySm, 'mt-4 text-faint')}>
-                  We may suspend or terminate accounts that breach this section, with or
-                  without prior notice, in accordance with §8.
+                  We may suspend or terminate accounts that breach this section, with or without
+                  prior notice, in accordance with §8.
                 </p>
               </>
             }
@@ -180,24 +175,23 @@ export default function TermsPage() {
             body={
               <>
                 <p className={cn(t.body, 'text-muted')}>
-                  All course content, lesson designs, code samples, illustrations, brand
-                  marks, and software comprising the Service are owned by Reka Bytes or its
-                  licensors and are protected by the{' '}
-                  <span className="text-ink">Copyright Act 1987</span> and applicable
-                  international law.
+                  All course content, lesson designs, code samples, illustrations, brand marks, and
+                  software comprising the Service are owned by Reka Bytes or its licensors and are
+                  protected by the <span className="text-ink">Copyright Act 1987</span> and
+                  applicable international law.
                 </p>
                 <p className={cn(t.body, 'mt-4 text-muted')}>
                   Subject to your compliance with these Terms, we grant you a limited,
-                  non-exclusive, non-transferable, revocable licence to access and use the
-                  Service and its content for personal, non-commercial learning. You may
-                  not redistribute, republish, sell, or sublicense any part of the Service
-                  or its content without our prior written consent.
+                  non-exclusive, non-transferable, revocable licence to access and use the Service
+                  and its content for personal, non-commercial learning. You may not redistribute,
+                  republish, sell, or sublicense any part of the Service or its content without our
+                  prior written consent.
                 </p>
                 <p className={cn(t.body, 'mt-4 text-muted')}>
                   You retain ownership of any original content you submit (e.g. answers to
                   application questions, inline-check responses). You grant us a worldwide,
-                  royalty-free licence to use such content solely to operate the Service
-                  and improve our courses.
+                  royalty-free licence to use such content solely to operate the Service and improve
+                  our courses.
                 </p>
               </>
             }
@@ -210,23 +204,21 @@ export default function TermsPage() {
             body={
               <>
                 <p className={cn(t.body, 'text-muted')}>
-                  AI-generated content on the platform is produced by third-party large
-                  language models. We do not guarantee its accuracy, completeness, or
-                  fitness for any particular purpose. AI-generated lessons and quizzes may
-                  contain errors, bias, or material that resembles third-party works.
+                  AI-generated content on the platform is produced by third-party large language
+                  models. We do not guarantee its accuracy, completeness, or fitness for any
+                  particular purpose. AI-generated lessons and quizzes may contain errors, bias, or
+                  material that resembles third-party works.
                 </p>
                 <p className={cn(t.body, 'mt-4 text-muted')}>
                   AI outputs are provided for educational use only and{' '}
-                  <span className="text-ink">do not constitute</span> professional, legal,
-                  medical, or financial advice. Where feasible, we review AI outputs before
-                  publication; you acknowledge that any reliance on AI outputs is at your
-                  own risk.
+                  <span className="text-ink">do not constitute</span> professional, legal, medical,
+                  or financial advice. Where feasible, we review AI outputs before publication; you
+                  acknowledge that any reliance on AI outputs is at your own risk.
                 </p>
                 <p className={cn(t.body, 'mt-4 text-muted')}>
-                  If you upload a document to the AI Masterclass, you confirm that you
-                  hold the rights necessary to share it with us and our subprocessors, and
-                  that doing so does not breach any confidentiality obligation or third-party
-                  rights.
+                  If you upload a document to the AI Masterclass, you confirm that you hold the
+                  rights necessary to share it with us and our subprocessors, and that doing so does
+                  not breach any confidentiality obligation or third-party rights.
                 </p>
               </>
             }
@@ -238,16 +230,15 @@ export default function TermsPage() {
             title="Payment terms (when applicable)"
             body={
               <p className={cn(t.body, 'text-muted')}>
-                Free cohorts and trial access are provided as described on the website at
-                the time of enrolment. If and when paid cohorts, subscriptions, or
-                one-time purchases are introduced, the applicable fees, billing cycle, and
-                refund policy will be presented to you before you complete the transaction
-                and will form part of this section. You agree to provide accurate
-                payment information and authorise us (or our payment processor) to charge
-                the stated fees. All fees are in Malaysian Ringgit (MYR) unless stated
-                otherwise and are exclusive of any applicable taxes, which you are
-                responsible for paying. Refund requests are reviewed case-by-case under the
-                Consumer Protection Act 1999.
+                Free cohorts and trial access are provided as described on the website at the time
+                of enrolment. If and when paid cohorts, subscriptions, or one-time purchases are
+                introduced, the applicable fees, billing cycle, and refund policy will be presented
+                to you before you complete the transaction and will form part of this section. You
+                agree to provide accurate payment information and authorise us (or our payment
+                processor) to charge the stated fees. All fees are in Malaysian Ringgit (MYR) unless
+                stated otherwise and are exclusive of any applicable taxes, which you are
+                responsible for paying. Refund requests are reviewed case-by-case under the Consumer
+                Protection Act 1999.
               </p>
             }
           />
@@ -259,17 +250,15 @@ export default function TermsPage() {
             body={
               <>
                 <p className={cn(t.body, 'text-muted')}>
-                  You may close your account at any time by contacting us. We may suspend
-                  or terminate your access if you breach these Terms, if required by law,
-                  or if continuing the Service to you is no longer commercially viable.
-                  Where reasonable, we will give prior notice and an opportunity to remedy
-                  the breach.
+                  You may close your account at any time by contacting us. We may suspend or
+                  terminate your access if you breach these Terms, if required by law, or if
+                  continuing the Service to you is no longer commercially viable. Where reasonable,
+                  we will give prior notice and an opportunity to remedy the breach.
                 </p>
                 <p className={cn(t.body, 'mt-4 text-muted')}>
-                  Upon termination, the licences granted to you under §5 end. Sections
-                  that by their nature should survive (Intellectual Property, Disclaimers,
-                  Limitation of Liability, Indemnity, Governing Law) will survive
-                  termination.
+                  Upon termination, the licences granted to you under §5 end. Sections that by their
+                  nature should survive (Intellectual Property, Disclaimers, Limitation of
+                  Liability, Indemnity, Governing Law) will survive termination.
                 </p>
               </>
             }
@@ -281,13 +270,12 @@ export default function TermsPage() {
             title="Disclaimers"
             body={
               <p className={cn(t.body, 'text-muted')}>
-                To the maximum extent permitted by Malaysian law, the Service is provided
-                on an &ldquo;as-is&rdquo; and &ldquo;as-available&rdquo; basis without
-                warranties of any kind, whether express or implied, including but not
-                limited to warranties of merchantability, fitness for a particular
-                purpose, non-infringement, or accuracy of content. We do not warrant that
-                the Service will be uninterrupted, error-free, or free of harmful
-                components.
+                To the maximum extent permitted by Malaysian law, the Service is provided on an
+                &ldquo;as-is&rdquo; and &ldquo;as-available&rdquo; basis without warranties of any
+                kind, whether express or implied, including but not limited to warranties of
+                merchantability, fitness for a particular purpose, non-infringement, or accuracy of
+                content. We do not warrant that the Service will be uninterrupted, error-free, or
+                free of harmful components.
               </p>
             }
           />
@@ -299,22 +287,21 @@ export default function TermsPage() {
             body={
               <>
                 <p className={cn(t.body, 'text-muted')}>
-                  To the maximum extent permitted by Malaysian law, Reka Bytes and its
-                  officers, employees, and agents will not be liable for any indirect,
-                  incidental, special, consequential, or punitive damages, or any loss of
-                  profits, revenue, data, or goodwill, arising out of or in connection with
-                  your use of the Service.
+                  To the maximum extent permitted by Malaysian law, Reka Bytes and its officers,
+                  employees, and agents will not be liable for any indirect, incidental, special,
+                  consequential, or punitive damages, or any loss of profits, revenue, data, or
+                  goodwill, arising out of or in connection with your use of the Service.
                 </p>
                 <p className={cn(t.body, 'mt-4 text-muted')}>
-                  Where liability cannot be excluded, our aggregate liability to you for
-                  all claims arising out of or relating to the Service will not exceed the
-                  total amount you have paid us (if any) in the twelve (12) months
-                  preceding the event giving rise to the liability.
+                  Where liability cannot be excluded, our aggregate liability to you for all claims
+                  arising out of or relating to the Service will not exceed the total amount you
+                  have paid us (if any) in the twelve (12) months preceding the event giving rise to
+                  the liability.
                 </p>
                 <p className={cn(t.bodySm, 'mt-4 text-faint')}>
-                  Nothing in these Terms excludes or limits liability that cannot be
-                  excluded or limited under Malaysian law (including liability for fraud,
-                  death, or personal injury caused by negligence).
+                  Nothing in these Terms excludes or limits liability that cannot be excluded or
+                  limited under Malaysian law (including liability for fraud, death, or personal
+                  injury caused by negligence).
                 </p>
               </>
             }
@@ -326,11 +313,10 @@ export default function TermsPage() {
             title="Indemnity"
             body={
               <p className={cn(t.body, 'text-muted')}>
-                You agree to indemnify and hold harmless Reka Bytes and its officers,
-                employees, and agents from any claim, demand, loss, or expense (including
-                reasonable legal fees) arising out of your breach of these Terms, your
-                misuse of the Service, or your violation of any applicable law or
-                third-party right.
+                You agree to indemnify and hold harmless Reka Bytes and its officers, employees, and
+                agents from any claim, demand, loss, or expense (including reasonable legal fees)
+                arising out of your breach of these Terms, your misuse of the Service, or your
+                violation of any applicable law or third-party right.
               </p>
             }
           />
@@ -341,11 +327,11 @@ export default function TermsPage() {
             title="Changes to these Terms"
             body={
               <p className={cn(t.body, 'text-muted')}>
-                We may update these Terms from time to time. Material changes will be
-                notified via email (where you have an account) and a prominent notice on
-                this page. The &ldquo;Last updated&rdquo; date at the top reflects the
-                current version. Continued use of the Service after a change constitutes
-                acceptance. If you do not accept a change, you may close your account.
+                We may update these Terms from time to time. Material changes will be notified via
+                email (where you have an account) and a prominent notice on this page. The
+                &ldquo;Last updated&rdquo; date at the top reflects the current version. Continued
+                use of the Service after a change constitutes acceptance. If you do not accept a
+                change, you may close your account.
               </p>
             }
           />
@@ -357,15 +343,15 @@ export default function TermsPage() {
             body={
               <>
                 <p className={cn(t.body, 'text-muted')}>
-                  These Terms are governed by the laws of Malaysia. Both parties submit
-                  to the non-exclusive jurisdiction of the courts of Malaysia for any
-                  dispute arising out of or in connection with these Terms or the Service.
+                  These Terms are governed by the laws of Malaysia. Both parties submit to the
+                  non-exclusive jurisdiction of the courts of Malaysia for any dispute arising out
+                  of or in connection with these Terms or the Service.
                 </p>
                 <p className={cn(t.body, 'mt-4 text-muted')}>
-                  We encourage you to contact us first to try to resolve any dispute
-                  informally. Nothing in this section limits your right to bring a claim
-                  before a competent Malaysian tribunal, including the Tribunal for Homebuyer
-                  Claims (where applicable) or the small-claims procedure.
+                  We encourage you to contact us first to try to resolve any dispute informally.
+                  Nothing in this section limits your right to bring a claim before a competent
+                  Malaysian tribunal, including the Tribunal for Homebuyer Claims (where applicable)
+                  or the small-claims procedure.
                 </p>
               </>
             }
@@ -404,9 +390,9 @@ export default function TermsPage() {
           />
 
           <p className={cn(t.bodySm, 'border-t border-line pt-8 text-faint')}>
-            This document is provided for informational purposes and does not constitute
-            legal advice. Please consult a qualified Malaysian legal practitioner for
-            binding compliance review tailored to your circumstances.
+            This document is provided for informational purposes and does not constitute legal
+            advice. Please consult a qualified Malaysian legal practitioner for binding compliance
+            review tailored to your circumstances.
           </p>
         </article>
       </section>

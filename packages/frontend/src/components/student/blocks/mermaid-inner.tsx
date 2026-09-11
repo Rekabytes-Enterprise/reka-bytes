@@ -9,13 +9,7 @@
 import { useEffect, useId, useState } from 'react';
 import { AlertTriangle } from 'lucide-react';
 
-const MermaidInner = ({
-  source,
-  caption,
-}: {
-  source: string;
-  caption?: string;
-}) => {
+const MermaidInner = ({ source, caption }: { source: string; caption?: string }) => {
   const [svg, setSvg] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
   const rawId = useId();
@@ -64,7 +58,10 @@ const MermaidInner = ({
     <figure data-testid="mermaid-block" className="rounded-panel border border-line bg-inset p-4">
       {svg ? (
         // mermaid strict-mode SVG output — sanitized by mermaid itself
-        <div className="mermaid-svg overflow-x-auto [&_svg]:mx-auto [&_svg]:max-w-full" dangerouslySetInnerHTML={{ __html: svg }} />
+        <div
+          className="mermaid-svg overflow-x-auto [&_svg]:mx-auto [&_svg]:max-w-full"
+          dangerouslySetInnerHTML={{ __html: svg }}
+        />
       ) : (
         <p className="py-8 text-center font-mono text-xs text-faint">// rendering diagram…</p>
       )}

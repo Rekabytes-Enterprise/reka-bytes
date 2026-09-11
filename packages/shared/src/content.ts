@@ -228,4 +228,3 @@ export interface AIGenJobStatusDTO {
   /** Proposed outline — present while the job is awaiting approval. */
   outline: AIOutlineDTO | null;
 }
-

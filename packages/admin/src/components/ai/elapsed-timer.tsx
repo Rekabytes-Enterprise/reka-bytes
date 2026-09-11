@@ -23,7 +23,12 @@ export function ElapsedTimer({ since }: { since?: number }) {
   const label = h > 0 ? `${h}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
 
   return (
-    <span className="font-mono text-xs text-faint" role="timer" aria-label="Elapsed time" data-testid="ai-elapsed">
+    <span
+      className="font-mono text-xs text-faint"
+      role="timer"
+      aria-label="Elapsed time"
+      data-testid="ai-elapsed"
+    >
       ⏱ {label}
     </span>
   );

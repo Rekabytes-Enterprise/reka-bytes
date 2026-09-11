@@ -1,0 +1,35 @@
+# Keep the build context lean — everything generated inside the image.
+.git
+.github
+.pi
+.claude
+
+# dependencies & builds — installed/produced inside the container
+node_modules
+**/node_modules
+**/.next
+**/dist
+**/out
+**/tsconfig.tsbuildinfo
+
+# env files — NEVER bake these into an image; runtime-only (Coolify sets them).
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.local.example
+
+# generated prisma client — regenerated inside the image (`pnpm --filter @reka-bytes/db generate`)
+packages/db/src/generated
+
+# e2e artifacts & reports (sources stay; only the junk is excluded)
+packages/e2e/artifacts
+packages/e2e/test-results
+packages/e2e/playwright-report
+playwright-report
+test-results
+
+# misc
+docs
+coverage
+*.log
+.DS_Store

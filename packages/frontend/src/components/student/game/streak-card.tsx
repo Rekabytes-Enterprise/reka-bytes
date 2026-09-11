@@ -26,8 +26,11 @@ export function StreakCard({ current, longest, activeToday }: StreakCardProps) {
         />
         <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">streak</p>
       </div>
-      <p className={`mt-4 font-display text-3xl font-semibold ${activeToday ? 'text-ink' : 'text-muted'}`}>
-        {current} <span className="text-base font-normal text-faint">day{current === 1 ? '' : 's'}</span>
+      <p
+        className={`mt-4 font-display text-3xl font-semibold ${activeToday ? 'text-ink' : 'text-muted'}`}
+      >
+        {current}{' '}
+        <span className="text-base font-normal text-faint">day{current === 1 ? '' : 's'}</span>
       </p>
       <p className="mt-1 font-body text-xs text-faint">
         {activeToday ? (

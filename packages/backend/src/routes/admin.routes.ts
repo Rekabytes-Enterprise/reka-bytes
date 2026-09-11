@@ -7,7 +7,12 @@ import { decideApplication } from '../services/application.service';
 import { adminStats } from './public.routes';
 import { contentRoutes } from './content.routes';
 import { aiRoutes } from './ai.routes';
-import { listStudents, studentDetail, analyticsClasses, analyticsClassDetail } from '../services/admin-analytics.service';
+import {
+  listStudents,
+  studentDetail,
+  analyticsClasses,
+  analyticsClassDetail,
+} from '../services/admin-analytics.service';
 
 export const adminRoutes = new Hono<AppEnv>()
   .use('*', requireAdmin)
@@ -21,7 +26,9 @@ export const adminRoutes = new Hono<AppEnv>()
     }
 
     const applications = await prisma.application.findMany({
-      where: status ? { user: { status: status as 'PENDING' | 'APPROVED' | 'REJECTED' } } : undefined,
+      where: status
+        ? { user: { status: status as 'PENDING' | 'APPROVED' | 'REJECTED' } }
+        : undefined,
       include: { user: { select: { name: true, email: true, status: true } } },
       orderBy: { createdAt: 'desc' },
     });
@@ -77,7 +84,9 @@ export const adminRoutes = new Hono<AppEnv>()
   .route('/ai', aiRoutes)
   // Students & analytics (PRD-03 §3.3–3.4)
   .get('/students', async (c) => {
-    return c.json({ data: await listStudents({ query: c.req.query('query'), status: c.req.query('status') }) });
+    return c.json({
+      data: await listStudents({ query: c.req.query('query'), status: c.req.query('status') }),
+    });
   })
   .get('/students/:id', async (c) => {
     return c.json({ data: await studentDetail(c.req.param('id')) });

@@ -5,7 +5,10 @@ import { Markdown } from '@/components/student/markdown';
 
 export function StepsBlockView({ block }: { block: StepsBlock }) {
   return (
-    <section data-testid="steps-block" className="rounded-card border border-line bg-elevated p-5 shadow-card">
+    <section
+      data-testid="steps-block"
+      className="rounded-card border border-line bg-elevated p-5 shadow-card"
+    >
       <h3 className="font-display text-lg font-semibold">{block.title}</h3>
       <ol className="mt-4 space-y-4">
         {block.steps.map((step, i) => (

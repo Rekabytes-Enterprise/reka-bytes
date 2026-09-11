@@ -15,12 +15,23 @@ const iconBtn = 'p-1.5 text-faint transition-colors hover:text-accent';
 export function ClassDetail({ classId }: { classId: string }) {
   const pushToast = usePushToast();
   const [title, setTitle] = useState('');
-  const [editingLesson, setEditingLesson] = useState<{ moduleId: string; lesson: LessonDTO | null } | null>(null);
+  const [editingLesson, setEditingLesson] = useState<{
+    moduleId: string;
+    lesson: LessonDTO | null;
+  } | null>(null);
   const [newModuleTitle, setNewModuleTitle] = useState('');
-  const [pendingDelete, setPendingDelete] = useState<{ kind: 'module'; module: { id: string; title: string } } | { kind: 'lesson'; lesson: { id: string; title: string } } | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<
+    | { kind: 'module'; module: { id: string; title: string } }
+    | { kind: 'lesson'; lesson: { id: string; title: string } }
+    | null
+  >(null);
 
   // Server state via useAdminQuery (jotai atom); mutations refetch via reload().
-  const { data: cls, loading, reload } = useAdminQuery<ClassTreeDTO>(`/api/admin/classes/${classId}`);
+  const {
+    data: cls,
+    loading,
+    reload,
+  } = useAdminQuery<ClassTreeDTO>(`/api/admin/classes/${classId}`);
 
   // Sync the editable title field when fresh data arrives (local edit state).
   useEffect(() => {
@@ -44,23 +55,39 @@ export function ClassDetail({ classId }: { classId: string }) {
     if (!mod) return;
     const j = index + dir;
     if (j < 0 || j >= mod.lessons.length) return;
-    const items = mod.lessons.map((l, i) => ({ id: l.id, order: i === index ? j : i === j ? index : i }));
-    void call(() => apiFetch('/api/admin/content/reorder', { method: 'POST', body: { type: 'lessons', items } }));
+    const items = mod.lessons.map((l, i) => ({
+      id: l.id,
+      order: i === index ? j : i === j ? index : i,
+    }));
+    void call(() =>
+      apiFetch('/api/admin/content/reorder', { method: 'POST', body: { type: 'lessons', items } }),
+    );
   }
 
   function reorderModules(index: number, dir: -1 | 1) {
     if (!c) return;
     const j = index + dir;
     if (j < 0 || j >= c.modules.length) return;
-    const items = c.modules.map((m, i) => ({ id: m.id, order: i === index ? j : i === j ? index : i }));
-    void call(() => apiFetch('/api/admin/content/reorder', { method: 'POST', body: { type: 'modules', items } }));
+    const items = c.modules.map((m, i) => ({
+      id: m.id,
+      order: i === index ? j : i === j ? index : i,
+    }));
+    void call(() =>
+      apiFetch('/api/admin/content/reorder', { method: 'POST', body: { type: 'modules', items } }),
+    );
   }
 
-  if (loading || !cls) return <p className="py-16 font-mono text-xs uppercase tracking-[0.12em] text-faint">// loading…</p>;
+  if (loading || !cls)
+    return (
+      <p className="py-16 font-mono text-xs uppercase tracking-[0.12em] text-faint">// loading…</p>
+    );
 
   return (
     <main className="mx-auto max-w-[1100px] px-6 py-16 lg:px-10">
-      <Link href="/content" className="font-mono text-xs uppercase tracking-[0.12em] text-faint hover:text-accent">
+      <Link
+        href="/content"
+        className="font-mono text-xs uppercase tracking-[0.12em] text-faint hover:text-accent"
+      >
         ← content manager
       </Link>
 
@@ -68,7 +95,9 @@ export function ClassDetail({ classId }: { classId: string }) {
       <header className="mt-4 border border-line bg-elevated p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex-1">
-            <label className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">Class title</label>
+            <label className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
+              Class title
+            </label>
             <div className="mt-1 flex gap-2">
               <input
                 value={title}
@@ -78,7 +107,13 @@ export function ClassDetail({ classId }: { classId: string }) {
               />
               <button
                 type="button"
-                onClick={() => void call(() => apiFetch(`/api/admin/classes/${cls.id}`, { method: 'PUT', body: { title } }), 'Class saved')}
+                onClick={() =>
+                  void call(
+                    () =>
+                      apiFetch(`/api/admin/classes/${cls.id}`, { method: 'PUT', body: { title } }),
+                    'Class saved',
+                  )
+                }
                 className="border border-line-strong px-4 py-2 font-mono text-xs uppercase tracking-[0.12em] hover:border-accent hover:text-accent"
               >
                 save
@@ -99,7 +134,9 @@ export function ClassDetail({ classId }: { classId: string }) {
             }
             data-testid="class-publish-toggle"
             className={`px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.12em] transition-colors ${
-              cls.published ? 'bg-success/15 text-success' : 'bg-accent text-accent-ink hover:bg-accent-hover'
+              cls.published
+                ? 'bg-success/15 text-success'
+                : 'bg-accent text-accent-ink hover:bg-accent-hover'
             }`}
           >
             {cls.published ? (
@@ -116,7 +153,11 @@ export function ClassDetail({ classId }: { classId: string }) {
       {/* Modules */}
       <ul className="mt-8 space-y-6" data-testid="module-list">
         {cls.modules.map((mod, mi) => (
-          <li key={mod.id} className="border border-line bg-elevated p-6" data-testid={`module-${mod.id}`}>
+          <li
+            key={mod.id}
+            className="border border-line bg-elevated p-6"
+            data-testid={`module-${mod.id}`}
+          >
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h2 className="font-display text-lg font-semibold">
                 <InlineText
@@ -125,17 +166,31 @@ export function ClassDetail({ classId }: { classId: string }) {
                   className="font-display text-lg font-semibold"
                   onSave={async (next) => {
                     await call(
-                      () => apiFetch(`/api/admin/modules/${mod.id}`, { method: 'PUT', body: { title: next } }),
+                      () =>
+                        apiFetch(`/api/admin/modules/${mod.id}`, {
+                          method: 'PUT',
+                          body: { title: next },
+                        }),
                       'Module renamed',
                     );
                   }}
                 />
               </h2>
               <div className="flex items-center gap-1">
-                <button type="button" aria-label="Move module up" className={iconBtn} onClick={() => reorderModules(mi, -1)}>
+                <button
+                  type="button"
+                  aria-label="Move module up"
+                  className={iconBtn}
+                  onClick={() => reorderModules(mi, -1)}
+                >
                   <ArrowUp size={15} />
                 </button>
-                <button type="button" aria-label="Move module down" className={iconBtn} onClick={() => reorderModules(mi, 1)}>
+                <button
+                  type="button"
+                  aria-label="Move module down"
+                  className={iconBtn}
+                  onClick={() => reorderModules(mi, 1)}
+                >
                   <ArrowDown size={15} />
                 </button>
                 <button
@@ -152,20 +207,43 @@ export function ClassDetail({ classId }: { classId: string }) {
             {/* Lessons */}
             <ul className="mt-4 divide-y divide-line border-y border-line">
               {mod.lessons.map((lesson, li) => (
-                <li key={lesson.id} className="flex items-center justify-between gap-3 py-3" data-testid={`lesson-row-${lesson.id}`}>
+                <li
+                  key={lesson.id}
+                  className="flex items-center justify-between gap-3 py-3"
+                  data-testid={`lesson-row-${lesson.id}`}
+                >
                   <span className="flex min-w-0 items-center gap-3 pl-2">
-                    <span className="font-mono text-xs text-faint">{String(li + 1).padStart(2, '0')}</span>
+                    <span className="font-mono text-xs text-faint">
+                      {String(li + 1).padStart(2, '0')}
+                    </span>
                     <span className="truncate font-body text-sm">{lesson.title}</span>
-                    <span className="shrink-0 font-mono text-xs text-faint">{lesson.durationMinutes} min</span>
+                    <span className="shrink-0 font-mono text-xs text-faint">
+                      {lesson.durationMinutes} min
+                    </span>
                   </span>
                   <span className="flex shrink-0 items-center gap-1">
-                    <button type="button" aria-label="Move lesson up" className={iconBtn} onClick={() => reorderLessons(mod.id, li, -1)}>
+                    <button
+                      type="button"
+                      aria-label="Move lesson up"
+                      className={iconBtn}
+                      onClick={() => reorderLessons(mod.id, li, -1)}
+                    >
                       <ArrowUp size={14} />
                     </button>
-                    <button type="button" aria-label="Move lesson down" className={iconBtn} onClick={() => reorderLessons(mod.id, li, 1)}>
+                    <button
+                      type="button"
+                      aria-label="Move lesson down"
+                      className={iconBtn}
+                      onClick={() => reorderLessons(mod.id, li, 1)}
+                    >
                       <ArrowDown size={14} />
                     </button>
-                    <button type="button" aria-label="Edit lesson" className={iconBtn} onClick={() => setEditingLesson({ moduleId: mod.id, lesson })}>
+                    <button
+                      type="button"
+                      aria-label="Edit lesson"
+                      className={iconBtn}
+                      onClick={() => setEditingLesson({ moduleId: mod.id, lesson })}
+                    >
                       <ListChecks size={14} />
                     </button>
                     <button
@@ -194,7 +272,9 @@ export function ClassDetail({ classId }: { classId: string }) {
                 </li>
               )}
               {mod.lessons.length === 0 && !editingLesson && (
-                <li className="py-3 font-mono text-xs uppercase tracking-[0.12em] text-faint">// no lessons yet</li>
+                <li className="py-3 font-mono text-xs uppercase tracking-[0.12em] text-faint">
+                  // no lessons yet
+                </li>
               )}
             </ul>
 
@@ -287,9 +367,15 @@ export function ClassDetail({ classId }: { classId: string }) {
           const pd = pendingDelete;
           setPendingDelete(null);
           if (pd.kind === 'module') {
-            void call(() => apiFetch(`/api/admin/modules/${pd.module.id}`, { method: 'DELETE' }), 'Module deleted');
+            void call(
+              () => apiFetch(`/api/admin/modules/${pd.module.id}`, { method: 'DELETE' }),
+              'Module deleted',
+            );
           } else {
-            void call(() => apiFetch(`/api/admin/lessons/${pd.lesson.id}`, { method: 'DELETE' }), 'Lesson deleted');
+            void call(
+              () => apiFetch(`/api/admin/lessons/${pd.lesson.id}`, { method: 'DELETE' }),
+              'Lesson deleted',
+            );
           }
         }}
         onClose={() => setPendingDelete(null)}

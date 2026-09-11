@@ -1,5 +1,13 @@
 import { test, expect } from '@playwright/test';
-import { ADMIN, uniqueEmail, cleanupUsers, loginCookie, adminLoginCookie, pgClient, approveStudent } from './helpers';
+import {
+  ADMIN,
+  uniqueEmail,
+  cleanupUsers,
+  loginCookie,
+  adminLoginCookie,
+  pgClient,
+  approveStudent,
+} from './helpers';
 
 const PASSWORD = 'password123';
 
@@ -14,20 +22,29 @@ test.describe('E2E-13 · AI masterclass (mocked)', () => {
   const classTitle = `E2E AI Class ${Date.now()}`;
 
   test.afterAll(async () => {
-    await pgClient.query(`DELETE FROM "Class" WHERE title = $1`, [classTitle]).catch(() => undefined);
+    await pgClient
+      .query(`DELETE FROM "Class" WHERE title = $1`, [classTitle])
+      .catch(() => undefined);
     if (email) await cleanupUsers(email);
   });
 
-  test('upload → outline checkpoint → generate (mock) → review edit → publish', async ({ browser }) => {
+  test('upload → outline checkpoint → generate (mock) → review edit → publish', async ({
+    browser,
+  }) => {
     // admin session via API cookie
     const adminCtx = await browser.newContext({ baseURL: ADMIN });
     const page = await adminCtx.newPage();
     const cookie = await adminLoginCookie();
-    await adminCtx.addCookies([{ name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' }]);
+    await adminCtx.addCookies([
+      { name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' },
+    ]);
 
     // step 1 — upload fixture PDF + title
     await page.goto('/ai-masterclass/step/1');
-    await page.getByTestId('ai-file-input').locator('input[type=file]').setInputFiles('tests/fixtures/curriculum.pdf');
+    await page
+      .getByTestId('ai-file-input')
+      .locator('input[type=file]')
+      .setInputFiles('tests/fixtures/curriculum.pdf');
     await page.getByTestId('ai-class-title').fill(classTitle);
     await page.getByTestId('ai-generate-btn').click();
 
@@ -71,7 +88,9 @@ test.describe('E2E-13 · AI masterclass (mocked)', () => {
     const studentCtx = await browser.newContext({ baseURL: 'http://localhost:4301' });
     const spage = await studentCtx.newPage();
     const sCookie = await loginCookie(email, PASSWORD);
-    await studentCtx.addCookies([{ name: 'rb_session', value: sCookie.split('=')[1] ?? '', domain: 'localhost', path: '/' }]);
+    await studentCtx.addCookies([
+      { name: 'rb_session', value: sCookie.split('=')[1] ?? '', domain: 'localhost', path: '/' },
+    ]);
     await spage.goto('/learn');
     await expect(spage.getByTestId('learn-tree')).toContainText(classTitle);
     await expect(spage.getByTestId('learn-tree')).toContainText('Module 2: First Project');

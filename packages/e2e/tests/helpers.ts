@@ -32,8 +32,7 @@ export function sampleAnswers(): Record<string, string | string[]> {
   return {
     q1: 'Use weekly',
     q2: ['ChatGPT (GPT-4/o-series)'],
-    q3:
-      'To me vibe coding means describing what I want to an AI and letting it write the code while I guide it.',
+    q3: 'To me vibe coding means describing what I want to an AI and letting it write the code while I guide it.',
     q4: ['Lovable', 'Cursor'],
   };
 }
@@ -48,7 +47,10 @@ export async function registerViaApi(
   email: string,
   password = 'password123',
   name = 'E2E Applicant',
-): Promise<{ status: number; body: { data?: ApiUser; error?: { code: string; message: string } } }> {
+): Promise<{
+  status: number;
+  body: { data?: ApiUser; error?: { code: string; message: string } };
+}> {
   const res = await fetch(`${BACK}/api/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -186,12 +188,27 @@ export async function seedClassroom(title = 'E2E Basics'): Promise<SeededClassro
   await pgClient.query(
     `INSERT INTO "Lesson" (id, "moduleId", title, "contentMarkdown", "videoUrl", "durationMinutes", "order", "createdAt", "updatedAt")
      VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())`,
-    [ids.lessonIds[0], ids.moduleId, 'Lesson One', lesson1Md, 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', 5, 0],
+    [
+      ids.lessonIds[0],
+      ids.moduleId,
+      'Lesson One',
+      lesson1Md,
+      'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+      5,
+      0,
+    ],
   );
   await pgClient.query(
     `INSERT INTO "Lesson" (id, "moduleId", title, "contentMarkdown", "videoUrl", "durationMinutes", "order", "createdAt", "updatedAt")
      VALUES ($1, $2, $3, $4, NULL, $5, $6, NOW(), NOW())`,
-    [ids.lessonIds[1], ids.moduleId, 'Lesson Two', '## Lesson Two\n\nPlain markdown content.', 10, 1],
+    [
+      ids.lessonIds[1],
+      ids.moduleId,
+      'Lesson Two',
+      '## Lesson Two\n\nPlain markdown content.',
+      10,
+      1,
+    ],
   );
 
   await pgClient.query(
@@ -209,7 +226,14 @@ export async function seedClassroom(title = 'E2E Basics'): Promise<SeededClassro
     await pgClient.query(
       `INSERT INTO "QuizQuestion" (id, "quizId", question, options, "correctIndex", "order")
        VALUES ($1, $2, $3, $4::jsonb, $5, $6)`,
-      [ids.questionIds[i], ids.quizId, question.q, JSON.stringify(question.options), question.correct, i],
+      [
+        ids.questionIds[i],
+        ids.quizId,
+        question.q,
+        JSON.stringify(question.options),
+        question.correct,
+        i,
+      ],
     );
   }
 

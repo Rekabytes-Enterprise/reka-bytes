@@ -17,19 +17,24 @@ export default function ApplicationsPage() {
   const [filter, setFilter] = useState<UserStatus | 'ALL'>('ALL');
 
   // Server state via useAdminQuery (jotai atom) — 401/403/0 auto-redirects to /login.
-  const { data: applications, loading } = useAdminQuery<ApplicationDTO[]>('/api/admin/applications');
+  const { data: applications, loading } =
+    useAdminQuery<ApplicationDTO[]>('/api/admin/applications');
 
   const visible = (applications ?? []).filter((a) => filter === 'ALL' || a.user.status === filter);
 
   return (
     <main>
       <header className="border-b border-line pb-8">
-        <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-dim">reka·bytes / admin</p>
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-dim">
+          reka·bytes / admin
+        </p>
         <h1 className="mt-2 font-display text-3xl font-semibold">Applications</h1>
       </header>
 
       {loading ? (
-        <p className="mt-8 font-mono text-xs uppercase tracking-[0.12em] text-faint">// loading applications…</p>
+        <p className="mt-8 font-mono text-xs uppercase tracking-[0.12em] text-faint">
+          // loading applications…
+        </p>
       ) : applications ? (
         <>
           {/* filters */}
@@ -81,7 +86,9 @@ export default function ApplicationsPage() {
           </ul>
         </>
       ) : (
-        <p className="mt-8 font-mono text-xs uppercase tracking-[0.12em] text-faint">// failed to load applications</p>
+        <p className="mt-8 font-mono text-xs uppercase tracking-[0.12em] text-faint">
+          // failed to load applications
+        </p>
       )}
     </main>
   );

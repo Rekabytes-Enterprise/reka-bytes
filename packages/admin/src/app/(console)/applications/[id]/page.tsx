@@ -4,12 +4,7 @@ import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
-import {
-  apiFetch,
-  isApiClientError,
-  QUESTION_META,
-  type ApplicationDTO,
-} from '@reka-bytes/shared';
+import { apiFetch, isApiClientError, QUESTION_META, type ApplicationDTO } from '@reka-bytes/shared';
 import { cn } from '@/lib/utils';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { Button } from '@/components/ui/button';
@@ -82,7 +77,10 @@ export default function ApplicationReviewPage({ params }: { params: Promise<{ id
     <main className="mx-auto grid max-w-[1200px] grid-cols-1 gap-12 px-6 py-16 lg:grid-cols-[1fr_360px] lg:px-10">
       {/* answers */}
       <div>
-        <Link href="/" className="font-mono text-xs uppercase tracking-[0.12em] text-faint hover:text-muted">
+        <Link
+          href="/"
+          className="font-mono text-xs uppercase tracking-[0.12em] text-faint hover:text-muted"
+        >
           ← all applications
         </Link>
         <h1 className="mt-6 font-display text-4xl font-semibold">{app.user.name}</h1>
@@ -91,15 +89,27 @@ export default function ApplicationReviewPage({ params }: { params: Promise<{ id
         <dl className="mt-10 divide-y divide-line border-y border-line" data-testid="answers-list">
           {QUESTION_META.map((q) => {
             const val = app.answers[q.id];
-            const rendered = Array.isArray(val) ? val.join(', ') : typeof val === 'string' ? val : '—';
+            const rendered = Array.isArray(val)
+              ? val.join(', ')
+              : typeof val === 'string'
+                ? val
+                : '—';
             return (
-              <div key={q.id} className="grid grid-cols-1 gap-2 py-5 sm:grid-cols-[220px_1fr] sm:gap-6">
+              <div
+                key={q.id}
+                className="grid grid-cols-1 gap-2 py-5 sm:grid-cols-[220px_1fr] sm:gap-6"
+              >
                 <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
                   {q.id.toUpperCase()}
                 </dt>
                 <dd>
                   <p className="font-body text-xs text-muted">{q.label}</p>
-                  <p className={cn('mt-1 font-body text-sm', rendered === '—' ? 'text-faint' : 'text-ink')}>
+                  <p
+                    className={cn(
+                      'mt-1 font-body text-sm',
+                      rendered === '—' ? 'text-faint' : 'text-ink',
+                    )}
+                  >
                     {rendered}
                   </p>
                 </dd>
@@ -118,7 +128,9 @@ export default function ApplicationReviewPage({ params }: { params: Promise<{ id
 
         {decided ? (
           <div className="mt-6 border-t border-line pt-6">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted">Internal note</p>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted">
+              Internal note
+            </p>
             <p className="mt-2 font-body text-sm text-muted">{app.internalNote ?? '—'}</p>
             <p className="mt-4 font-mono text-xs uppercase tracking-[0.12em] text-faint">
               decided {app.decidedAt ? new Date(app.decidedAt).toLocaleDateString() : '—'}
@@ -192,7 +204,11 @@ export default function ApplicationReviewPage({ params }: { params: Promise<{ id
                   className={cn(modal === 'REJECTED' && 'bg-danger text-white hover:bg-danger/90')}
                   data-testid="confirm-decision-btn"
                 >
-                  {busy ? 'Working…' : modal === 'APPROVED' ? 'Confirm approval' : 'Confirm rejection'}
+                  {busy
+                    ? 'Working…'
+                    : modal === 'APPROVED'
+                      ? 'Confirm approval'
+                      : 'Confirm rejection'}
                 </Button>
               </div>
             </motion.div>

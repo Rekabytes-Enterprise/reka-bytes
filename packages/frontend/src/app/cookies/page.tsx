@@ -4,14 +4,9 @@ import { typeStyles } from '@reka-bytes/shared';
 import { cn } from '@/lib/utils';
 import { SectionHeader } from '@/components/landing/section-header';
 import { Footer } from '@/components/layout/footer';
+import { SiteNav } from '@/components/layout/site-nav';
 import { Breadcrumb } from '@/components/layout/breadcrumb';
-import {
-  CONTACT,
-  field,
-  LEGAL_EFFECTIVE,
-  LEGAL_UPDATED,
-  mailtoHref,
-} from '@/lib/legal';
+import { CONTACT, field, LEGAL_EFFECTIVE, LEGAL_UPDATED, mailtoHref } from '@/lib/legal';
 
 export const metadata: Metadata = {
   title: 'Cookies Policy — Reka Bytes',
@@ -33,13 +28,12 @@ export default function CookiesPage() {
 
   return (
     <main>
+      <SiteNav />
+
       <section className="border-b border-line">
         <div className="mx-auto max-w-[1240px] px-6 py-20 lg:px-10 lg:py-24">
           <Breadcrumb items={[{ label: 'home', href: '/' }, { label: 'cookies' }]} />
-          <SectionHeader
-            name="COOKIES POLICY"
-            title="Cookies and similar technologies we use."
-          />
+          <SectionHeader name="COOKIES POLICY" title="Cookies and similar technologies we use." />
           <div className="mt-6 flex flex-wrap items-center gap-4 font-mono text-xs uppercase tracking-[0.12em] text-faint">
             <span>
               Effective: <span className="text-muted">{LEGAL_EFFECTIVE}</span>
@@ -64,11 +58,11 @@ export default function CookiesPage() {
             title="What are cookies?"
             body={
               <p className={cn(t.body, 'text-muted')}>
-                Cookies are small text files placed on your device when you visit a
-                website. They are widely used to make sites work, improve performance,
-                and provide information to site owners. &ldquo;Similar technologies&rdquo;
-                include localStorage, sessionStorage, and pixels — we use localStorage for
-                a small set of UI preferences described below.
+                Cookies are small text files placed on your device when you visit a website. They
+                are widely used to make sites work, improve performance, and provide information to
+                site owners. &ldquo;Similar technologies&rdquo; include localStorage,
+                sessionStorage, and pixels — we use localStorage for a small set of UI preferences
+                described below.
               </p>
             }
           />
@@ -81,9 +75,8 @@ export default function CookiesPage() {
               <>
                 <p className={cn(t.body, 'text-muted')}>
                   We use only cookies and storage that are{' '}
-                  <span className="text-ink">strictly necessary</span> for the operation
-                  of the Service, or that store non-personal UI preferences on your
-                  device.
+                  <span className="text-ink">strictly necessary</span> for the operation of the
+                  Service, or that store non-personal UI preferences on your device.
                 </p>
 
                 <h3 className={cn(t.headingS, 'mt-8 text-ink')}>a) Strictly necessary cookies</h3>
@@ -101,8 +94,8 @@ export default function CookiesPage() {
                       <tr>
                         <td className="px-5 py-4 align-top font-mono text-ink">rb_session</td>
                         <td className="px-5 py-4 align-top">
-                          Authenticates you after login. Holds a signed, HTTP-only JWT —
-                          no readable personal data.
+                          Authenticates you after login. Holds a signed, HTTP-only JWT — no readable
+                          personal data.
                         </td>
                         <td className="px-5 py-4 align-top">HTTP-only cookie</td>
                         <td className="px-5 py-4 align-top">7 days</td>
@@ -111,12 +104,14 @@ export default function CookiesPage() {
                   </table>
                 </div>
                 <p className={cn(t.bodySm, 'mt-3 text-faint')}>
-                  Strictly necessary cookies do not require consent under the PDPA
-                  because the Service cannot function without them. Disabling them will
-                  log you out and may break the Service.
+                  Strictly necessary cookies do not require consent under the PDPA because the
+                  Service cannot function without them. Disabling them will log you out and may
+                  break the Service.
                 </p>
 
-                <h3 className={cn(t.headingS, 'mt-10 text-ink')}>b) Local storage (non-essential)</h3>
+                <h3 className={cn(t.headingS, 'mt-10 text-ink')}>
+                  b) Local storage (non-essential)
+                </h3>
                 <div className="mt-3 overflow-hidden border border-line">
                   <table className="w-full text-left">
                     <thead className="bg-elevated">
@@ -134,19 +129,17 @@ export default function CookiesPage() {
                         </td>
                         <td className="px-5 py-4 align-top">
                           Remembers which gamification badges you have already seen the
-                          &ldquo;unlocked&rdquo; celebration for, so we don&apos;t show the
-                          same toast repeatedly.
+                          &ldquo;unlocked&rdquo; celebration for, so we don&apos;t show the same
+                          toast repeatedly.
                         </td>
                         <td className="px-5 py-4 align-top">localStorage</td>
                         <td className="px-5 py-4 align-top">No (badge IDs only)</td>
                       </tr>
                       <tr>
-                        <td className="px-5 py-4 align-top font-mono text-ink">
-                          theme preference
-                        </td>
+                        <td className="px-5 py-4 align-top font-mono text-ink">theme preference</td>
                         <td className="px-5 py-4 align-top">
-                          Remembers your chosen colour theme (e.g. light/dark) so the
-                          Service renders consistently between visits.
+                          Remembers your chosen colour theme (e.g. light/dark) so the Service
+                          renders consistently between visits.
                         </td>
                         <td className="px-5 py-4 align-top">localStorage</td>
                         <td className="px-5 py-4 align-top">No</td>
@@ -155,8 +148,8 @@ export default function CookiesPage() {
                   </table>
                 </div>
                 <p className={cn(t.bodySm, 'mt-3 text-faint')}>
-                  These items are functional UI preferences stored only on your device.
-                  They are not transmitted to our servers and contain no personal data.
+                  These items are functional UI preferences stored only on your device. They are not
+                  transmitted to our servers and contain no personal data.
                 </p>
               </>
             }
@@ -168,13 +161,12 @@ export default function CookiesPage() {
             title="Third-party cookies"
             body={
               <p className={cn(t.body, 'text-muted')}>
-                We do <span className="text-ink">not</span> use third-party analytics,
-                advertising networks, or social-media tracking pixels. The only
-                third-party requests initiated by the Service are made to our backend
-                API (<code className="font-mono text-ink">/api/*</code>) and, when you
-                use the AI Masterclass, to our AI subprocessors (OpenRouter and Boundary
-                ML). Those AI requests are made server-to-server and do not set cookies
-                in your browser.
+                We do <span className="text-ink">not</span> use third-party analytics, advertising
+                networks, or social-media tracking pixels. The only third-party requests initiated
+                by the Service are made to our backend API (
+                <code className="font-mono text-ink">/api/*</code>) and, when you use the AI
+                Masterclass, to our AI subprocessors (OpenRouter and Boundary ML). Those AI requests
+                are made server-to-server and do not set cookies in your browser.
               </p>
             }
           />
@@ -186,16 +178,15 @@ export default function CookiesPage() {
             body={
               <>
                 <p className={cn(t.body, 'text-muted')}>
-                  You can control cookies through your browser settings. Most browsers
-                  allow you to block all cookies, block only third-party cookies, or
-                  delete cookies when you close the browser. Note that blocking the{' '}
-                  <code className="font-mono text-ink">rb_session</code> cookie will log
-                  you out and may prevent the Service from working.
+                  You can control cookies through your browser settings. Most browsers allow you to
+                  block all cookies, block only third-party cookies, or delete cookies when you
+                  close the browser. Note that blocking the{' '}
+                  <code className="font-mono text-ink">rb_session</code> cookie will log you out and
+                  may prevent the Service from working.
                 </p>
                 <p className={cn(t.body, 'mt-4 text-muted')}>
                   To clear localStorage entries, use your browser&apos;s developer tools
-                  (Application → Storage → Clear site data) or use private/incognito
-                  browsing mode.
+                  (Application → Storage → Clear site data) or use private/incognito browsing mode.
                 </p>
                 <p className={cn(t.body, 'mt-4 text-muted')}>
                   Browser-specific guidance:{' '}
@@ -246,12 +237,11 @@ export default function CookiesPage() {
             title="&ldquo;Do Not Track&rdquo; signals"
             body={
               <p className={cn(t.body, 'text-muted')}>
-                We honour &ldquo;Do Not Track&rdquo; (&ldquo;DNT&rdquo;) browser signals
-                where they are technically applicable. Because we do not use third-party
-                tracking cookies in the first place, there is currently no behavioural
-                tracking for DNT to opt out of. If we add analytics or marketing cookies
-                in future, this section will be updated and the new cookies will fully
-                honour DNT / Global Privacy Control signals.
+                We honour &ldquo;Do Not Track&rdquo; (&ldquo;DNT&rdquo;) browser signals where they
+                are technically applicable. Because we do not use third-party tracking cookies in
+                the first place, there is currently no behavioural tracking for DNT to opt out of.
+                If we add analytics or marketing cookies in future, this section will be updated and
+                the new cookies will fully honour DNT / Global Privacy Control signals.
               </p>
             }
           />
@@ -262,10 +252,10 @@ export default function CookiesPage() {
             title="Changes to this Policy"
             body={
               <p className={cn(t.body, 'text-muted')}>
-                We will update this page whenever our use of cookies or storage changes.
-                Material additions (e.g. introducing analytics or marketing cookies) will
-                be announced on this page and, where required by the PDPA, we will request
-                your prior consent before such cookies are set.
+                We will update this page whenever our use of cookies or storage changes. Material
+                additions (e.g. introducing analytics or marketing cookies) will be announced on
+                this page and, where required by the PDPA, we will request your prior consent before
+                such cookies are set.
               </p>
             }
           />
@@ -290,10 +280,7 @@ export default function CookiesPage() {
                   </span>
                 )}
                 . See our full{' '}
-                <Link
-                  href="/privacy"
-                  className="text-accent underline-offset-4 hover:underline"
-                >
+                <Link href="/privacy" className="text-accent underline-offset-4 hover:underline">
                   Privacy Policy
                 </Link>{' '}
                 for data-protection rights under the PDPA.
@@ -302,11 +289,10 @@ export default function CookiesPage() {
           />
 
           <p className={cn(t.bodySm, 'border-t border-line pt-8 text-faint')}>
-            This document is provided for informational purposes and does not constitute
-            legal advice. Please consult a qualified Malaysian legal practitioner for
-            binding compliance review.
+            This document is provided for informational purposes and does not constitute legal
+            advice. Please consult a qualified Malaysian legal practitioner for binding compliance
+            review.
           </p>
-
         </article>
       </section>
 

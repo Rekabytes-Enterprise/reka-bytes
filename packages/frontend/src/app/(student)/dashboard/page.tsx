@@ -76,7 +76,9 @@ export default function DashboardPage() {
       {/* Greeting + level pill + XP bar */}
       <header className="pb-8">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-dim">cohort 001 · live</p>
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-dim">
+            cohort 001 · live
+          </p>
           <LevelPill level={data.game.xp.level} />
         </div>
         <h1 className="mt-2 font-display text-3xl font-semibold">Welcome back 👋</h1>
@@ -128,7 +130,9 @@ export default function DashboardPage() {
               </p>
               {data.nextLesson ? (
                 <div className="mt-4">
-                  <h2 className="font-display text-2xl font-semibold">{data.nextLesson.lessonTitle}</h2>
+                  <h2 className="font-display text-2xl font-semibold">
+                    {data.nextLesson.lessonTitle}
+                  </h2>
                   <p className="mt-2 font-body text-sm text-muted">
                     {data.nextLesson.moduleTitle} · {data.nextLesson.durationMinutes} min
                   </p>
@@ -151,7 +155,9 @@ export default function DashboardPage() {
                 </div>
               ) : (
                 <div className="mt-4">
-                  <h2 className="font-display text-2xl font-semibold">You&apos;re all caught up! 🎉</h2>
+                  <h2 className="font-display text-2xl font-semibold">
+                    You&apos;re all caught up! 🎉
+                  </h2>
                   <p className="mt-2 font-body text-sm text-muted">
                     Every lesson complete. Watch for new modules dropping soon.
                   </p>
@@ -191,7 +197,9 @@ export default function DashboardPage() {
             </Card>
 
             <Card data-testid="announcements">
-              <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">announcements</p>
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
+                announcements
+              </p>
               <div className="mt-4 border-l-2 border-accent pl-4">
                 <p className="font-body text-sm leading-relaxed text-muted">
                   📌 Welcome to Cohort 001! Class materials are live — start with Module 1 and work
