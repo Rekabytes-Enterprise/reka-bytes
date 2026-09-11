@@ -9,6 +9,8 @@ node_modules
 # generated code — never reformat
 packages/db/src/generated
 packages/baml/baml_client
+# Next.js owns this file (regenerated on dev/build; it may re-unformat)
+**/next-env.d.ts
 
 # e2e artifacts & reports
 packages/e2e/artifacts
