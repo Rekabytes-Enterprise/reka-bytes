@@ -27,14 +27,16 @@ COPY . .
 # generated inside the image. baml_client is committed, so no BAML step.
 RUN pnpm --filter @reka-bytes/db generate
 
-# ── runner: full workspace (tsx is a devDep; prisma CLI kept so Coolify
-#    pre-deploy can run `pnpm --filter @reka-bytes/db deploy`) ───────────────
+# ── runner: full workspace (tsx is a devDep; prisma CLI is used by start.sh
+#    to run migrations on every container start, mokara-style) ────────────
 FROM base AS runner
 ENV NODE_ENV=production PORT=4300
 WORKDIR /app
 COPY --from=build /app ./
+RUN chmod +x packages/backend/scripts/start.sh
 USER node
 WORKDIR /app/packages/backend
 EXPOSE 4300
-# tsx as PID 1 — receives SIGTERM directly; the app handles graceful shutdown.
-CMD ["node_modules/.bin/tsx", "src/index.ts"]
+# start.sh = prisma migrate deploy (idempotent) → exec tsx so SIGTERM still
+# reaches the app for graceful shutdown.
+CMD ["./scripts/start.sh"]
