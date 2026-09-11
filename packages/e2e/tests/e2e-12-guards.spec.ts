@@ -23,7 +23,9 @@ test.describe('E2E-12 · auth guards', () => {
 
     const ctx = await browser.newContext({ baseURL: FRONT });
     const cookie = await loginCookie(pendingEmail, PASSWORD);
-    await ctx.addCookies([{ name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' }]);
+    await ctx.addCookies([
+      { name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' },
+    ]);
     const page = await ctx.newPage();
 
     // UI guard: PENDING → bounced to /status with toast

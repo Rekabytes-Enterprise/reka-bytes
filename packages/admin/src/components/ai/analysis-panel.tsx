@@ -26,10 +26,7 @@ export function AnalysisPanel({ analysis, defaultOpen = false }: Props) {
   const gapCount = analysis.topics.filter((t) => t.needsExpansion).length;
 
   return (
-    <section
-      className="border border-line bg-elevated"
-      data-testid="ai-analysis-panel"
-    >
+    <section className="border border-line bg-elevated" data-testid="ai-analysis-panel">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}

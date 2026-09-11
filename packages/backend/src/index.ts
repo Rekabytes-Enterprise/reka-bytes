@@ -35,7 +35,10 @@ app.route('/api/learn', learnRoutes);
 app.onError(errorHandler);
 
 app.notFound((c) =>
-  c.json({ error: { code: 'NOT_FOUND', message: `No route for ${c.req.method} ${c.req.path}` } }, 404),
+  c.json(
+    { error: { code: 'NOT_FOUND', message: `No route for ${c.req.method} ${c.req.path}` } },
+    404,
+  ),
 );
 
 const server = serve({ fetch: app.fetch, port: env.PORT }, (info) => {

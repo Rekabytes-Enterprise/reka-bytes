@@ -39,9 +39,7 @@ export interface UseApiQueryResult<T> {
 }
 
 type QueryResult<T> =
-  | { state: 'loading' }
-  | { state: 'hasData'; data: T | null }
-  | { state: 'hasError'; error: Error };
+  { state: 'loading' } | { state: 'hasData'; data: T | null } | { state: 'hasError'; error: Error };
 
 /**
  * Userland replacement for jotai's deprecated `loadable` (removed in v3).

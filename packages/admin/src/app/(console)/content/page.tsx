@@ -16,7 +16,11 @@ export default function ContentPage() {
   const [pendingDelete, setPendingDelete] = useState<ClassSummaryDTO | null>(null);
 
   // Server state via useApiQuery (jotai atom); delete refetches via reload().
-  const { data: classes, loading, reload } = useAdminQuery<ClassSummaryDTO[]>(
+  const {
+    data: classes,
+    loading,
+    reload,
+  } = useAdminQuery<ClassSummaryDTO[]>(
     // Skip until the auth guard is ready — avoids a doomed request on hard reloads.
     guard === 'ready' ? '/api/admin/classes' : null,
   );
@@ -43,7 +47,10 @@ export default function ContentPage() {
     <main className="mx-auto max-w-[1200px] px-6 py-16 lg:px-10">
       <header className="flex flex-wrap items-center justify-between gap-4 border-b border-line pb-8">
         <div>
-          <Link href="/" className="font-mono text-xs uppercase tracking-[0.12em] text-faint hover:text-accent">
+          <Link
+            href="/"
+            className="font-mono text-xs uppercase tracking-[0.12em] text-faint hover:text-accent"
+          >
             ← applications
           </Link>
           <h1 className="mt-2 font-display text-3xl font-semibold">Content Manager</h1>
@@ -67,11 +74,18 @@ export default function ContentPage() {
       </header>
 
       {loading ? (
-        <p className="py-10 font-mono text-xs uppercase tracking-[0.12em] text-faint">// loading classes…</p>
+        <p className="py-10 font-mono text-xs uppercase tracking-[0.12em] text-faint">
+          // loading classes…
+        </p>
       ) : !classes ? (
-        <p className="py-10 font-mono text-xs uppercase tracking-[0.12em] text-faint">// failed to load classes</p>
+        <p className="py-10 font-mono text-xs uppercase tracking-[0.12em] text-faint">
+          // failed to load classes
+        </p>
       ) : classes.length === 0 ? (
-        <p className="py-10 font-mono text-xs uppercase tracking-[0.12em] text-faint" data-testid="content-empty">
+        <p
+          className="py-10 font-mono text-xs uppercase tracking-[0.12em] text-faint"
+          data-testid="content-empty"
+        >
           // no classes yet — create one or use AI masterclass
         </p>
       ) : (
@@ -87,7 +101,8 @@ export default function ContentPage() {
                   <div>
                     <p className="font-body text-sm font-medium text-ink">{cls.title}</p>
                     <p className="font-mono text-xs text-muted">
-                      {cls.moduleCount} modules · {cls.lessonCount} lessons · {cls.quizCount} quizzes
+                      {cls.moduleCount} modules · {cls.lessonCount} lessons · {cls.quizCount}{' '}
+                      quizzes
                     </p>
                   </div>
                   <span
@@ -123,10 +138,18 @@ export default function ContentPage() {
           pendingDelete ? (
             <>
               This permanently deletes{' '}
-              <strong>{pendingDelete.moduleCount} module{pendingDelete.moduleCount !== 1 ? 's' : ''}</strong>,{' '}
-              <strong>{pendingDelete.lessonCount} lesson{pendingDelete.lessonCount !== 1 ? 's' : ''}</strong> and{' '}
-              <strong>{pendingDelete.quizCount} quiz{pendingDelete.quizCount !== 1 ? 'zes' : ''}</strong>.{' '}
-              Student progress and knowledge-check events are deleted too.{' '}
+              <strong>
+                {pendingDelete.moduleCount} module{pendingDelete.moduleCount !== 1 ? 's' : ''}
+              </strong>
+              ,{' '}
+              <strong>
+                {pendingDelete.lessonCount} lesson{pendingDelete.lessonCount !== 1 ? 's' : ''}
+              </strong>{' '}
+              and{' '}
+              <strong>
+                {pendingDelete.quizCount} quiz{pendingDelete.quizCount !== 1 ? 'zes' : ''}
+              </strong>
+              . Student progress and knowledge-check events are deleted too.{' '}
               <strong>This cannot be undone.</strong>
             </>
           ) : undefined

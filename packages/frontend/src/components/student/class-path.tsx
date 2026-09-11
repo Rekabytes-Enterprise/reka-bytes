@@ -65,7 +65,9 @@ export function ClassPath({ cls }: { cls: StudentClassDTO }) {
       {/* ── Class head ─────────────────────────────────────────── */}
       <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
         <div className="min-w-0 max-w-xl">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-faint">class</p>
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-faint">
+            class
+          </p>
           <h2 className="mt-1 font-display text-xl font-semibold">{cls.title}</h2>
           {cls.description && (
             <p className="mt-1 font-body text-sm leading-relaxed text-muted">{cls.description}</p>
@@ -99,9 +101,15 @@ export function ClassPath({ cls }: { cls: StudentClassDTO }) {
       <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.16em] text-faint">
         {doneCount}/{totalLessons} lessons complete · {pct}%
       </p>
-      <span aria-hidden className="mt-2 block h-1.5 w-full overflow-hidden rounded-full bg-inset ring-1 ring-line/60">
+      <span
+        aria-hidden
+        className="mt-2 block h-1.5 w-full overflow-hidden rounded-full bg-inset ring-1 ring-line/60"
+      >
         <motion.span
-          className={cn('block h-full rounded-full', doneCount === totalLessons && totalLessons > 0 ? 'bg-success' : 'bg-accent')}
+          className={cn(
+            'block h-full rounded-full',
+            doneCount === totalLessons && totalLessons > 0 ? 'bg-success' : 'bg-accent',
+          )}
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -112,16 +120,27 @@ export function ClassPath({ cls }: { cls: StudentClassDTO }) {
       {cls.modules.length === 0 ? (
         <p className="mt-8 font-mono text-xs text-faint">// no modules published yet</p>
       ) : (
-        <ol data-testid="module-map" className="relative ml-3 mt-4 space-y-5 border-l border-line pb-2 pl-7 pt-6">
+        <ol
+          data-testid="module-map"
+          className="relative ml-3 mt-4 space-y-5 border-l border-line pb-2 pl-7 pt-6"
+        >
           {cls.modules.map((mod, i) => {
             const modDone = mod.lessons.filter((l) => l.completedAt !== null).length;
             const modTotal = mod.lessons.length;
             const modPct = modTotal === 0 ? 0 : Math.round((modDone / modTotal) * 100);
             const isComplete = modTotal > 0 && modDone === modTotal;
-            const state = isComplete ? 'complete' : mod.id === currentModuleId ? 'current' : 'upcoming';
+            const state = isComplete
+              ? 'complete'
+              : mod.id === currentModuleId
+                ? 'current'
+                : 'upcoming';
 
             return (
-              <li key={mod.id} className="relative reveal-in" style={{ animationDelay: `${i * 60}ms` }}>
+              <li
+                key={mod.id}
+                className="relative reveal-in"
+                style={{ animationDelay: `${i * 60}ms` }}
+              >
                 {/* Rail node */}
                 <span
                   aria-hidden
@@ -130,14 +149,20 @@ export function ClassPath({ cls }: { cls: StudentClassDTO }) {
                     MODULE_NODE_CLS[state],
                   )}
                 >
-                  {isComplete ? <Check size={14} strokeWidth={3} /> : String(i + 1).padStart(2, '0')}
+                  {isComplete ? (
+                    <Check size={14} strokeWidth={3} />
+                  ) : (
+                    String(i + 1).padStart(2, '0')
+                  )}
                 </span>
 
                 <div className="card-surface p-5" data-testid={`module-panel-${mod.id}`}>
                   {/* Module header */}
                   <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                     <h3 className="min-w-0 truncate font-body text-base font-medium">
-                      <span className="mr-3 font-mono text-xs font-bold text-faint">{String(i + 1).padStart(2, '0')} /</span>
+                      <span className="mr-3 font-mono text-xs font-bold text-faint">
+                        {String(i + 1).padStart(2, '0')} /
+                      </span>
                       {mod.title}
                     </h3>
                     <div className="flex shrink-0 items-center gap-3">
@@ -183,9 +208,17 @@ export function ClassPath({ cls }: { cls: StudentClassDTO }) {
                                 <span
                                   aria-hidden
                                   data-testid={`map-dot-${lessonState}`}
-                                  className={cn('size-2 shrink-0 rounded-full', DOT_CLS[lessonState])}
+                                  className={cn(
+                                    'size-2 shrink-0 rounded-full',
+                                    DOT_CLS[lessonState],
+                                  )}
                                 />
-                                <span className={cn('truncate font-body text-sm', TITLE_CLS[lessonState])}>
+                                <span
+                                  className={cn(
+                                    'truncate font-body text-sm',
+                                    TITLE_CLS[lessonState],
+                                  )}
+                                >
                                   {lesson.title}
                                 </span>
                               </span>
@@ -195,7 +228,9 @@ export function ClassPath({ cls }: { cls: StudentClassDTO }) {
                                     resume
                                   </span>
                                 )}
-                                <span className="font-mono text-xs text-faint">{lesson.durationMinutes} min</span>
+                                <span className="font-mono text-xs text-faint">
+                                  {lesson.durationMinutes} min
+                                </span>
                               </span>
                             </Link>
                           </li>
@@ -211,8 +246,12 @@ export function ClassPath({ cls }: { cls: StudentClassDTO }) {
                             className="flex items-center justify-between gap-3 rounded-input border border-dashed border-line px-3 py-2.5 transition-colors hover:border-line-strong hover:bg-inset"
                           >
                             <span className="flex min-w-0 items-center gap-3">
-                              <span aria-hidden className="font-mono text-[10px] text-faint">?</span>
-                              <span className="truncate font-body text-sm text-muted">{mod.quiz.title}</span>
+                              <span aria-hidden className="font-mono text-[10px] text-faint">
+                                ?
+                              </span>
+                              <span className="truncate font-body text-sm text-muted">
+                                {mod.quiz.title}
+                              </span>
                             </span>
                             <span className="shrink-0 font-mono text-xs text-faint">
                               {mod.quiz.questionCount} q · pass {mod.quiz.passingScore}%

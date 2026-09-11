@@ -17,14 +17,9 @@ export interface FormattedError {
  * 2. plain Error — title = message
  * 3. non-Error — falls back to `fallback` string
  */
-export function formatApiError(
-  error: unknown,
-  fallback = 'Something went wrong',
-): FormattedError {
+export function formatApiError(error: unknown, fallback = 'Something went wrong'): FormattedError {
   if (error instanceof ApiClientError) {
-    const detail = error.details
-      ? Object.entries(error.details)[0]
-      : undefined;
+    const detail = error.details ? Object.entries(error.details)[0] : undefined;
     return {
       title: error.message || fallback,
       description: detail

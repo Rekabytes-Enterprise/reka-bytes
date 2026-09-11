@@ -41,7 +41,10 @@ test.describe('PRD-04 R3 · gamification', () => {
        LIMIT 1`,
     );
     const first = res.rows[0];
-    if (!first) throw new Error('no published lessons with inline-checks found; gamification spec requires one');
+    if (!first)
+      throw new Error(
+        'no published lessons with inline-checks found; gamification spec requires one',
+      );
     lessonId = first.id;
     classTitle = first.classTitle;
   });
@@ -64,7 +67,8 @@ test.describe('PRD-04 R3 · gamification', () => {
 
     // Answer all inline-checks in this lesson — auto-complete fires on the last one.
     const checkCount = await page.getByTestId('inline-check-block').count();
-    if (checkCount === 0) throw new Error('lesson has no inline-checks (after API probe) — fixture drift');
+    if (checkCount === 0)
+      throw new Error('lesson has no inline-checks (after API probe) — fixture drift');
     for (let i = 0; i < checkCount; i++) {
       const block = page.getByTestId('inline-check-block').nth(i);
       await expect(block).toBeVisible();
@@ -74,7 +78,9 @@ test.describe('PRD-04 R3 · gamification', () => {
     }
 
     // After the final check, mark-complete flips OR the lessonComplete callback already did.
-    await expect(page.getByTestId('mark-complete')).toContainText(/completed/i, { timeout: 10_000 });
+    await expect(page.getByTestId('mark-complete')).toContainText(/completed/i, {
+      timeout: 10_000,
+    });
 
     // ── 2. XP toast fired ──
     await expect(page.getByTestId('xp-toast').first()).toBeVisible({ timeout: 5_000 });
@@ -91,7 +97,17 @@ test.describe('PRD-04 R3 · gamification', () => {
 
     const dashboardData = await fetch(`${BACK}/api/learn/dashboard`, {
       headers: { Cookie: cookie },
-    }).then((r) => r.json() as Promise<{ data: { game: { xp: { balance: number; level: number }; badges: Array<{ key: string; unlocked: boolean }> } } }>);
+    }).then(
+      (r) =>
+        r.json() as Promise<{
+          data: {
+            game: {
+              xp: { balance: number; level: number };
+              badges: Array<{ key: string; unlocked: boolean }>;
+            };
+          };
+        }>,
+    );
 
     expect(dashboardData.data.game.xp.balance).toBeGreaterThan(0);
     const firstSteps = dashboardData.data.game.badges.find((b) => b.key === 'first-steps');

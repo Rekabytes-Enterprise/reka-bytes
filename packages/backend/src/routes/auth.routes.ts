@@ -3,7 +3,13 @@ import { zValidator } from '@hono/zod-validator';
 import { AppError, loginSchema, registerSchema } from '@reka-bytes/shared';
 import { verifyPassword } from '@reka-bytes/shared/password';
 import { prisma } from '../lib/prisma';
-import { authedUser, clearSessionCookie, requireAuth, setSessionCookie, type AppEnv } from '../middleware/auth';
+import {
+  authedUser,
+  clearSessionCookie,
+  requireAuth,
+  setSessionCookie,
+  type AppEnv,
+} from '../middleware/auth';
 import { rateLimit } from '../middleware/rate-limit';
 import { registerApplicant } from '../services/application.service';
 
@@ -29,7 +35,13 @@ export const authRoutes = new Hono<AppEnv>()
 
     await setSessionCookie(c, { sub: user.id, role: user.role });
     return c.json({
-      data: { id: user.id, email: user.email, name: user.name, role: user.role, status: user.status },
+      data: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        status: user.status,
+      },
     });
   })
   .post('/logout', async (c) => {

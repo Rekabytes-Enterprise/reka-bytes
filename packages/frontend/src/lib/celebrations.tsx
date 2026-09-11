@@ -17,7 +17,10 @@ const listeners = new Set<Listener>();
 let nextId = 1;
 
 /** Imperatively show a floating XP toast (PRD-04 §6). */
-export function showXpToast(amount: number, opts: { celebrate?: boolean; label?: string } = {}): void {
+export function showXpToast(
+  amount: number,
+  opts: { celebrate?: boolean; label?: string } = {},
+): void {
   for (const fn of listeners) fn({ id: nextId++, amount, ...opts });
 }
 
@@ -26,8 +29,12 @@ export async function fireConfetti(): Promise<void> {
   if (typeof window === 'undefined') return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const confetti = (await import('canvas-confetti')).default;
-  const accent = getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim() || '#4e7700';
-  const success = getComputedStyle(document.documentElement).getPropertyValue('--color-success').trim() || '#15803d';
+  const accent =
+    getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim() ||
+    '#4e7700';
+  const success =
+    getComputedStyle(document.documentElement).getPropertyValue('--color-success').trim() ||
+    '#15803d';
   confetti({
     particleCount: 80,
     spread: 70,
@@ -89,7 +96,9 @@ export function XpToastHost() {
             <span aria-hidden className="size-2 rounded-full bg-accent" />
             <span className="font-display text-sm font-semibold text-accent">+{t.amount} xp</span>
             {t.label && (
-              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">{t.label}</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+                {t.label}
+              </span>
             )}
           </motion.div>
         ))}

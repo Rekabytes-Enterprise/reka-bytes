@@ -13,7 +13,11 @@ interface DraftQuestion {
   correctIndex: number;
 }
 
-const emptyDraft = (): DraftQuestion => ({ question: '', options: ['', '', '', ''], correctIndex: 0 });
+const emptyDraft = (): DraftQuestion => ({
+  question: '',
+  options: ['', '', '', ''],
+  correctIndex: 0,
+});
 
 export function QuizEditor({ quizId }: { quizId: string }) {
   const pushToast = usePushToast();
@@ -44,7 +48,8 @@ export function QuizEditor({ quizId }: { quizId: string }) {
         }
         if (!cancelled) pushToast({ variant: 'error', title: 'Quiz not found' });
       } catch (e) {
-        if (!cancelled) pushToast({ variant: 'error', title: e instanceof Error ? e.message : 'Load failed' });
+        if (!cancelled)
+          pushToast({ variant: 'error', title: e instanceof Error ? e.message : 'Load failed' });
       }
     })();
     return () => {
@@ -62,7 +67,10 @@ export function QuizEditor({ quizId }: { quizId: string }) {
     }
   }
 
-  if (!quiz) return <p className="py-16 font-mono text-xs uppercase tracking-[0.12em] text-faint">// loading…</p>;
+  if (!quiz)
+    return (
+      <p className="py-16 font-mono text-xs uppercase tracking-[0.12em] text-faint">// loading…</p>
+    );
 
   async function saveDraft() {
     if (!draft || !quiz) return;
@@ -75,12 +83,20 @@ export function QuizEditor({ quizId }: { quizId: string }) {
       if (draft.id) {
         await apiFetch(`/api/admin/questions/${draft.id}`, {
           method: 'PUT',
-          body: { question: draft.question.trim(), options: draft.options.map((o) => o.trim()), correctIndex: draft.correctIndex },
+          body: {
+            question: draft.question.trim(),
+            options: draft.options.map((o) => o.trim()),
+            correctIndex: draft.correctIndex,
+          },
         });
       } else {
         await apiFetch(`/api/admin/quizzes/${quiz.id}/questions`, {
           method: 'POST',
-          body: { question: draft.question.trim(), options: draft.options.map((o) => o.trim()), correctIndex: draft.correctIndex },
+          body: {
+            question: draft.question.trim(),
+            options: draft.options.map((o) => o.trim()),
+            correctIndex: draft.correctIndex,
+          },
         });
       }
       pushToast({ variant: 'success', title: draft.id ? 'Question updated' : 'Question added' });
@@ -93,14 +109,19 @@ export function QuizEditor({ quizId }: { quizId: string }) {
 
   return (
     <main className="mx-auto max-w-[900px] px-6 py-16">
-      <Link href="/content" className="font-mono text-xs uppercase tracking-[0.12em] text-faint hover:text-accent">
+      <Link
+        href="/content"
+        className="font-mono text-xs uppercase tracking-[0.12em] text-faint hover:text-accent"
+      >
         ← content manager
       </Link>
 
       <header className="mt-4 border border-line bg-elevated p-6">
         <div className="flex flex-wrap items-end gap-4">
           <label className="flex-1">
-            <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">Quiz title</span>
+            <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
+              Quiz title
+            </span>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -108,7 +129,9 @@ export function QuizEditor({ quizId }: { quizId: string }) {
             />
           </label>
           <label>
-            <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">Pass %</span>
+            <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
+              Pass %
+            </span>
             <input
               type="number"
               min={50}
@@ -120,7 +143,16 @@ export function QuizEditor({ quizId }: { quizId: string }) {
           </label>
           <button
             type="button"
-            onClick={() => void call(() => apiFetch(`/api/admin/quizzes/${quiz.id}`, { method: 'PUT', body: { title: title.trim(), passingScore: Number(passingScore) || 80 } }), 'Quiz saved')}
+            onClick={() =>
+              void call(
+                () =>
+                  apiFetch(`/api/admin/quizzes/${quiz.id}`, {
+                    method: 'PUT',
+                    body: { title: title.trim(), passingScore: Number(passingScore) || 80 },
+                  }),
+                'Quiz saved',
+              )
+            }
             className="border border-line-strong px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.12em] hover:border-accent hover:text-accent"
           >
             save settings
@@ -131,14 +163,21 @@ export function QuizEditor({ quizId }: { quizId: string }) {
       {/* Questions */}
       <ul className="mt-8 space-y-3" data-testid="question-list">
         {quiz.questions.map((q, qi) => (
-          <li key={q.id} className="border border-line bg-elevated p-5" data-testid={`question-row-${q.id}`}>
+          <li
+            key={q.id}
+            className="border border-line bg-elevated p-5"
+            data-testid={`question-row-${q.id}`}
+          >
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="font-mono text-xs text-faint">Q{qi + 1}</p>
                 <p className="mt-1 font-body text-sm font-medium">{q.question}</p>
                 <ul className="mt-2 space-y-1">
                   {q.options.map((opt, oi) => (
-                    <li key={oi} className={`font-body text-xs ${oi === q.correctIndex ? 'text-success' : 'text-muted'}`}>
+                    <li
+                      key={oi}
+                      className={`font-body text-xs ${oi === q.correctIndex ? 'text-success' : 'text-muted'}`}
+                    >
                       {String.fromCharCode(65 + oi)}) {opt} {oi === q.correctIndex ? '✓' : ''}
                     </li>
                   ))}
@@ -147,7 +186,14 @@ export function QuizEditor({ quizId }: { quizId: string }) {
               <div className="flex flex-col gap-1">
                 <button
                   type="button"
-                  onClick={() => setDraft({ id: q.id, question: q.question, options: [...q.options], correctIndex: q.correctIndex })}
+                  onClick={() =>
+                    setDraft({
+                      id: q.id,
+                      question: q.question,
+                      options: [...q.options],
+                      correctIndex: q.correctIndex,
+                    })
+                  }
                   className="font-mono text-xs uppercase tracking-[0.12em] text-accent hover:underline"
                 >
                   edit
@@ -164,7 +210,9 @@ export function QuizEditor({ quizId }: { quizId: string }) {
           </li>
         ))}
         {quiz.questions.length === 0 && (
-          <li className="py-4 font-mono text-xs uppercase tracking-[0.12em] text-faint">// no questions yet</li>
+          <li className="py-4 font-mono text-xs uppercase tracking-[0.12em] text-faint">
+            // no questions yet
+          </li>
         )}
       </ul>
 
@@ -181,10 +229,17 @@ export function QuizEditor({ quizId }: { quizId: string }) {
 
       {/* Question editor */}
       {draft && (
-        <section className="mt-8 border border-accent/40 bg-elevated p-6" data-testid="question-editor">
-          <h2 className="font-display text-lg font-semibold">{draft.id ? 'Edit question' : 'New question'}</h2>
+        <section
+          className="mt-8 border border-accent/40 bg-elevated p-6"
+          data-testid="question-editor"
+        >
+          <h2 className="font-display text-lg font-semibold">
+            {draft.id ? 'Edit question' : 'New question'}
+          </h2>
           <label className="mt-4 block">
-            <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">Question</span>
+            <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
+              Question
+            </span>
             <textarea
               value={draft.question}
               onChange={(e) => setDraft({ ...draft, question: e.target.value })}
@@ -211,7 +266,10 @@ export function QuizEditor({ quizId }: { quizId: string }) {
                   <input
                     value={opt}
                     onChange={(e) =>
-                      setDraft({ ...draft, options: draft.options.map((o, i) => (i === oi ? e.target.value : o)) })
+                      setDraft({
+                        ...draft,
+                        options: draft.options.map((o, i) => (i === oi ? e.target.value : o)),
+                      })
                     }
                     placeholder={`Option ${String.fromCharCode(65 + oi)}`}
                     className="w-full border border-line bg-canvas px-3 py-2 font-body text-sm outline-none focus:border-accent"

@@ -52,8 +52,8 @@ export default function NotFound() {
           {') · this block was never placed'}
         </p>
         <p className={cn(t.body, 'mt-4 max-w-xl text-muted')}>
-          The link may be off by one block, or this page hasn’t been generated yet.
-          Either way, your spawn point is safe.
+          The link may be off by one block, or this page hasn’t been generated yet. Either way, your
+          spawn point is safe.
         </p>
         <Link href="/" data-testid="error-404-home" className="mt-10 inline-block">
           <Button>

@@ -32,7 +32,11 @@ export function Hero() {
             <SeatsMeter variant="chip" />
           </motion.div>
 
-          <motion.h1 {...reveal} transition={{ duration: 0.4, ease: 'easeOut', delay: 0.05 }} className={cn(t.displayXL, 'mt-8')}>
+          <motion.h1
+            {...reveal}
+            transition={{ duration: 0.4, ease: 'easeOut', delay: 0.05 }}
+            className={cn(t.displayXL, 'mt-8')}
+          >
             Learn to vibe code{' '}
             <span className="relative inline-block text-accent">
               properly.
@@ -40,13 +44,21 @@ export function Hero() {
             </span>
           </motion.h1>
 
-          <motion.p {...reveal} transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 }} className={cn(t.body, 'mt-8 max-w-xl text-muted')}>
-            AI can write your code. We teach you what it actually wrote. Reka Bytes
-            pairs hands-on vibe coding with the software engineering fundamentals
-            most vibe coders skip — architecture, debugging, git, and APIs.
+          <motion.p
+            {...reveal}
+            transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 }}
+            className={cn(t.body, 'mt-8 max-w-xl text-muted')}
+          >
+            AI can write your code. We teach you what it actually wrote. Reka Bytes pairs hands-on
+            vibe coding with the software engineering fundamentals most vibe coders skip —
+            architecture, debugging, git, and APIs.
           </motion.p>
 
-          <motion.div {...reveal} transition={{ duration: 0.4, ease: 'easeOut', delay: 0.15 }} className="mt-12 flex flex-wrap items-center gap-5">
+          <motion.div
+            {...reveal}
+            transition={{ duration: 0.4, ease: 'easeOut', delay: 0.15 }}
+            className="mt-12 flex flex-wrap items-center gap-5"
+          >
             <Link href="/register">
               <Button>
                 Register for Cohort 001 <ArrowRight className="size-4" aria-hidden />
@@ -76,11 +88,18 @@ export function Hero() {
           <ByteStream className="absolute inset-0 size-full" />
           {/* corner ticks */}
           {['top-0 left-0', 'top-0 right-0', 'bottom-0 left-0', 'bottom-0 right-0'].map((pos) => (
-            <span key={pos} className={`absolute ${pos} font-mono text-sm leading-none text-faint`} aria-hidden>
+            <span
+              key={pos}
+              className={`absolute ${pos} font-mono text-sm leading-none text-faint`}
+              aria-hidden
+            >
               +
             </span>
           ))}
-          <p className="absolute bottom-4 left-4 font-mono text-[10px] uppercase tracking-[0.12em] text-faint" aria-hidden>
+          <p
+            className="absolute bottom-4 left-4 font-mono text-[10px] uppercase tracking-[0.12em] text-faint"
+            aria-hidden
+          >
             fig.01 — byte stream / live
           </p>
         </motion.div>

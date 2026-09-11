@@ -1,7 +1,12 @@
 import { randomUUID } from 'node:crypto';
 import { redis } from '../../lib/redis';
 import { AppError } from '@reka-bytes/shared';
-import type { AIGenJobStatusDTO, AIGenJobStatus, AIOutlineDTO, AIAnalysisDTO } from '@reka-bytes/shared';
+import type {
+  AIGenJobStatusDTO,
+  AIGenJobStatus,
+  AIOutlineDTO,
+  AIAnalysisDTO,
+} from '@reka-bytes/shared';
 import type { ClassOutline, DocumentAnalysis } from '@reka-bytes/baml';
 
 /**

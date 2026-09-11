@@ -32,16 +32,26 @@ const chunks = chunkText(text);
 console.log(`extracted ${text.length} chars → ${chunks.length} chunks`);
 
 console.log('\n── pass 1 · AnalyzeDocument ──');
-const analysis = await b.AnalyzeDocument(chunks.map((c) => c.text), bamlOpts);
+const analysis = await b.AnalyzeDocument(
+  chunks.map((c) => c.text),
+  bamlOpts,
+);
 console.log('summary:', analysis.summary);
 for (const t of analysis.topics) {
-  console.log(`  [${t.coverage}]${t.needs_expansion ? ' (needs expansion)' : ''} ${t.title} — ${t.notes}`);
+  console.log(
+    `  [${t.coverage}]${t.needs_expansion ? ' (needs expansion)' : ''} ${t.title} — ${t.notes}`,
+  );
 }
 console.log('prerequisites:', analysis.prerequisites);
 console.log('warnings:', analysis.warnings);
 
 console.log('\n── pass 2 · GenerateOutline ──');
-const outline = await b.GenerateOutline(classTitle, analysis, chunks.map((c) => c.text), bamlOpts);
+const outline = await b.GenerateOutline(
+  classTitle,
+  analysis,
+  chunks.map((c) => c.text),
+  bamlOpts,
+);
 for (const m of outline.modules) {
   console.log(`\n${m.title}`);
   for (const l of m.lessons) {

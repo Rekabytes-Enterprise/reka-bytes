@@ -5,8 +5,13 @@ import type { RecapBlock } from '@reka-bytes/shared';
 
 export function RecapBlockView({ block }: { block: RecapBlock }) {
   return (
-    <section data-testid="recap-block" className="rounded-card border border-line bg-elevated p-5 shadow-card">
-      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-accent">// recap</p>
+    <section
+      data-testid="recap-block"
+      className="rounded-card border border-line bg-elevated p-5 shadow-card"
+    >
+      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-accent">
+        // recap
+      </p>
       <ul className="mt-3 space-y-2.5">
         {block.points.map((point, i) => (
           <li key={i} className="flex gap-3 text-sm leading-relaxed text-muted">

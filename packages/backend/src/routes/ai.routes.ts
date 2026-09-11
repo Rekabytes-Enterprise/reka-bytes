@@ -82,7 +82,9 @@ export const aiRoutes = new Hono<AppEnv>()
     async (c) => {
       await checkDailyLimit('regen');
       const { jobId } = c.req.valid('json') ?? {};
-      return c.json({ data: { contentMarkdown: await regenerateLesson(c.req.param('lessonId'), jobId) } });
+      return c.json({
+        data: { contentMarkdown: await regenerateLesson(c.req.param('lessonId'), jobId) },
+      });
     },
   )
   .post('/masterclass/regenerate-quiz/:quizId', async (c) => {

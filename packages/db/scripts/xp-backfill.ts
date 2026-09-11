@@ -41,7 +41,10 @@ async function main() {
         lessonId: true,
         completedAt: true,
         lesson: {
-          select: { moduleId: true, module: { select: { classId: true, class: { select: { published: true } } } } },
+          select: {
+            moduleId: true,
+            module: { select: { classId: true, class: { select: { published: true } } } },
+          },
         },
       },
     }),
@@ -55,7 +58,9 @@ async function main() {
   ]);
 
   const pub = progresses.filter((p) => p.lesson.module.class.published);
-  console.log(`[xp-backfill] ${progresses.length} progress rows (${pub.length} in published classes)`);
+  console.log(
+    `[xp-backfill] ${progresses.length} progress rows (${pub.length} in published classes)`,
+  );
 
   const lessonEvents: NewXpEvent[] = [];
   const moduleEvents: NewXpEvent[] = [];
@@ -77,7 +82,13 @@ async function main() {
 
   for (const [userId, rows] of byUser) {
     for (const row of rows) {
-      lessonEvents.push({ userId, amount: LESSON_XP, reason: 'LESSON_COMPLETED', refId: row.lessonId, createdAt: row.completedAt });
+      lessonEvents.push({
+        userId,
+        amount: LESSON_XP,
+        reason: 'LESSON_COMPLETED',
+        refId: row.lessonId,
+        createdAt: row.completedAt,
+      });
     }
 
     // module completion: count per module + latest completion timestamp
@@ -96,12 +107,24 @@ async function main() {
     }
     for (const [moduleId, { done, latest }] of perModule) {
       if (moduleLessonTotal.get(moduleId) === done && done > 0) {
-        moduleEvents.push({ userId, amount: MODULE_BONUS, reason: 'MODULE_COMPLETED', refId: moduleId, createdAt: latest });
+        moduleEvents.push({
+          userId,
+          amount: MODULE_BONUS,
+          reason: 'MODULE_COMPLETED',
+          refId: moduleId,
+          createdAt: latest,
+        });
       }
     }
     for (const [classId, { done, latest }] of perClass) {
       if (classLessonTotal.get(classId) === done && done > 0) {
-        classEvents.push({ userId, amount: CLASS_BONUS, reason: 'CLASS_COMPLETED', refId: classId, createdAt: latest });
+        classEvents.push({
+          userId,
+          amount: CLASS_BONUS,
+          reason: 'CLASS_COMPLETED',
+          refId: classId,
+          createdAt: latest,
+        });
       }
     }
   }
@@ -114,14 +137,26 @@ async function main() {
       const key = `${a.userId}:${a.quizId}`;
       const prev = firstPass.get(key);
       if (!prev || a.createdAt < prev.createdAt) {
-        firstPass.set(key, { userId: a.userId, amount: QUIZ_PASS_XP, reason: 'QUIZ_PASSED', refId: a.quizId, createdAt: a.createdAt });
+        firstPass.set(key, {
+          userId: a.userId,
+          amount: QUIZ_PASS_XP,
+          reason: 'QUIZ_PASSED',
+          refId: a.quizId,
+          createdAt: a.createdAt,
+        });
       }
     }
     if (a.score === 100) {
       const key = `${a.userId}:${a.quizId}`;
       const prev = firstPerfect.get(key);
       if (!prev || a.createdAt < prev.createdAt) {
-        firstPerfect.set(key, { userId: a.userId, amount: PERFECT_QUIZ_BONUS, reason: 'PERFECT_QUIZ', refId: a.quizId, createdAt: a.createdAt });
+        firstPerfect.set(key, {
+          userId: a.userId,
+          amount: PERFECT_QUIZ_BONUS,
+          reason: 'PERFECT_QUIZ',
+          refId: a.quizId,
+          createdAt: a.createdAt,
+        });
       }
     }
   }
@@ -142,7 +177,9 @@ async function main() {
     console.log(`[xp-backfill] ${reason}: ${res.count}/${events.length} inserted`);
   }
 
-  console.log(`[xp-backfill] done — ${totalInserted} events across ${byUser.size} user(s). Re-run is a no-op.`);
+  console.log(
+    `[xp-backfill] done — ${totalInserted} events across ${byUser.size} user(s). Re-run is a no-op.`,
+  );
 }
 
 main()

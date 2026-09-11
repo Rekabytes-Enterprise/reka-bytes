@@ -13,7 +13,11 @@ export function SeatsMeter({ variant }: { variant: 'chip' | 'block' }) {
   const pushToast = usePushToast();
   // Network failures (`status === 0`) are tolerated as "seats unavailable";
   // everything else surfaces as a toast.
-  const { data: seats, loading, error } = useApiQuery<SeatsDTO>('/api/public/seats', {
+  const {
+    data: seats,
+    loading,
+    error,
+  } = useApiQuery<SeatsDTO>('/api/public/seats', {
     toastError: false,
     onError: (e) => {
       if (isApiClientError(e) && e.status === 0) return; // tolerate
@@ -25,10 +29,16 @@ export function SeatsMeter({ variant }: { variant: 'chip' | 'block' }) {
   const netFail = error !== null && isApiClientError(error) && error.status === 0;
 
   if (loading && !seats) {
-    return <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">// loading seats…</p>;
+    return (
+      <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">// loading seats…</p>
+    );
   }
   if (netFail && !seats) {
-    return <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">// seats unavailable</p>;
+    return (
+      <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">
+        // seats unavailable
+      </p>
+    );
   }
   if (!seats) return null;
 
@@ -59,7 +69,11 @@ export function SeatsMeter({ variant }: { variant: 'chip' | 'block' }) {
           {seats.approved}/{seats.cap} CLAIMED
         </p>
       </div>
-      <div className="mt-4 flex gap-1.5" role="img" aria-label={`${seats.approved} of ${seats.cap} seats claimed`}>
+      <div
+        className="mt-4 flex gap-1.5"
+        role="img"
+        aria-label={`${seats.approved} of ${seats.cap} seats claimed`}
+      >
         {Array.from({ length: seats.cap }, (_, i) => (
           <span
             key={i}

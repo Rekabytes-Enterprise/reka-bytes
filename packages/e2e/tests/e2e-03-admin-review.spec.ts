@@ -1,11 +1,5 @@
 import { test, expect } from '@playwright/test';
-import {
-  ADMIN,
-  FRONT,
-  uniqueEmail,
-  registerViaApi,
-  findApplicationIdByEmail,
-} from './helpers';
+import { ADMIN, FRONT, uniqueEmail, registerViaApi, findApplicationIdByEmail } from './helpers';
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'admin@rekabytes.dev';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? 'change-me-in-production';
@@ -77,7 +71,9 @@ test.describe('E2E-05 · admin rejects → student sees REJECTED', () => {
     await adminPage.goto(`/applications/${appId}`);
     await adminPage.getByTestId('reject-btn').click();
     await expect(adminPage.getByTestId('confirm-rejected-modal')).toBeVisible();
-    await adminPage.getByLabel(/internal note/i).fill('Cohort timing not right — revisit next intake.');
+    await adminPage
+      .getByLabel(/internal note/i)
+      .fill('Cohort timing not right — revisit next intake.');
     await adminPage.getByTestId('confirm-decision-btn').click();
 
     await expect(adminPage.locator('aside').getByText('REJECTED')).toBeVisible();

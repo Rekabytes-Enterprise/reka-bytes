@@ -8,7 +8,17 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Inbox, BookOpen, GraduationCap, Users, BarChart3, Menu, X, LogOut } from 'lucide-react';
+import {
+  LayoutDashboard,
+  Inbox,
+  BookOpen,
+  GraduationCap,
+  Users,
+  BarChart3,
+  Menu,
+  X,
+  LogOut,
+} from 'lucide-react';
 import { apiFetch } from '@reka-bytes/shared';
 
 const NAV = [
@@ -54,7 +64,10 @@ export function ConsoleSidebar() {
     <>
       {/* Mobile top bar */}
       <div className="sticky top-0 z-40 flex items-center justify-between border-b border-line bg-canvas px-4 py-3 md:hidden">
-        <Link href="/" className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-accent">
+        <Link
+          href="/"
+          className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-accent"
+        >
           reka·bytes / admin
         </Link>
         <button
@@ -67,14 +80,20 @@ export function ConsoleSidebar() {
         </button>
       </div>
       {open && (
-        <nav className="sticky top-[49px] z-40 flex flex-col border-b border-line bg-canvas py-2 md:hidden">{links(() => setOpen(false))}</nav>
+        <nav className="sticky top-[49px] z-40 flex flex-col border-b border-line bg-canvas py-2 md:hidden">
+          {links(() => setOpen(false))}
+        </nav>
       )}
 
       {/* Desktop rail */}
       <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-line bg-canvas md:flex">
         <div className="border-b border-line px-5 py-6">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-accent">reka·bytes</p>
-          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.16em] text-faint">admin console</p>
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-accent">
+            reka·bytes
+          </p>
+          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.16em] text-faint">
+            admin console
+          </p>
         </div>
         <nav className="flex flex-1 flex-col gap-1 py-4">{links()}</nav>
         <div className="border-t border-line p-4">

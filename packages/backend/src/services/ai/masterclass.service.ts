@@ -70,7 +70,10 @@ export async function runGeneration(job: AIGenJob, filePath: string | null): Pro
       job.outline = mockClassToOutline(mock);
       await saveJob(job);
       const lessonTotal = mock.modules.reduce((s, m) => s + m.lessons.length, 0);
-      await appendProgress(job, `Outline ready: ${mock.modules.length} modules · ${lessonTotal} lessons`);
+      await appendProgress(
+        job,
+        `Outline ready: ${mock.modules.length} modules · ${lessonTotal} lessons`,
+      );
       await pauseForApproval(job);
       return;
     }
@@ -88,7 +91,10 @@ export async function runGeneration(job: AIGenJob, filePath: string | null): Pro
       // ── Pass 1 · analyze ──
       await appendProgress(job, 'Analyzing the material…');
       const analysis = await withBamlRetry('AnalyzeDocument', () =>
-        b.AnalyzeDocument(chunks.map((c) => c.text), bamlOpts),
+        b.AnalyzeDocument(
+          chunks.map((c) => c.text),
+          bamlOpts,
+        ),
       );
       await setReviewNotes(job, analysisToNotes(analysis));
       await appendProgress(job, `Analysis done — ${analysis.topics.length} topics found`);
@@ -96,10 +102,18 @@ export async function runGeneration(job: AIGenJob, filePath: string | null): Pro
       // ── Pass 2 · outline ──
       await appendProgress(job, 'Designing the course outline…');
       const outline = await withBamlRetry('GenerateOutline', () =>
-        b.GenerateOutline(classTitle, analysis, chunks.map((c) => c.text), bamlOpts),
+        b.GenerateOutline(
+          classTitle,
+          analysis,
+          chunks.map((c) => c.text),
+          bamlOpts,
+        ),
       );
       const lessonTotal = outline.modules.reduce((s, m) => s + m.lessons.length, 0);
-      await appendProgress(job, `Outline ready: ${outline.modules.length} modules · ${lessonTotal} lessons`);
+      await appendProgress(
+        job,
+        `Outline ready: ${outline.modules.length} modules · ${lessonTotal} lessons`,
+      );
 
       // ── Checkpoint · persist pass 1–2 outputs, pause for admin sign-off ──
       job.analysis = analysis;
@@ -197,7 +211,10 @@ export async function regenerateOutline(jobId: string): Promise<AIOutlineDTO> {
       b.GenerateOutline(job.classTitle, analysis, chunkTexts, bamlOpts),
     );
     const lessonTotal = outline.modules.reduce((s, m) => s + m.lessons.length, 0);
-    await appendProgress(job, `New outline ready: ${outline.modules.length} modules · ${lessonTotal} lessons`);
+    await appendProgress(
+      job,
+      `New outline ready: ${outline.modules.length} modules · ${lessonTotal} lessons`,
+    );
     job.outline = outline;
   }
   await saveJob(job);
@@ -209,7 +226,9 @@ export async function regenerateOutline(jobId: string): Promise<AIOutlineDTO> {
 function analysisToNotes(analysis: DocumentAnalysis): string[] {
   const notes: string[] = [analysis.summary];
   for (const t of analysis.topics) {
-    notes.push(`${t.title} — ${t.coverage.toLowerCase()}${t.needs_expansion ? ' · needs expansion' : ''}: ${t.notes}`);
+    notes.push(
+      `${t.title} — ${t.coverage.toLowerCase()}${t.needs_expansion ? ' · needs expansion' : ''}: ${t.notes}`,
+    );
   }
   if (analysis.prerequisites.length > 0) {
     notes.push(`Assumes but does not teach: ${analysis.prerequisites.join('; ')}`);
@@ -276,7 +295,16 @@ async function callWriteLesson(
 ): Promise<{ blocks: LessonBlock[]; key_terms: string[] }> {
   const written: BamlWrittenLesson = await withBamlRetry(
     'WriteLesson',
-    () => b.WriteLesson(courseTitle, moduleTitle, lessonTitle, objectives, sourceExcerpt, analysisNotes, bamlOpts),
+    () =>
+      b.WriteLesson(
+        courseTitle,
+        moduleTitle,
+        lessonTitle,
+        objectives,
+        sourceExcerpt,
+        analysisNotes,
+        bamlOpts,
+      ),
     // Zero surviving blocks counts as an invalid attempt → retry; the final
     // attempt's (still empty) result is returned so we can degrade below.
     (w) => toLessonBlocks(w.blocks).length > 0,
@@ -368,7 +396,9 @@ async function writeLessonsAndQuizzes(
 
     const analysisNotes = [
       analysis.summary,
-      ...analysis.topics.slice(0, 6).map((t) => `${t.title} (${t.coverage.toLowerCase()}): ${t.notes}`),
+      ...analysis.topics
+        .slice(0, 6)
+        .map((t) => `${t.title} (${t.coverage.toLowerCase()}): ${t.notes}`),
       ...analysis.prerequisites.map((p) => `Prerequisite gap: ${p}`),
     ].join('\n');
     const written = await callWriteLesson(
@@ -391,7 +421,10 @@ async function writeLessonsAndQuizzes(
     });
 
     completed += 1;
-    await appendProgress(job, `Wrote lesson ${completed}/${allLessons.length}: ${entry.lesson.title}`);
+    await appendProgress(
+      job,
+      `Wrote lesson ${completed}/${allLessons.length}: ${entry.lesson.title}`,
+    );
   }
 
   for (let i = 0; i < allLessons.length; i += LESSON_CONCURRENCY) {
@@ -404,7 +437,11 @@ async function writeLessonsAndQuizzes(
       .map((l, li) => results.get(`${m.title}::${li}`))
       .filter((x): x is GeneratedLesson => Boolean(x));
     await appendProgress(job, `Generating quiz: ${m.title}`);
-    const quiz = await b.GenerateQuiz(m.title, lessons.map((l) => l.contentMarkdown), bamlOpts);
+    const quiz = await b.GenerateQuiz(
+      m.title,
+      lessons.map((l) => l.contentMarkdown),
+      bamlOpts,
+    );
     modules.push({ title: m.title, lessons, quiz });
   }
 
@@ -497,7 +534,11 @@ async function persistGeneratedClass(gen: GeneratedClass, jobId: string): Promis
         action: 'AI_MASTERCLASS_GENERATED',
         targetType: 'Class',
         targetId: cls.id,
-        meta: { jobId, model: process.env.AI_MODEL ?? 'unknown', modules: gen.modules.length } as Prisma.InputJsonValue,
+        meta: {
+          jobId,
+          model: process.env.AI_MODEL ?? 'unknown',
+          modules: gen.modules.length,
+        } as Prisma.InputJsonValue,
       },
     });
 
@@ -529,10 +570,16 @@ export interface RegeneratedLesson {
   contentMarkdown: string;
 }
 
-export async function regenerateLesson(lessonId: string, jobId?: string): Promise<RegeneratedLesson> {
+export async function regenerateLesson(
+  lessonId: string,
+  jobId?: string,
+): Promise<RegeneratedLesson> {
   if (process.env.AI_MOCK === '1') {
     const blocks: LessonBlock[] = [
-      { type: 'prose', markdown: `## Why this matters\n\n(mock regenerated) This lesson body was regenerated in mock mode for \`${lessonId}\`.` },
+      {
+        type: 'prose',
+        markdown: `## Why this matters\n\n(mock regenerated) This lesson body was regenerated in mock mode for \`${lessonId}\`.`,
+      },
       {
         type: 'inline-check',
         question: '(mock) What should you do after regenerating a lesson?',
@@ -545,7 +592,10 @@ export async function regenerateLesson(lessonId: string, jobId?: string): Promis
     return { blocks, contentMarkdown: flattenBlocksToMarkdown(blocks) };
   }
   const bamlOpts = { clientRegistry: getBamlRegistry() };
-  const lesson = await prisma.lesson.findUnique({ where: { id: lessonId }, include: { module: true } });
+  const lesson = await prisma.lesson.findUnique({
+    where: { id: lessonId },
+    include: { module: true },
+  });
   if (!lesson) throw AppError.notFound('Lesson not found');
 
   let courseTitle = 'Reka Bytes course';
@@ -582,13 +632,13 @@ export async function regenerateLesson(lessonId: string, jobId?: string): Promis
     analysisNotes,
     bamlOpts,
   );
-  return { blocks: written.blocks, contentMarkdown: flattenBlocksToMarkdown(written.blocks).slice(0, 100_000) };
+  return {
+    blocks: written.blocks,
+    contentMarkdown: flattenBlocksToMarkdown(written.blocks).slice(0, 100_000),
+  };
 }
 
-function findOutlineLesson(
-  job: AIGenJob,
-  lessonTitle: string,
-): { objectives: string[] } | null {
+function findOutlineLesson(job: AIGenJob, lessonTitle: string): { objectives: string[] } | null {
   // The outline itself isn't stored on the job post-refactor; objectives are
   // recoverable from review notes only loosely, so we regenerate with generic
   // objectives unless the lesson title matches a topic needing expansion.

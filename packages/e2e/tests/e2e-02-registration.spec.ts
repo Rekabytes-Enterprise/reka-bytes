@@ -18,13 +18,13 @@ test.describe('E2E-02 · full registration flow', () => {
     await page.getByRole('button', { name: /continue/i }).click();
 
     // Step 2 — questionnaire (required: q1 single, q2 multi, q3 text, q4 multi)
-    await expect(page.getByRole('heading', { name: /where you're at|where you are at/i })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: /where you're at|where you are at/i }),
+    ).toBeVisible();
 
     await page.getByRole('radio', { name: 'Use weekly' }).click();
     await page.getByRole('button', { name: /chatgpt/i }).click();
-    await page
-      .getByPlaceholder(/describe it in your own words/i)
-      .fill(REQUIRED_TEXT_Q3);
+    await page.getByPlaceholder(/describe it in your own words/i).fill(REQUIRED_TEXT_Q3);
     await page.getByRole('button', { name: 'Lovable', exact: true }).click();
     await page.getByRole('button', { name: 'Cursor', exact: true }).click();
 

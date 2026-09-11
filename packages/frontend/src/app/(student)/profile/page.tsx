@@ -47,7 +47,9 @@ export default function ProfilePage() {
   return (
     <div className="mx-auto max-w-3xl">
       <header className="pb-8">
-        <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-dim">account</p>
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-dim">
+          account
+        </p>
         <h1 className="mt-2 font-display text-3xl font-semibold">Profile</h1>
       </header>
 
@@ -80,7 +82,9 @@ export default function ProfilePage() {
               passed={data.recentAttempts.filter((a) => a.passed).length}
             />
             <Card className="flex flex-col" data-testid="profile-badges-summary">
-              <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">badges</p>
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
+                badges
+              </p>
               <p className="mt-4 font-display text-3xl font-semibold text-ink">
                 {unlockedCount}
                 <span className="text-base font-normal text-faint">/{totalBadges}</span>
@@ -97,11 +101,30 @@ export default function ProfilePage() {
       <dl className="mt-6 grid grid-cols-[120px_1fr] gap-y-4 rounded-card border border-line bg-inset/60 p-6">
         <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">Name</dt>
         <dd className="font-body text-sm">{user.name}</dd>
-        <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">Email</dt>
+        <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
+          Email
+        </dt>
         <dd className="font-body text-sm">{user.email}</dd>
-        <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">Cohort</dt>
+        <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
+          Cohort
+        </dt>
         <dd className="font-body text-sm">001</dd>
       </dl>
+
+      {/* Account action — log out lives HERE (profile), not in the sidebar. */}
+      <div className="mt-6 flex items-center justify-between gap-4 rounded-card border border-line bg-inset/60 p-6">
+        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-faint">
+          {'// end the session on this device'}
+        </p>
+        <button
+          type="button"
+          onClick={logout}
+          data-testid="profile-logout"
+          className="shrink-0 rounded-full border border-danger/50 px-6 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-danger transition-colors hover:border-danger hover:bg-danger/10"
+        >
+          log out
+        </button>
+      </div>
 
       {/* Badge collection */}
       <section className="mt-8">
@@ -115,18 +138,11 @@ export default function ProfilePage() {
         {data ? (
           <BadgeGrid badges={data.game.badges} />
         ) : (
-          <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">// loading badges…</p>
+          <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">
+            // loading badges…
+          </p>
         )}
       </section>
-
-      <button
-        type="button"
-        onClick={logout}
-        data-testid="profile-logout"
-        className="mt-10 rounded-full border border-danger/50 px-7 py-3 font-mono text-xs font-bold uppercase tracking-[0.12em] text-danger transition-colors hover:border-danger hover:bg-danger/10"
-      >
-        log out
-      </button>
     </div>
   );
 }

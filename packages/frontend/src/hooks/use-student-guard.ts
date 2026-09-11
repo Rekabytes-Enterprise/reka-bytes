@@ -39,7 +39,10 @@ export function useStudentGuard(): GuardState {
         if (user.status !== 'APPROVED') {
           pushToast({
             variant: 'error',
-            title: user.status === 'PENDING' ? 'Your application is still under review.' : 'Your application was not accepted.',
+            title:
+              user.status === 'PENDING'
+                ? 'Your application is still under review.'
+                : 'Your application was not accepted.',
           });
           router.replace('/status');
           return;

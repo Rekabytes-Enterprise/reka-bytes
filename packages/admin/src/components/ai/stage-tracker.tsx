@@ -33,7 +33,10 @@ interface StageSignals {
 
 function signalsFrom(progress: string[]): StageSignals {
   const has = (prefix: string) => progress.some((l) => l.startsWith(prefix));
-  const lessonMatch = [...progress].reverse().find((l) => l.startsWith('Wrote lesson '))?.match(/^Wrote lesson (\d+)\/(\d+)/);
+  const lessonMatch = [...progress]
+    .reverse()
+    .find((l) => l.startsWith('Wrote lesson '))
+    ?.match(/^Wrote lesson (\d+)\/(\d+)/);
 
   const mock = has('Mock mode');
   return {
@@ -90,12 +93,21 @@ const nodeVariants = {
 
 export function StageTracker({ stages }: { stages: StageView[] }) {
   return (
-    <div className="flex items-center gap-0" role="status" aria-label="Pipeline stages" data-testid="ai-stage-tracker">
+    <div
+      className="flex items-center gap-0"
+      role="status"
+      aria-label="Pipeline stages"
+      data-testid="ai-stage-tracker"
+    >
       {stages.map((stage, i) => (
         <div key={stage.id} className="flex flex-1 items-center last:flex-none">
           <motion.div
             className={`flex items-center gap-1.5 whitespace-nowrap border px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] ${
-              stage.state === 'active' ? 'bg-accent/10' : stage.state === 'done' ? 'bg-success/5' : 'bg-transparent'
+              stage.state === 'active'
+                ? 'bg-accent/10'
+                : stage.state === 'done'
+                  ? 'bg-success/5'
+                  : 'bg-transparent'
             }`}
             variants={nodeVariants}
             initial={false}
@@ -121,7 +133,10 @@ export function StageTracker({ stages }: { stages: StageView[] }) {
                   transition={{ repeat: Infinity, duration: 1.1 }}
                 />
               ) : (
-                <span key="ring" className="inline-block size-[6px] rounded-full border border-current" />
+                <span
+                  key="ring"
+                  className="inline-block size-[6px] rounded-full border border-current"
+                />
               )}
             </AnimatePresence>
             {stage.label}

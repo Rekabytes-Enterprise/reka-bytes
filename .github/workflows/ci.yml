@@ -1,0 +1,46 @@
+name: CI
+
+# Dev-branch quality gate — typecheck, lint, prettier format check.
+# Release images are built separately by release.yml (tag pushes).
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+  workflow_dispatch:
+
+jobs:
+  quality:
+    name: typecheck · lint · format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Installs pnpm@11.9.0 from the root `packageManager` field
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # packages/db/src/generated is gitignored — fresh clones have no Prisma
+      # client, so generate before typecheck (same as the Docker builds do).
+      - name: Generate Prisma client
+        run: pnpm --filter @reka-bytes/db generate
+
+      - name: Typecheck (all packages)
+        run: pnpm -r typecheck
+
+      - name: Lint (all packages)
+        run: pnpm -r lint
+
+      - name: Format check (prettier)
+        run: pnpm format:check

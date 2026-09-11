@@ -21,13 +21,15 @@ function byOrder(): Array<{ order: 'asc' }> {
   return [{ order: 'asc' }];
 }
 
-function quizSummary(quiz: {
-  id: string;
-  title: string;
-  passingScore: number;
-  required: boolean;
-  _count?: { questions: number };
-} | null) {
+function quizSummary(
+  quiz: {
+    id: string;
+    title: string;
+    passingScore: number;
+    required: boolean;
+    _count?: { questions: number };
+  } | null,
+) {
   if (!quiz) return null;
   return {
     id: quiz.id,
@@ -84,7 +86,11 @@ function awardLessonCompletion(userId: string, lessonId: string): void {
         events.push({ amount: MODULE_BONUS, reason: 'MODULE_COMPLETED', refId: lesson.moduleId });
       }
       if (classTotal > 0 && classDone === classTotal) {
-        events.push({ amount: CLASS_BONUS, reason: 'CLASS_COMPLETED', refId: lesson.module.classId });
+        events.push({
+          amount: CLASS_BONUS,
+          reason: 'CLASS_COMPLETED',
+          refId: lesson.module.classId,
+        });
       }
       await prisma.xpEvent.createMany({
         data: events.map((e) => ({ userId, ...e })),
@@ -292,7 +298,10 @@ export async function checkInlineAnswer(
       },
     })
     .catch((e: unknown) =>
-      console.warn('[learn] BlockEvent write failed (telemetry lost):', e instanceof Error ? e.message : e),
+      console.warn(
+        '[learn] BlockEvent write failed (telemetry lost):',
+        e instanceof Error ? e.message : e,
+      ),
     );
 
   // Auto-complete (PRD-03 §2): the lesson completes when every inline-check in it
@@ -336,7 +345,10 @@ export async function checkInlineAnswer(
   };
 }
 
-export async function completeLesson(lessonId: string, userId: string): Promise<{ completedAt: string }> {
+export async function completeLesson(
+  lessonId: string,
+  userId: string,
+): Promise<{ completedAt: string }> {
   const lesson = await prisma.lesson.findUnique({
     where: { id: lessonId },
     include: { module: { include: { class: { select: { published: true } } } } },
@@ -365,7 +377,12 @@ export async function getDashboard(userId: string): Promise<LearnDashboardDTO> {
   const pending = allLessons.find((l) => l.completedAt === null);
   if (pending) {
     const owner = classes
-      .flatMap((c) => c.modules.map((m) => ({ moduleTitle: m.title, lesson: m.lessons.find((l) => l.id === pending.id) })))
+      .flatMap((c) =>
+        c.modules.map((m) => ({
+          moduleTitle: m.title,
+          lesson: m.lessons.find((l) => l.id === pending.id),
+        })),
+      )
       .find((entry) => entry.lesson !== null);
     if (owner?.lesson) {
       nextLesson = {
@@ -377,28 +394,36 @@ export async function getDashboard(userId: string): Promise<LearnDashboardDTO> {
     }
   }
 
-  const [attempts, balanceAgg, xpTimestamps, blockTimestamps, correctChecks, perfectQuizzes, passedQuizRows, quizAvgAgg] =
-    await Promise.all([
-      prisma.quizAttempt.findMany({
-        where: { userId },
-        orderBy: { createdAt: 'desc' },
-        take: 3,
-        include: { quiz: { include: { module: { select: { title: true } } } } },
-      }),
-      prisma.xpEvent.aggregate({ where: { userId }, _sum: { amount: true } }),
-      prisma.xpEvent.findMany({ where: { userId }, select: { createdAt: true } }),
-      prisma.blockEvent.findMany({ where: { userId }, select: { createdAt: true } }),
-      prisma.blockEvent.count({
-        where: { userId, kind: 'inline-check', payload: { path: ['correct'], equals: true } },
-      }),
-      prisma.quizAttempt.count({ where: { userId, score: 100 } }),
-      prisma.quizAttempt.findMany({
-        where: { userId, passed: true },
-        distinct: ['quizId'],
-        select: { quizId: true },
-      }),
-      prisma.quizAttempt.aggregate({ where: { userId }, _avg: { score: true } }),
-    ]);
+  const [
+    attempts,
+    balanceAgg,
+    xpTimestamps,
+    blockTimestamps,
+    correctChecks,
+    perfectQuizzes,
+    passedQuizRows,
+    quizAvgAgg,
+  ] = await Promise.all([
+    prisma.quizAttempt.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+      take: 3,
+      include: { quiz: { include: { module: { select: { title: true } } } } },
+    }),
+    prisma.xpEvent.aggregate({ where: { userId }, _sum: { amount: true } }),
+    prisma.xpEvent.findMany({ where: { userId }, select: { createdAt: true } }),
+    prisma.blockEvent.findMany({ where: { userId }, select: { createdAt: true } }),
+    prisma.blockEvent.count({
+      where: { userId, kind: 'inline-check', payload: { path: ['correct'], equals: true } },
+    }),
+    prisma.quizAttempt.count({ where: { userId, score: 100 } }),
+    prisma.quizAttempt.findMany({
+      where: { userId, passed: true },
+      distinct: ['quizId'],
+      select: { quizId: true },
+    }),
+    prisma.quizAttempt.aggregate({ where: { userId }, _avg: { score: true } }),
+  ]);
 
   // Derived from the already-fetched class tree (zero extra queries).
   let modulesCompleted = 0;

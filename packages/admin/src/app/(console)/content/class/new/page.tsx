@@ -42,14 +42,19 @@ export default function NewClassPage() {
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-16">
-      <Link href="/content" className="font-mono text-xs uppercase tracking-[0.12em] text-faint hover:text-accent">
+      <Link
+        href="/content"
+        className="font-mono text-xs uppercase tracking-[0.12em] text-faint hover:text-accent"
+      >
         ← content manager
       </Link>
       <h1 className="mt-4 font-display text-3xl font-semibold">New Class</h1>
 
       <div className="mt-8 grid gap-5 border border-line bg-elevated p-6">
         <label className="block">
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">Title</span>
+          <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
+            Title
+          </span>
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -58,7 +63,9 @@ export default function NewClassPage() {
           />
         </label>
         <label className="block">
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">Description</span>
+          <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
+            Description
+          </span>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -67,7 +74,9 @@ export default function NewClassPage() {
           />
         </label>
         <label className="block">
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">Cover image URL</span>
+          <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
+            Cover image URL
+          </span>
           <input
             value={coverImage}
             onChange={(e) => setCoverImage(e.target.value)}

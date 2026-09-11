@@ -36,8 +36,6 @@ export function ConfirmDialog({
   onConfirm,
   onClose,
 }: ConfirmDialogProps) {
-
-
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
@@ -86,10 +84,7 @@ export function ConfirmDialog({
                   {title}
                 </h2>
                 {description && (
-                  <p
-                    id="confirm-dialog-description"
-                    className="mt-2 font-body text-sm text-muted"
-                  >
+                  <p id="confirm-dialog-description" className="mt-2 font-body text-sm text-muted">
                     {description}
                   </p>
                 )}

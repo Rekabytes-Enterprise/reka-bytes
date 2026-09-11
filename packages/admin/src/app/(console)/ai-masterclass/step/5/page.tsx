@@ -86,7 +86,9 @@ export default function Step5Page() {
       ) : (
         <>
           <div className="border border-line bg-elevated p-8">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">summary</p>
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
+              summary
+            </p>
             <dl className="mt-4 grid grid-cols-[140px_1fr] gap-y-2 border-b border-line pb-6">
               <dt className="font-body text-sm text-muted">Class</dt>
               <dd className="font-body text-sm">{cls.title}</dd>
@@ -127,7 +129,9 @@ export default function Step5Page() {
           </div>
 
           <div className="mt-10 flex items-center justify-between border-t border-line pt-6">
-            <p className="font-mono text-xs text-faint">you can unpublish later from content manager</p>
+            <p className="font-mono text-xs text-faint">
+              you can unpublish later from content manager
+            </p>
             <button
               type="button"
               onClick={confirm}

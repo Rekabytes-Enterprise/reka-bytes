@@ -10,7 +10,9 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
   if (state === 'loading') {
     return (
       <main className="flex min-h-dvh items-center justify-center px-6">
-        <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">// loading classroom…</p>
+        <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">
+          // loading classroom…
+        </p>
       </main>
     );
   }

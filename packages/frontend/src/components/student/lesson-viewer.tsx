@@ -39,7 +39,9 @@ export function LessonViewer({ lessonId }: { lessonId: string }) {
   };
 
   if (!lesson) {
-    return <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">// loading lesson…</p>;
+    return (
+      <p className="font-mono text-xs uppercase tracking-[0.12em] text-faint">// loading lesson…</p>
+    );
   }
 
   const embed = toYouTubeEmbed(lesson.videoUrl);
@@ -87,7 +89,10 @@ export function LessonViewer({ lessonId }: { lessonId: string }) {
 
       {/* Video */}
       {embed && (
-        <div className="mt-8 aspect-video w-full overflow-hidden rounded-card border border-line bg-inset shadow-card" data-testid="lesson-video">
+        <div
+          className="mt-8 aspect-video w-full overflow-hidden rounded-card border border-line bg-inset shadow-card"
+          data-testid="lesson-video"
+        >
           <iframe
             src={embed}
             title={lesson.title}
@@ -134,7 +139,10 @@ export function LessonViewer({ lessonId }: { lessonId: string }) {
 
         {/* Quiz CTA */}
         {lesson.quiz && (
-          <div className="card-surface mt-8 flex flex-wrap items-center justify-between gap-4 p-5" data-testid="quiz-cta">
+          <div
+            className="card-surface mt-8 flex flex-wrap items-center justify-between gap-4 p-5"
+            data-testid="quiz-cta"
+          >
             <div>
               <p className="font-body text-sm font-medium">📝 {lesson.quiz.title}</p>
               <p className="font-mono text-xs text-faint">
@@ -152,7 +160,10 @@ export function LessonViewer({ lessonId }: { lessonId: string }) {
       </div>
 
       {/* Bottom prev/next — no scrolling back up needed when finishing a lesson */}
-      <nav className="mt-12 flex items-center justify-between gap-4 border-t border-line pt-8" data-testid="bottom-nav">
+      <nav
+        className="mt-12 flex items-center justify-between gap-4 border-t border-line pt-8"
+        data-testid="bottom-nav"
+      >
         {lesson.prevLessonId ? (
           <Link
             href={`/learn/${lesson.prevLessonId}`}

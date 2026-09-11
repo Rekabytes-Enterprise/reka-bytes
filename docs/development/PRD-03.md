@@ -29,23 +29,23 @@ Rationale: checks are formative; attempting is the engagement signal. Requiring 
 
 ### 2.2 Behavior matrix
 
-| Case | Behavior |
-|---|---|
-| Lesson with N ≥ 1 inline-checks, student attempts all N | Auto-complete (`LessonProgress.upsert`) |
-| Student answers some wrong | Still completes (can retry checks; stays complete) |
-| Student attempts only k < N checks | Not complete |
-| Lesson with zero inline-checks (legacy prose / video lessons) | Manual "mark as complete" button remains the only path |
-| Manual button on a check-lesson | Still works (fallback / skip) |
-| Synthetic env-admin | Silent no-op (no User row → no progress writes; see PRD-03-ADDENDUM on env-admin) |
+| Case                                                          | Behavior                                                                          |
+| ------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Lesson with N ≥ 1 inline-checks, student attempts all N       | Auto-complete (`LessonProgress.upsert`)                                           |
+| Student answers some wrong                                    | Still completes (can retry checks; stays complete)                                |
+| Student attempts only k < N checks                            | Not complete                                                                      |
+| Lesson with zero inline-checks (legacy prose / video lessons) | Manual "mark as complete" button remains the only path                            |
+| Manual button on a check-lesson                               | Still works (fallback / skip)                                                     |
+| Synthetic env-admin                                           | Silent no-op (no User row → no progress writes; see PRD-03-ADDENDUM on env-admin) |
 
 ### 2.3 Changes
 
-| Layer | Change |
-|---|---|
+| Layer                      | Change                                                                                                                                                                                                                                                                                                                                                    |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Backend `learn.service.ts` | `checkInlineAnswer`: after the BlockEvent write, count distinct inline-check block indexes this user has attempted (query `BlockEvent` by lessonId+userId, distinct `payload->>'blockIndex'`) vs total inline-check blocks in the lesson. If equal → `lessonProgress.upsert`. Add `lessonCompleted: boolean` (+ `completedAt?`) to `InlineCheckResultDTO` |
-| Shared | Extend check-result DTO with `lessonCompleted` |
-| Frontend | `InlineCheckBlock` receives an `onCompleted?` callback (or the result object); `lesson-viewer` flips the button to "completed ✓" state without reload |
-| E2E | Extend `e2e-14-live-vibe6.spec.ts`: answer ALL checks in lesson 1 → assert button flipped + module map 1/3 **without ever clicking mark-complete** |
+| Shared                     | Extend check-result DTO with `lessonCompleted`                                                                                                                                                                                                                                                                                                            |
+| Frontend                   | `InlineCheckBlock` receives an `onCompleted?` callback (or the result object); `lesson-viewer` flips the button to "completed ✓" state without reload                                                                                                                                                                                                     |
+| E2E                        | Extend `e2e-14-live-vibe6.spec.ts`: answer ALL checks in lesson 1 → assert button flipped + module map 1/3 **without ever clicking mark-complete**                                                                                                                                                                                                        |
 
 ### 2.4 Performance note
 
@@ -70,16 +70,16 @@ The "distinct attempted indexes" query runs per check submit. With the `BlockEve
 ### 3.2 Delete lesson UI (B2)
 
 - Per-lesson delete button in the `/content/class/[id]` tree editor.
-- Confirm dialog stating scope: *"Deletes the lesson and all student progress + check events for it. Quizzes are not affected."*
+- Confirm dialog stating scope: _"Deletes the lesson and all student progress + check events for it. Quizzes are not affected."_
 - Hard delete via the existing endpoint (classes are AI-regenerable; no soft-delete needed — decision recorded below).
 - Guard: disable while an edit form for that lesson is dirty.
 
 ### 3.3 Students page (B3)
 
-| Endpoint | Returns |
-|---|---|
+| Endpoint                                 | Returns                                                                                                                            |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | `GET /api/admin/students?query=&status=` | Paginated list: id, name, email, status, role, joinedAt, lessonsCompleted/lessonsTotal, quizAttempts, avgQuizScore, lastActivityAt |
-| `GET /api/admin/students/:id` | Detail: per-class progress map, quiz attempt history (score, passed, date), recent inline-check answers (last 20) |
+| `GET /api/admin/students/:id`            | Detail: per-class progress map, quiz attempt history (score, passed, date), recent inline-check answers (last 20)                  |
 
 - UI: searchable, status-filterable table; row click → detail view (drawer or sub-page) with per-class progress bars and attempt history.
 - Read-only in v1: approve/reject stays in Applications (single source of decision flow). Revisit if admin asks for inline status changes.
@@ -87,9 +87,9 @@ The "distinct attempted indexes" query runs per check submit. With the `BlockEve
 
 ### 3.4 Analytics page (B4) — "topics, tasks, quiz marks"
 
-| Endpoint | Returns |
-|---|---|
-| `GET /api/admin/analytics/classes` | Per published class: enrolled-ish proxy (students with any progress), completion %, quiz pass rate |
+| Endpoint                             | Returns                                                                                                                                      |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /api/admin/analytics/classes`   | Per published class: enrolled-ish proxy (students with any progress), completion %, quiz pass rate                                           |
 | `GET /api/admin/analytics/class/:id` | Per lesson: completion count; **per inline-check block**: attempts, % correct (the concept-difficulty heatmap); per quiz question: % correct |
 
 - UI v1: class picker → two panels: (1) lesson completion bars, (2) **inline-check heatmap** — each check rendered as a cell colored by % correct (green ≥ 80, amber 50–79, red < 50). Low % = concept teaches badly = content signal for the founder.
@@ -98,7 +98,7 @@ The "distinct attempted indexes" query runs per check submit. With the `BlockEve
 
 ### 3.5 Env-admin hardening (small, rides along)
 
-Discovered during live testing: the synthetic env-admin (no DB row) can browse lessons but **every progress write FK-fails** — loudly on mark-complete, *silently* on BlockEvent (fire-and-forget swallow). Fixes:
+Discovered during live testing: the synthetic env-admin (no DB row) can browse lessons but **every progress write FK-fails** — loudly on mark-complete, _silently_ on BlockEvent (fire-and-forget swallow). Fixes:
 
 1. `BlockEvent` fire-and-forget catch logs `console.warn` instead of pure silence.
 2. Student-write endpoints (`complete`, `check`) return a clean 403 `"student account required"` for synthetic admin instead of a 500.
@@ -110,13 +110,13 @@ Discovered during live testing: the synthetic env-admin (no DB row) can browse l
 
 Scope guard: **no schema changes, no BAML changes, no new block types.** Pure CSS/layout in `BlockRenderer` + `lesson-viewer`.
 
-| Area | Change |
-|---|---|
-| Typography | Tighter heading scale inside blocks; prose `max-w` measure (~68ch); line-height bump on long paragraphs |
-| Blocks | Softer card borders + subtle shadow on `key-terms`/`comparison`; accent left-rail on `callout`; numbered rail on `steps` |
+| Area         | Change                                                                                                                                                  |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Typography   | Tighter heading scale inside blocks; prose `max-w` measure (~68ch); line-height bump on long paragraphs                                                 |
+| Blocks       | Softer card borders + subtle shadow on `key-terms`/`comparison`; accent left-rail on `callout`; numbered rail on `steps`                                |
 | Inline-check | Animated reveal of the explanation (fade/slide, `MotionConfig reducedMotion` aware); stronger correct (green fill) / incorrect (red fill) option states |
-| Reading flow | Sticky mini-header on scroll: lesson title + completion dot + jump-to-quiz link |
-| Bottom nav | Keep; add lesson title tooltip on hover |
+| Reading flow | Sticky mini-header on scroll: lesson title + completion dot + jump-to-quiz link                                                                         |
+| Bottom nav   | Keep; add lesson title tooltip on hover                                                                                                                 |
 
 Deferred to Phase B/C (needs BAML): figure/image blocks, pull-quotes, model-directed emphasis, simulation shells.
 
@@ -124,14 +124,14 @@ Deferred to Phase B/C (needs BAML): figure/image blocks, pull-quotes, model-dire
 
 ## 5. Execution order & estimates
 
-| # | Workstream | Effort | Depends on |
-|---|---|---|---|
-| 1 | Phase A — auto-complete | ~½ session | — |
-| 2 | B1 sidebar + B2 delete UI | ~½ session | — |
-| 3 | Phase C — lesson polish | ~½–1 session | — |
-| 4 | B3 students page | ~1 session | B1 |
-| 5 | B4 analytics page | ~1 session | B1 (data accrues in the meantime) |
-| 6 | §3.5 env-admin hardening | trivial | ride along with #1 |
+| #   | Workstream                | Effort       | Depends on                        |
+| --- | ------------------------- | ------------ | --------------------------------- |
+| 1   | Phase A — auto-complete   | ~½ session   | —                                 |
+| 2   | B1 sidebar + B2 delete UI | ~½ session   | —                                 |
+| 3   | Phase C — lesson polish   | ~½–1 session | —                                 |
+| 4   | B3 students page          | ~1 session   | B1                                |
+| 5   | B4 analytics page         | ~1 session   | B1 (data accrues in the meantime) |
+| 6   | §3.5 env-admin hardening  | trivial      | ride along with #1                |
 
 E2E: extend e2e-14 (auto-complete), new e2e-15 (admin students/analytics smoke), keep e2e-09 green throughout.
 
@@ -147,11 +147,11 @@ E2E: extend e2e-14 (auto-complete), new e2e-15 (admin students/analytics smoke),
 
 ## 7. Decisions recorded
 
-| Decision | Rationale |
-|---|---|
-| Auto-complete = all-attempted, not all-correct | Formative checks measure engagement; all-correct lets one bad question block progress |
-| Hard delete for lessons | Content is AI-regenerable; soft-delete adds schema + UI complexity for no current need |
-| Students page read-only v1 | Applications page remains the single approval flow; avoids duplicate decision paths |
-| Identifiable (non-anonymized) analytics | Internal founder tool for their own cohort; privacy posture unchanged |
-| Env-admin: 403 on student writes, not DB row | Keeps Users directory clean; synthetic identity stays synthetic |
-| Lesson polish = CSS only | BAML/prompt changes explicitly deferred by product decision (founder) |
+| Decision                                       | Rationale                                                                              |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Auto-complete = all-attempted, not all-correct | Formative checks measure engagement; all-correct lets one bad question block progress  |
+| Hard delete for lessons                        | Content is AI-regenerable; soft-delete adds schema + UI complexity for no current need |
+| Students page read-only v1                     | Applications page remains the single approval flow; avoids duplicate decision paths    |
+| Identifiable (non-anonymized) analytics        | Internal founder tool for their own cohort; privacy posture unchanged                  |
+| Env-admin: 403 on student writes, not DB row   | Keeps Users directory clean; synthetic identity stays synthetic                        |
+| Lesson polish = CSS only                       | BAML/prompt changes explicitly deferred by product decision (founder)                  |

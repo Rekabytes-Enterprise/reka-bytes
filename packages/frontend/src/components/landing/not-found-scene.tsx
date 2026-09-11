@@ -262,11 +262,11 @@ function buildPetals(): Petal[] {
       tz: tree.z,
       ox: (r - 0.5) * 3.6,
       oz: (((i * 61) % 100) / 100 - 0.5) * 3.6,
-      y: 4.4 + ((i * 29) % 100) / 100 * 2,
-      speed: 0.5 + ((i * 43) % 100) / 100 * 0.45,
+      y: 4.4 + (((i * 29) % 100) / 100) * 2,
+      speed: 0.5 + (((i * 43) % 100) / 100) * 0.45,
       swayPhase: (i * 2.399) % (Math.PI * 2),
-      swayAmp: 0.25 + ((i * 71) % 100) / 100 * 0.4,
-      size: 4 + ((i * 17) % 100) / 100 * 2.5,
+      swayAmp: 0.25 + (((i * 71) % 100) / 100) * 0.4,
+      size: 4 + (((i * 17) % 100) / 100) * 2.5,
       color: PETAL_COLORS[i % 3] ?? PETAL_COLORS[0],
     });
   }
@@ -362,10 +362,7 @@ export function NotFoundScene({ className }: { className?: string }) {
       return rx + rz > 0;
     };
 
-    const pathPoly = (
-      c: CanvasRenderingContext2D,
-      pts: Array<[number, number]>,
-    ): void => {
+    const pathPoly = (c: CanvasRenderingContext2D, pts: Array<[number, number]>): void => {
       c.beginPath();
       let first = true;
       for (const [px, py] of pts) {
@@ -500,9 +497,7 @@ export function NotFoundScene({ className }: { className?: string }) {
       staticCanvas.height = Math.max(1, Math.round(h * dpr));
       sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       sctx.clearRect(0, 0, w, h);
-      const sorted = [...BLOCKS].sort(
-        (a, b) => depth(a.x, a.z) - depth(b.x, b.z) || a.y - b.y,
-      );
+      const sorted = [...BLOCKS].sort((a, b) => depth(a.x, a.z) - depth(b.x, b.z) || a.y - b.y);
       for (const b of sorted) {
         drawBlockOn(sctx, b);
       }
@@ -689,13 +684,8 @@ export function NotFoundScene({ className }: { className?: string }) {
 
     const updateAndDrawPetals = (t: number, dt: number): void => {
       for (const p of PETALS) {
-        const gx =
-          p.tx + p.ox + Math.sin(t * 1.1 + p.swayPhase) * p.swayAmp + windX * 0.9;
-        const gz =
-          p.tz +
-          p.oz +
-          Math.cos(t * 0.9 + p.swayPhase) * p.swayAmp * 0.6 +
-          windX * 0.3;
+        const gx = p.tx + p.ox + Math.sin(t * 1.1 + p.swayPhase) * p.swayAmp + windX * 0.9;
+        const gz = p.tz + p.oz + Math.cos(t * 0.9 + p.swayPhase) * p.swayAmp * 0.6 + windX * 0.3;
         const [psx, psy] = project(gx, p.y, gz);
         const [tx2, ty2] = project(gx - windX * 0.3, p.y + p.speed * dt * 0.8, gz);
         drawPetalShape(tx2, ty2, p.size, p.color, 0.3);
@@ -728,17 +718,17 @@ export function NotFoundScene({ className }: { className?: string }) {
     const spawnBurst = (x: number, z: number): void => {
       for (let i = 0; i < 10; i++) {
         const angle = (i / 10) * Math.PI * 2 + hops * 0.7;
-        const speed = 1.4 + ((i * 37) % 100) / 100 * 1.2;
+        const speed = 1.4 + (((i * 37) % 100) / 100) * 1.2;
         bursts.push({
           x,
           y: 1.9,
           z,
           vx: Math.cos(angle) * speed * 0.6,
-          vy: 2.2 + ((i * 53) % 100) / 100 * 1.4,
+          vy: 2.2 + (((i * 53) % 100) / 100) * 1.4,
           vz: Math.sin(angle) * speed * 0.6,
           life: 0.85,
           maxLife: 0.85,
-          size: 3.5 + ((i * 19) % 100) / 100 * 2.5,
+          size: 3.5 + (((i * 19) % 100) / 100) * 2.5,
           color: PETAL_COLORS[i % 3] ?? PETAL_COLORS[0],
         });
       }
@@ -888,10 +878,7 @@ export function NotFoundScene({ className }: { className?: string }) {
     const onWheel = (e: WheelEvent): void => {
       // the band is an interactive viewer — wheel zooms instead of page-scroll
       e.preventDefault();
-      zoomTarget = Math.max(
-        ZOOM_MIN,
-        Math.min(ZOOM_MAX, zoomTarget - e.deltaY * 0.0016),
-      );
+      zoomTarget = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, zoomTarget - e.deltaY * 0.0016));
       if (reducedMotion) {
         zoom = zoomTarget;
         rerenderNow();

@@ -37,12 +37,16 @@ test.describe('LIVE · Vibe Coding Testing 6', () => {
   test('lesson flow: inline-check → mark complete → progress → prev/next', async ({ browser }) => {
     const ctx = await browser.newContext({ baseURL: FRONT });
     const cookie = await loginCookie(email, PASSWORD);
-    await ctx.addCookies([{ name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' }]);
+    await ctx.addCookies([
+      { name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' },
+    ]);
     const page = await ctx.newPage();
 
     // ── 1. module map shows the class and the first lesson as "current" ──
     await page.goto('/learn');
-    const vibe6 = page.locator('section', { hasText: CLASS_TITLE }).filter({ has: page.getByTestId('module-map') });
+    const vibe6 = page
+      .locator('section', { hasText: CLASS_TITLE })
+      .filter({ has: page.getByTestId('module-map') });
     await expect(vibe6).toContainText(CLASS_TITLE);
     await expect(page.getByTestId(`lesson-link-${lessonIds[0]}`)).toBeVisible();
     await page.screenshot({ path: 'artifacts/live-01-module-map-before.png', fullPage: true });
@@ -58,8 +62,11 @@ test.describe('LIVE · Vibe Coding Testing 6', () => {
       headers: { Cookie: cookie },
     });
     const detailJson = (await detail.json()) as { data?: { blocks?: Array<{ type: string }> } };
-    const checkCount = (detailJson.data?.blocks ?? []).filter((b) => b.type === 'inline-check').length;
-    if (checkCount === 0) throw new Error('lesson 1 has no inline-checks — auto-complete path untestable');
+    const checkCount = (detailJson.data?.blocks ?? []).filter(
+      (b) => b.type === 'inline-check',
+    ).length;
+    if (checkCount === 0)
+      throw new Error('lesson 1 has no inline-checks — auto-complete path untestable');
 
     // Answer every check (option A + check answer)
     for (let i = 0; i < checkCount; i++) {

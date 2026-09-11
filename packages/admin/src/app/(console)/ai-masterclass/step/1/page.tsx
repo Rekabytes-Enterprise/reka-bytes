@@ -106,7 +106,9 @@ export default function Step1Page() {
               />
             </label>
             <p className="mt-3 font-mono text-xs text-faint">
-              {file ? `selected: ${file.name} (${Math.round(file.size / 1024)} KB)` : 'max 50MB · PDF only'}
+              {file
+                ? `selected: ${file.name} (${Math.round(file.size / 1024)} KB)`
+                : 'max 50MB · PDF only'}
             </p>
           </div>
 
@@ -138,7 +140,9 @@ export default function Step1Page() {
         </div>
 
         <div className="mt-10 flex items-center justify-between border-t border-line pt-6">
-          <p className="font-mono text-xs text-faint">the AI drafts modules, lessons &amp; a quiz</p>
+          <p className="font-mono text-xs text-faint">
+            the AI drafts modules, lessons &amp; a quiz
+          </p>
           <button
             type="button"
             onClick={start}

@@ -1,275 +1,697 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>The Vibe Coding Field Guide — Zero-Basis Edition</title>
     <style>
-        :root {
-            --color-bg: #ffffff;
-            --color-text: #1a1a2e;
-            --color-muted: #555770;
-            --color-accent: #4f46e5;
-            --color-border: #e2e4ea;
-            --color-code-bg: #f4f5f9;
-            --color-warning-bg: #fffbeb;
-            --color-warning-border: #f59e0b;
-            --color-tip-bg: #ecfdf5;
-            --color-tip-border: #10b981;
-            --color-hook-bg: #eef2ff;
-            --color-hook-border: #4f46e5;
-            --font-body: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: var(--font-body); color: var(--color-text); background: #f0f1f5; line-height: 1.65; font-size: 11pt; }
-        .page-container { max-width: 210mm; margin: 2rem auto; background: var(--color-bg); padding: 20mm 18mm; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
-        h1 { font-size: 26pt; letter-spacing: -0.5px; margin-bottom: 0.2em; color: var(--color-accent); }
-        h2 { font-size: 16pt; margin-top: 1.8em; margin-bottom: 0.3em; padding-bottom: 0.3em; border-bottom: 2px solid var(--color-accent); }
-        h3 { font-size: 12pt; margin-top: 1.2em; margin-bottom: 0.4em; }
-        p { margin-bottom: 0.7em; }
-        a { color: var(--color-accent); text-decoration: none; }
-        table { width: 100%; border-collapse: collapse; margin: 1em 0; font-size: 10pt; }
-        th, td { border: 1px solid var(--color-border); padding: 8px 10px; text-align: left; }
-        th { background: var(--color-code-bg); font-weight: 700; white-space: nowrap; }
-        tr:nth-child(even) { background: #fafbfd; }
-        pre { background: var(--color-code-bg); border: 1px solid var(--color-border); border-radius: 6px; padding: 12px 14px; overflow-x: auto; font-family: var(--font-mono); font-size: 9.5pt; line-height: 1.55; margin: 0.8em 0; }
-        code { font-family: var(--font-mono); font-size: 9.5pt; }
-        p code, li code, td code { background: var(--color-code-bg); padding: 1px 5px; border-radius: 3px; font-size: 9pt; }
-        .callout { border-left: 4px solid; padding: 10px 14px; margin: 1em 0; border-radius: 0 6px 6px 0; font-size: 10pt; }
-        .callout.warning { background: var(--color-warning-bg); border-color: var(--color-warning-border); }
-        .callout.tip { background: var(--color-tip-bg); border-color: var(--color-tip-border); }
-        .callout.hook { background: var(--color-hook-bg); border-color: var(--color-hook-border); font-style: italic; }
-        .callout strong { display: block; margin-bottom: 2px; }
-        ul, ol { margin: 0.5em 0 0.8em 1.5em; }
-        li { margin-bottom: 0.25em; }
-        .checklist { list-style: none; margin-left: 0; }
-        .checklist li::before { content: "☐ "; font-family: var(--font-mono); color: var(--color-accent); }
-        .toc { background: var(--color-code-bg); padding: 16px 20px; border-radius: 8px; margin: 1.5em 0; }
-        .toc h3 { margin-top: 0; }
-        .toc ol { margin-bottom: 0; }
-        .toc a { color: var(--color-text); border-bottom: 1px dotted var(--color-border); }
-        .subtitle { font-size: 13pt; color: var(--color-muted); margin-bottom: 0.3em; }
-        .version { font-size: 9pt; color: var(--color-muted); margin-bottom: 2em; font-family: var(--font-mono); }
-        .flowchart { background: var(--color-code-bg); border: 1px solid var(--color-border); border-radius: 6px; padding: 14px 18px; font-family: var(--font-mono); font-size: 9pt; line-height: 1.6; white-space: pre-wrap; margin: 1em 0; }
-        .self-check { background: #f8f9fc; border: 1px dashed var(--color-border); border-radius: 6px; padding: 12px 16px; margin: 1.2em 0; font-size: 10pt; }
-        .self-check strong { color: var(--color-accent); display: block; margin-bottom: 4px; }
-        .visual-anchor { font-family: var(--font-mono); font-size: 9pt; background: #1a1a2e; color: #a5f3c4; padding: 10px 14px; border-radius: 6px; margin: 0.8em 0; line-height: 1.5; white-space: pre-wrap; }
+      :root {
+        --color-bg: #ffffff;
+        --color-text: #1a1a2e;
+        --color-muted: #555770;
+        --color-accent: #4f46e5;
+        --color-border: #e2e4ea;
+        --color-code-bg: #f4f5f9;
+        --color-warning-bg: #fffbeb;
+        --color-warning-border: #f59e0b;
+        --color-tip-bg: #ecfdf5;
+        --color-tip-border: #10b981;
+        --color-hook-bg: #eef2ff;
+        --color-hook-border: #4f46e5;
+        --font-body: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: var(--font-body);
+        color: var(--color-text);
+        background: #f0f1f5;
+        line-height: 1.65;
+        font-size: 11pt;
+      }
+      .page-container {
+        max-width: 210mm;
+        margin: 2rem auto;
+        background: var(--color-bg);
+        padding: 20mm 18mm;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      }
+      h1 {
+        font-size: 26pt;
+        letter-spacing: -0.5px;
+        margin-bottom: 0.2em;
+        color: var(--color-accent);
+      }
+      h2 {
+        font-size: 16pt;
+        margin-top: 1.8em;
+        margin-bottom: 0.3em;
+        padding-bottom: 0.3em;
+        border-bottom: 2px solid var(--color-accent);
+      }
+      h3 {
+        font-size: 12pt;
+        margin-top: 1.2em;
+        margin-bottom: 0.4em;
+      }
+      p {
+        margin-bottom: 0.7em;
+      }
+      a {
+        color: var(--color-accent);
+        text-decoration: none;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1em 0;
+        font-size: 10pt;
+      }
+      th,
+      td {
+        border: 1px solid var(--color-border);
+        padding: 8px 10px;
+        text-align: left;
+      }
+      th {
+        background: var(--color-code-bg);
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      tr:nth-child(even) {
+        background: #fafbfd;
+      }
+      pre {
+        background: var(--color-code-bg);
+        border: 1px solid var(--color-border);
+        border-radius: 6px;
+        padding: 12px 14px;
+        overflow-x: auto;
+        font-family: var(--font-mono);
+        font-size: 9.5pt;
+        line-height: 1.55;
+        margin: 0.8em 0;
+      }
+      code {
+        font-family: var(--font-mono);
+        font-size: 9.5pt;
+      }
+      p code,
+      li code,
+      td code {
+        background: var(--color-code-bg);
+        padding: 1px 5px;
+        border-radius: 3px;
+        font-size: 9pt;
+      }
+      .callout {
+        border-left: 4px solid;
+        padding: 10px 14px;
+        margin: 1em 0;
+        border-radius: 0 6px 6px 0;
+        font-size: 10pt;
+      }
+      .callout.warning {
+        background: var(--color-warning-bg);
+        border-color: var(--color-warning-border);
+      }
+      .callout.tip {
+        background: var(--color-tip-bg);
+        border-color: var(--color-tip-border);
+      }
+      .callout.hook {
+        background: var(--color-hook-bg);
+        border-color: var(--color-hook-border);
+        font-style: italic;
+      }
+      .callout strong {
+        display: block;
+        margin-bottom: 2px;
+      }
+      ul,
+      ol {
+        margin: 0.5em 0 0.8em 1.5em;
+      }
+      li {
+        margin-bottom: 0.25em;
+      }
+      .checklist {
+        list-style: none;
+        margin-left: 0;
+      }
+      .checklist li::before {
+        content: '☐ ';
+        font-family: var(--font-mono);
+        color: var(--color-accent);
+      }
+      .toc {
+        background: var(--color-code-bg);
+        padding: 16px 20px;
+        border-radius: 8px;
+        margin: 1.5em 0;
+      }
+      .toc h3 {
+        margin-top: 0;
+      }
+      .toc ol {
+        margin-bottom: 0;
+      }
+      .toc a {
+        color: var(--color-text);
+        border-bottom: 1px dotted var(--color-border);
+      }
+      .subtitle {
+        font-size: 13pt;
+        color: var(--color-muted);
+        margin-bottom: 0.3em;
+      }
+      .version {
+        font-size: 9pt;
+        color: var(--color-muted);
+        margin-bottom: 2em;
+        font-family: var(--font-mono);
+      }
+      .flowchart {
+        background: var(--color-code-bg);
+        border: 1px solid var(--color-border);
+        border-radius: 6px;
+        padding: 14px 18px;
+        font-family: var(--font-mono);
+        font-size: 9pt;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        margin: 1em 0;
+      }
+      .self-check {
+        background: #f8f9fc;
+        border: 1px dashed var(--color-border);
+        border-radius: 6px;
+        padding: 12px 16px;
+        margin: 1.2em 0;
+        font-size: 10pt;
+      }
+      .self-check strong {
+        color: var(--color-accent);
+        display: block;
+        margin-bottom: 4px;
+      }
+      .visual-anchor {
+        font-family: var(--font-mono);
+        font-size: 9pt;
+        background: #1a1a2e;
+        color: #a5f3c4;
+        padding: 10px 14px;
+        border-radius: 6px;
+        margin: 0.8em 0;
+        line-height: 1.5;
+        white-space: pre-wrap;
+      }
 
-        @media print {
-            @page { size: A4 portrait; margin: 15mm 14mm 20mm 14mm; }
-            body { background: white; font-size: 10pt; line-height: 1.55; color: #000; }
-            .page-container { max-width: none; margin: 0; padding: 0; box-shadow: none; }
-            h1 { font-size: 22pt; } h2 { font-size: 14pt; margin-top: 1.4em; } h3 { font-size: 11pt; }
-            h2, h3, h4 { break-after: avoid; page-break-after: avoid; }
-            pre, table, .callout, .flowchart, .toc, .self-check, .visual-anchor { break-inside: avoid; page-break-inside: avoid; }
-            tr, li { break-inside: avoid; page-break-inside: avoid; }
-            .page-break-before { break-before: page; page-break-before: always; }
-            a[href]::after { content: " (" attr(href) ")"; font-size: 8pt; color: #666; word-break: break-all; }
-            .toc a[href]::after { content: ""; }
-            .no-print { display: none !important; }
-            thead.print-header { display: table-header-group; }
-            tfoot.print-footer { display: table-footer-group; }
-            thead.print-header th, tfoot.print-footer td { border: none; background: none; padding: 0; font-size: 8pt; color: #999; font-family: var(--font-mono); }
-            thead.print-header th { padding-bottom: 6px; border-bottom: 1px solid #ddd; text-align: right; }
-            tfoot.print-footer td { padding-top: 8px; border-top: 1px solid #ddd; text-align: center; }
-            .print-wrapper-table { width: 100%; border: none; border-collapse: collapse; }
-            .print-wrapper-table td { border: none; padding: 0; vertical-align: top; }
-            pre { border: 1px solid #ccc; background: #f8f8f8 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .callout, .self-check, .visual-anchor { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .callout.warning { background: #fffbeb !important; }
-            .callout.tip { background: #ecfdf5 !important; }
-            .callout.hook { background: #eef2ff !important; }
-            .self-check { background: #f8f9fc !important; }
-            .visual-anchor { background: #1a1a2e !important; color: #a5f3c4 !important; }
-            th { background: #f0f1f5 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      @media print {
+        @page {
+          size: A4 portrait;
+          margin: 15mm 14mm 20mm 14mm;
         }
-        .download-bar { position: fixed; top: 0; left: 0; right: 0; background: var(--color-accent); color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; font-size: 10pt; box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
-        .download-bar button { background: white; color: var(--color-accent); border: none; padding: 8px 20px; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 10pt; }
-        .download-bar button:hover { background: #f0f0ff; }
+        body {
+          background: white;
+          font-size: 10pt;
+          line-height: 1.55;
+          color: #000;
+        }
+        .page-container {
+          max-width: none;
+          margin: 0;
+          padding: 0;
+          box-shadow: none;
+        }
+        h1 {
+          font-size: 22pt;
+        }
+        h2 {
+          font-size: 14pt;
+          margin-top: 1.4em;
+        }
+        h3 {
+          font-size: 11pt;
+        }
+        h2,
+        h3,
+        h4 {
+          break-after: avoid;
+          page-break-after: avoid;
+        }
+        pre,
+        table,
+        .callout,
+        .flowchart,
+        .toc,
+        .self-check,
+        .visual-anchor {
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+        tr,
+        li {
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+        .page-break-before {
+          break-before: page;
+          page-break-before: always;
+        }
+        a[href]::after {
+          content: ' (' attr(href) ')';
+          font-size: 8pt;
+          color: #666;
+          word-break: break-all;
+        }
+        .toc a[href]::after {
+          content: '';
+        }
+        .no-print {
+          display: none !important;
+        }
+        thead.print-header {
+          display: table-header-group;
+        }
+        tfoot.print-footer {
+          display: table-footer-group;
+        }
+        thead.print-header th,
+        tfoot.print-footer td {
+          border: none;
+          background: none;
+          padding: 0;
+          font-size: 8pt;
+          color: #999;
+          font-family: var(--font-mono);
+        }
+        thead.print-header th {
+          padding-bottom: 6px;
+          border-bottom: 1px solid #ddd;
+          text-align: right;
+        }
+        tfoot.print-footer td {
+          padding-top: 8px;
+          border-top: 1px solid #ddd;
+          text-align: center;
+        }
+        .print-wrapper-table {
+          width: 100%;
+          border: none;
+          border-collapse: collapse;
+        }
+        .print-wrapper-table td {
+          border: none;
+          padding: 0;
+          vertical-align: top;
+        }
+        pre {
+          border: 1px solid #ccc;
+          background: #f8f8f8 !important;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+        .callout,
+        .self-check,
+        .visual-anchor {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+        .callout.warning {
+          background: #fffbeb !important;
+        }
+        .callout.tip {
+          background: #ecfdf5 !important;
+        }
+        .callout.hook {
+          background: #eef2ff !important;
+        }
+        .self-check {
+          background: #f8f9fc !important;
+        }
+        .visual-anchor {
+          background: #1a1a2e !important;
+          color: #a5f3c4 !important;
+        }
+        th {
+          background: #f0f1f5 !important;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+      }
+      .download-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: var(--color-accent);
+        color: white;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1000;
+        font-size: 10pt;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+      }
+      .download-bar button {
+        background: white;
+        color: var(--color-accent);
+        border: none;
+        padding: 8px 20px;
+        border-radius: 4px;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 10pt;
+      }
+      .download-bar button:hover {
+        background: #f0f0ff;
+      }
     </style>
-</head>
-<body>
-
-<div class="download-bar no-print">
-    <span>📄 Vibe Coding Field Guide (Zero-Basis Edition) — Press <strong>Ctrl+P / Cmd+P</strong></span>
-    <button onclick="window.print()">⬇ Save as PDF</button>
-</div>
-
-<div class="page-container">
-<table class="print-wrapper-table">
-<thead class="print-header"><tr><th>The Vibe Coding Field Guide v2.0 — Continuation</th></tr></thead>
-<tfoot class="print-footer"><tr><td>Page · The Vibe Coding Field Guide · Zero-Basis Edition</td></tr></tfoot>
-<tbody><tr><td>
-
-<!-- ==================== COVER ==================== -->
-<h1>The Vibe Coding Field Guide</h1>
-<p class="subtitle">From Absolute Zero to AI-Assisted Developer</p>
-<p class="version">Reference Manual v2.0 · Zero-Basis Edition · Print-Optimized</p>
-
-<div class="callout tip">
-    <strong>💡 This Guide Is For You If…</strong>
-    You’ve used Bolt or Lovable but don’t know what VS Code is. You’ve seen error messages but don’t know how to read them. You want to build real things with AI but feel lost when the AI breaks. <strong>This guide assumes zero prior coding knowledge.</strong>
-</div>
-
-<div class="toc">
-    <h3>Table of Contents</h3>
-    <ol>
-        <li><a href="#mindset">The Vibe Coding Mindset</a></li>
-        <li><a href="#workbench">Your Workbench: IDE &amp; Terminal</a></li>
-        <li><a href="#models">Mental Models: How Software Works</a></li>
-        <li><a href="#reading">Reading Code Without Writing It</a></li>
-        <li><a href="#debugging">Debugging: The Core Skill</a></li>
-        <li><a href="#git">Git: Save Points, Not Memorization</a></li>
-        <li><a href="#prompting">AI Prompting Patterns for Debugging</a></li>
-        <li><a href="#cheatsheets">Quick Reference Cheat Sheets</a></li>
-    </ol>
-</div>
-
-<!-- ==================== SECTION 1 ==================== -->
-<section id="mindset">
-    <h2>1. The Vibe Coding Mindset</h2>
-    <div class="callout hook">
-        <strong>🎯 Why this matters:</strong>
-        If you try to learn vibe coding like traditional CS, you’ll quit in 2 weeks. This mindset shift is what makes everything else click.
+  </head>
+  <body>
+    <div class="download-bar no-print">
+      <span
+        >📄 Vibe Coding Field Guide (Zero-Basis Edition) — Press
+        <strong>Ctrl+P / Cmd+P</strong></span
+      >
+      <button onclick="window.print()">⬇ Save as PDF</button>
     </div>
 
-    <h3>Analogy: Chef vs. Food Critic</h3>
-    <p>A <strong>traditional developer</strong> is a chef who memorizes every recipe. A <strong>vibe coder</strong> is a food critic who knows exactly what good food tastes like, can describe what’s wrong, and can direct the chef (AI) to fix it. <em>You don’t need to cook — you need to taste and direct.</em></p>
-
-    <table>
-        <thead><tr><th>Traditional Developer</th><th>Vibe Coder (You)</th></tr></thead>
+    <div class="page-container">
+      <table class="print-wrapper-table">
+        <thead class="print-header">
+          <tr>
+            <th>The Vibe Coding Field Guide v2.0 — Continuation</th>
+          </tr>
+        </thead>
+        <tfoot class="print-footer">
+          <tr>
+            <td>Page · The Vibe Coding Field Guide · Zero-Basis Edition</td>
+          </tr>
+        </tfoot>
         <tbody>
-            <tr><td>Memorizes syntax</td><td>Recognizes patterns &amp; describes intent</td></tr>
-            <tr><td>Writes code from scratch</td><td>Generates, reviews, and refines</td></tr>
-            <tr><td>Fears the terminal</td><td>Uses terminal as primary feedback loop</td></tr>
-            <tr><td>"I need to learn React first"</td><td>"I need to understand state to fix this bug"</td></tr>
-        </tbody>
-    </table>
+          <tr>
+            <td>
+              <!-- ==================== COVER ==================== -->
+              <h1>The Vibe Coding Field Guide</h1>
+              <p class="subtitle">From Absolute Zero to AI-Assisted Developer</p>
+              <p class="version">Reference Manual v2.0 · Zero-Basis Edition · Print-Optimized</p>
 
-    <h3>The Three Rules</h3>
-    <ol>
-        <li><strong>Never trust AI blindly.</strong> AI is confident even when wrong. Always verify.</li>
-        <li><strong>Read &gt; Write.</strong> You must <em>read</em> code fluently even if you can’t <em>write</em> it from memory.</li>
-        <li><strong>Context is King.</strong> AI fails without context. Your job is to feed it the right information.</li>
-    </ol>
+              <div class="callout tip">
+                <strong>💡 This Guide Is For You If…</strong>
+                You’ve used Bolt or Lovable but don’t know what VS Code is. You’ve seen error
+                messages but don’t know how to read them. You want to build real things with AI but
+                feel lost when the AI breaks.
+                <strong>This guide assumes zero prior coding knowledge.</strong>
+              </div>
 
-    <div class="self-check">
-        <strong>✅ Self-Check (No coding needed!)</strong>
-        1. If AI gives you code that looks correct but doesn’t work, what should you do first?<br>
-        2. True or False: You need to memorize JavaScript syntax to be a vibe coder.<br>
-        3. What is YOUR role when working with AI? (Hint: Not typist)
-    </div>
-</section>
+              <div class="toc">
+                <h3>Table of Contents</h3>
+                <ol>
+                  <li><a href="#mindset">The Vibe Coding Mindset</a></li>
+                  <li><a href="#workbench">Your Workbench: IDE &amp; Terminal</a></li>
+                  <li><a href="#models">Mental Models: How Software Works</a></li>
+                  <li><a href="#reading">Reading Code Without Writing It</a></li>
+                  <li><a href="#debugging">Debugging: The Core Skill</a></li>
+                  <li><a href="#git">Git: Save Points, Not Memorization</a></li>
+                  <li><a href="#prompting">AI Prompting Patterns for Debugging</a></li>
+                  <li><a href="#cheatsheets">Quick Reference Cheat Sheets</a></li>
+                </ol>
+              </div>
 
-<!-- ==================== SECTION 2 ==================== -->
-<section id="workbench" class="page-break-before">
-    <h2>2. Your Workbench: IDE &amp; Terminal</h2>
-    <div class="callout hook">
-        <strong>🎯 Why this matters:</strong>
-        Bolt/Lovable are training wheels. VS Code + Terminal is the real bicycle. This chapter removes the fear of both.
-    </div>
+              <!-- ==================== SECTION 1 ==================== -->
+              <section id="mindset">
+                <h2>1. The Vibe Coding Mindset</h2>
+                <div class="callout hook">
+                  <strong>🎯 Why this matters:</strong>
+                  If you try to learn vibe coding like traditional CS, you’ll quit in 2 weeks. This
+                  mindset shift is what makes everything else click.
+                </div>
 
-    <h3>Analogy: Workshop vs. Swiss Army Knife</h3>
-    <p>Bolt/Lovable is a <strong>Swiss Army knife</strong> — portable, limited. VS Code is a <strong>full workshop</strong> — every tool on the wall, unlimited power. The terminal is just <strong>text messaging your computer</strong>: you type a command, it replies with text.</p>
+                <h3>Analogy: Chef vs. Food Critic</h3>
+                <p>
+                  A <strong>traditional developer</strong> is a chef who memorizes every recipe. A
+                  <strong>vibe coder</strong> is a food critic who knows exactly what good food
+                  tastes like, can describe what’s wrong, and can direct the chef (AI) to fix it.
+                  <em>You don’t need to cook — you need to taste and direct.</em>
+                </p>
 
-    <h3>What the Terminal Actually Looks Like</h3>
-    <div class="visual-anchor">$ cd my-project
-$ npm run dev
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Traditional Developer</th>
+                      <th>Vibe Coder (You)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Memorizes syntax</td>
+                      <td>Recognizes patterns &amp; describes intent</td>
+                    </tr>
+                    <tr>
+                      <td>Writes code from scratch</td>
+                      <td>Generates, reviews, and refines</td>
+                    </tr>
+                    <tr>
+                      <td>Fears the terminal</td>
+                      <td>Uses terminal as primary feedback loop</td>
+                    </tr>
+                    <tr>
+                      <td>"I need to learn React first"</td>
+                      <td>"I need to understand state to fix this bug"</td>
+                    </tr>
+                  </tbody>
+                </table>
 
-  ▲ Next.js 14.2.3
-  ✓ Ready in 2.1s
-  ○ Local:        http://localhost:3000
-  ○ Network:      http://192.168.1.5:3000
+                <h3>The Three Rules</h3>
+                <ol>
+                  <li>
+                    <strong>Never trust AI blindly.</strong> AI is confident even when wrong. Always
+                    verify.
+                  </li>
+                  <li>
+                    <strong>Read &gt; Write.</strong> You must <em>read</em> code fluently even if
+                    you can’t <em>write</em> it from memory.
+                  </li>
+                  <li>
+                    <strong>Context is King.</strong> AI fails without context. Your job is to feed
+                    it the right information.
+                  </li>
+                </ol>
 
-$ _</div>
-    <p><em>This is NOT scary. It’s just your computer talking back. Green/white text = good. Red text = needs attention.</em></p>
+                <div class="self-check">
+                  <strong>✅ Self-Check (No coding needed!)</strong>
+                  1. If AI gives you code that looks correct but doesn’t work, what should you do
+                  first?<br />
+                  2. True or False: You need to memorize JavaScript syntax to be a vibe coder.<br />
+                  3. What is YOUR role when working with AI? (Hint: Not typist)
+                </div>
+              </section>
 
-    <h3>Essential Commands (Only These 8)</h3>
-    <table>
-        <thead><tr><th>Command</th><th>Plain English</th><th>When to Use</th></tr></thead>
-        <tbody>
-            <tr><td><code>pwd</code></td><td>"Where am I?"</td><td>When you’re lost in folders</td></tr>
-            <tr><td><code>ls</code></td><td>"Show me files here"</td><td>See what’s in current folder</td></tr>
-            <tr><td><code>cd folder</code></td><td>"Go into this folder"</td><td>Navigate deeper</td></tr>
-            <tr><td><code>cd ..</code></td><td>"Go up one level"</td><td>Go back to parent folder</td></tr>
-            <tr><td><code>npm install</code></td><td>"Download project plugins"</td><td>First time opening a project</td></tr>
-            <tr><td><code>npm run dev</code></td><td>"Start the app"</td><td>Run your project locally</td></tr>
-            <tr><td><code>cat file.txt</code></td><td>"Show file contents"</td><td>Quick peek at a file</td></tr>
-            <tr><td><code>Ctrl+C</code></td><td>"Stop current command"</td><td>Kill running server / cancel</td></tr>
-        </tbody>
-    </table>
+              <!-- ==================== SECTION 2 ==================== -->
+              <section id="workbench" class="page-break-before">
+                <h2>2. Your Workbench: IDE &amp; Terminal</h2>
+                <div class="callout hook">
+                  <strong>🎯 Why this matters:</strong>
+                  Bolt/Lovable are training wheels. VS Code + Terminal is the real bicycle. This
+                  chapter removes the fear of both.
+                </div>
 
-    <div class="callout warning">
-        <strong>🚫 Beginner Mistake #1</strong>
-        Typing commands in the wrong folder. <strong>Always run <code>pwd</code> first</strong> to confirm where you are before running anything destructive.
-    </div>
+                <h3>Analogy: Workshop vs. Swiss Army Knife</h3>
+                <p>
+                  Bolt/Lovable is a <strong>Swiss Army knife</strong> — portable, limited. VS Code
+                  is a <strong>full workshop</strong> — every tool on the wall, unlimited power. The
+                  terminal is just <strong>text messaging your computer</strong>: you type a
+                  command, it replies with text.
+                </p>
 
-    <div class="self-check">
-        <strong>✅ Self-Check</strong>
-        1. You opened a new project. What command runs FIRST?<br>
-        2. Your dev server is running and you want to stop it. What do you press?<br>
-        3. You’re not sure which folder you’re in. What command tells you?
-    </div>
-</section>
+                <h3>What the Terminal Actually Looks Like</h3>
+                <div class="visual-anchor">
+                  $ cd my-project $ npm run dev ▲ Next.js 14.2.3 ✓ Ready in 2.1s ○ Local:
+                  http://localhost:3000 ○ Network: http://192.168.1.5:3000 $ _
+                </div>
+                <p>
+                  <em
+                    >This is NOT scary. It’s just your computer talking back. Green/white text =
+                    good. Red text = needs attention.</em
+                  >
+                </p>
 
-<!-- ==================== SECTION 3 ==================== -->
-<section id="models" class="page-break-before">
-    <h2>3. Mental Models: How Software Works</h2>
-    <div class="callout hook">
-        <strong>🎯 Why this matters:</strong>
-        When AI generates broken code, understanding these models lets you spot WHERE it broke instead of guessing.
-    </div>
+                <h3>Essential Commands (Only These 8)</h3>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Command</th>
+                      <th>Plain English</th>
+                      <th>When to Use</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><code>pwd</code></td>
+                      <td>"Where am I?"</td>
+                      <td>When you’re lost in folders</td>
+                    </tr>
+                    <tr>
+                      <td><code>ls</code></td>
+                      <td>"Show me files here"</td>
+                      <td>See what’s in current folder</td>
+                    </tr>
+                    <tr>
+                      <td><code>cd folder</code></td>
+                      <td>"Go into this folder"</td>
+                      <td>Navigate deeper</td>
+                    </tr>
+                    <tr>
+                      <td><code>cd ..</code></td>
+                      <td>"Go up one level"</td>
+                      <td>Go back to parent folder</td>
+                    </tr>
+                    <tr>
+                      <td><code>npm install</code></td>
+                      <td>"Download project plugins"</td>
+                      <td>First time opening a project</td>
+                    </tr>
+                    <tr>
+                      <td><code>npm run dev</code></td>
+                      <td>"Start the app"</td>
+                      <td>Run your project locally</td>
+                    </tr>
+                    <tr>
+                      <td><code>cat file.txt</code></td>
+                      <td>"Show file contents"</td>
+                      <td>Quick peek at a file</td>
+                    </tr>
+                    <tr>
+                      <td><code>Ctrl+C</code></td>
+                      <td>"Stop current command"</td>
+                      <td>Kill running server / cancel</td>
+                    </tr>
+                  </tbody>
+                </table>
 
-    <h3>The Restaurant Analogy (Expanded)</h3>
-    <table>
-        <thead><tr><th>Concept</th><th>Restaurant</th><th>In Your App</th><th>If It Breaks…</th></tr></thead>
-        <tbody>
-            <tr><td>Frontend</td><td>Dining room</td><td>Buttons, forms, pages</td><td>UI looks wrong / nothing happens on click</td></tr>
-            <tr><td>Backend</td><td>Kitchen</td><td>Data processing, auth</td><td>500 error / data missing</td></tr>
-            <tr><td>Database</td><td>Pantry</td><td>User data, posts</td><td>Empty results / save fails</td></tr>
-            <tr><td>API</td><td>Waiter</td><td>URL endpoints</td><td>404 / wrong data format</td></tr>
-            <tr><td>HTTP Request</td><td>Order ticket</td><td>fetch() / axios call</td><td>Network tab shows failure</td></tr>
-        </tbody>
-    </table>
+                <div class="callout warning">
+                  <strong>🚫 Beginner Mistake #1</strong>
+                  Typing commands in the wrong folder.
+                  <strong>Always run <code>pwd</code> first</strong> to confirm where you are before
+                  running anything destructive.
+                </div>
 
-    <h3>Client vs. Server: The Security Line</h3>
-    <div class="callout warning">
-        <strong>🚫 Beginner Mistake #2</strong>
-        Putting API keys, passwords, or database queries in frontend code. <strong>Anything in the browser is PUBLIC.</strong> Secrets ALWAYS live on the server.
-    </div>
+                <div class="self-check">
+                  <strong>✅ Self-Check</strong>
+                  1. You opened a new project. What command runs FIRST?<br />
+                  2. Your dev server is running and you want to stop it. What do you press?<br />
+                  3. You’re not sure which folder you’re in. What command tells you?
+                </div>
+              </section>
 
-    <h3>Tech Stack Decision Tree</h3>
-    <p>Don’t guess. Ask yourself ONE question: <strong>"What am I building?"</strong></p>
-    <ul>
-        <li>Simple dashboard / internal tool → <strong>Streamlit or Bolt</strong></li>
-        <li>Web app with users + login → <strong>Next.js + Supabase</strong></li>
-        <li>Blog / portfolio → <strong>Astro or plain HTML</strong></li>
-        <li>Mobile app → <strong>React Native / Expo</strong></li>
-        <li>Automation script → <strong>Python</strong></li>
-    </ul>
+              <!-- ==================== SECTION 3 ==================== -->
+              <section id="models" class="page-break-before">
+                <h2>3. Mental Models: How Software Works</h2>
+                <div class="callout hook">
+                  <strong>🎯 Why this matters:</strong>
+                  When AI generates broken code, understanding these models lets you spot WHERE it
+                  broke instead of guessing.
+                </div>
 
-    <div class="self-check">
-        <strong>✅ Self-Check</strong>
-        1. Your app shows a blank page. Is this likely a frontend or backend problem?<br>
-        2. Your API returns a 500 error. Where should you look for logs?<br>
-        3. You’re building a user login system. Should the password check happen in the browser or server?
-    </div>
-</section>
+                <h3>The Restaurant Analogy (Expanded)</h3>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Concept</th>
+                      <th>Restaurant</th>
+                      <th>In Your App</th>
+                      <th>If It Breaks…</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Frontend</td>
+                      <td>Dining room</td>
+                      <td>Buttons, forms, pages</td>
+                      <td>UI looks wrong / nothing happens on click</td>
+                    </tr>
+                    <tr>
+                      <td>Backend</td>
+                      <td>Kitchen</td>
+                      <td>Data processing, auth</td>
+                      <td>500 error / data missing</td>
+                    </tr>
+                    <tr>
+                      <td>Database</td>
+                      <td>Pantry</td>
+                      <td>User data, posts</td>
+                      <td>Empty results / save fails</td>
+                    </tr>
+                    <tr>
+                      <td>API</td>
+                      <td>Waiter</td>
+                      <td>URL endpoints</td>
+                      <td>404 / wrong data format</td>
+                    </tr>
+                    <tr>
+                      <td>HTTP Request</td>
+                      <td>Order ticket</td>
+                      <td>fetch() / axios call</td>
+                      <td>Network tab shows failure</td>
+                    </tr>
+                  </tbody>
+                </table>
 
-<!-- ==================== SECTION 4 ==================== -->
-<section id="reading" class="page-break-before">
-    <h2>4. Reading Code Without Writing It</h2>
-    <div class="callout hook">
-        <strong>🎯 Why this matters:</strong>
-        AI writes code. YOU verify it. Reading is the verification skill. You don’t need to write a single line to be effective.
-    </div>
+                <h3>Client vs. Server: The Security Line</h3>
+                <div class="callout warning">
+                  <strong>🚫 Beginner Mistake #2</strong>
+                  Putting API keys, passwords, or database queries in frontend code.
+                  <strong>Anything in the browser is PUBLIC.</strong> Secrets ALWAYS live on the
+                  server.
+                </div>
 
-    <h3>Analogy: Reading Sheet Music vs. Playing Piano</h3>
-    <p>You don’t need to play piano to hear when a note is wrong. Similarly, you don’t need to write code to see when logic is broken. Focus on <strong>pattern recognition</strong>, not syntax memorization.</p>
+                <h3>Tech Stack Decision Tree</h3>
+                <p>
+                  Don’t guess. Ask yourself ONE question: <strong>"What am I building?"</strong>
+                </p>
+                <ul>
+                  <li>Simple dashboard / internal tool → <strong>Streamlit or Bolt</strong></li>
+                  <li>Web app with users + login → <strong>Next.js + Supabase</strong></li>
+                  <li>Blog / portfolio → <strong>Astro or plain HTML</strong></li>
+                  <li>Mobile app → <strong>React Native / Expo</strong></li>
+                  <li>Automation script → <strong>Python</strong></li>
+                </ul>
 
-    <h3>The 4 Patterns You Must Recognize</h3>
-<pre>// PATTERN 1: IF/ELSE → Decision fork
+                <div class="self-check">
+                  <strong>✅ Self-Check</strong>
+                  1. Your app shows a blank page. Is this likely a frontend or backend problem?<br />
+                  2. Your API returns a 500 error. Where should you look for logs?<br />
+                  3. You’re building a user login system. Should the password check happen in the
+                  browser or server?
+                </div>
+              </section>
+
+              <!-- ==================== SECTION 4 ==================== -->
+              <section id="reading" class="page-break-before">
+                <h2>4. Reading Code Without Writing It</h2>
+                <div class="callout hook">
+                  <strong>🎯 Why this matters:</strong>
+                  AI writes code. YOU verify it. Reading is the verification skill. You don’t need
+                  to write a single line to be effective.
+                </div>
+
+                <h3>Analogy: Reading Sheet Music vs. Playing Piano</h3>
+                <p>
+                  You don’t need to play piano to hear when a note is wrong. Similarly, you don’t
+                  need to write code to see when logic is broken. Focus on
+                  <strong>pattern recognition</strong>, not syntax memorization.
+                </p>
+
+                <h3>The 4 Patterns You Must Recognize</h3>
+                <pre>
+// PATTERN 1: IF/ELSE → Decision fork
 if (user.isLoggedIn) {     // ← Condition (the question)
   showDashboard();         // ← YES path
 } else {
@@ -291,229 +713,348 @@ try {
   showError(error);        // ← Plan B if it fails
 }</pre>
 
-    <h3>Scope: The Bedroom Rule</h3>
-    <p><strong>Variables declared inside {} are trapped there.</strong> Like items in a bedroom — they don’t exist in the hallway.</p>
-<pre>function greet() {
+                <h3>Scope: The Bedroom Rule</h3>
+                <p>
+                  <strong>Variables declared inside {} are trapped there.</strong> Like items in a
+                  bedroom — they don’t exist in the hallway.
+                </p>
+                <pre>
+function greet() {
   let message = "Hello";   // ← Lives INSIDE this function
   console.log(message);    // ✅ Can see it here
 }
 console.log(message);      // ❌ UNDEFINED — not in this "room"</pre>
 
-    <div class="callout warning">
-        <strong>🚫 Beginner Mistake #3</strong>
-        Seeing <code>undefined</code> and assuming the variable was never created. 80% of the time, it exists but is <strong>in the wrong scope</strong>. Check the curly braces {}.
-    </div>
+                <div class="callout warning">
+                  <strong>🚫 Beginner Mistake #3</strong>
+                  Seeing <code>undefined</code> and assuming the variable was never created. 80% of
+                  the time, it exists but is <strong>in the wrong scope</strong>. Check the curly
+                  braces {}.
+                </div>
 
-    <div class="self-check">
-        <strong>✅ Self-Check</strong>
-        1. You see <code>users.map(...)</code>. In plain English, what is this doing?<br>
-        2. A variable returns <code>undefined</code>. What should you check FIRST?<br>
-        3. Code inside <code>catch(error)</code> runs when…?
-    </div>
-</section>
+                <div class="self-check">
+                  <strong>✅ Self-Check</strong>
+                  1. You see <code>users.map(...)</code>. In plain English, what is this doing?<br />
+                  2. A variable returns <code>undefined</code>. What should you check FIRST?<br />
+                  3. Code inside <code>catch(error)</code> runs when…?
+                </div>
+              </section>
 
-<!-- ==================== SECTION 5 ==================== -->
-<section id="debugging" class="page-break-before">
-    <h2>5. Debugging: The Core Skill</h2>
-    <div class="callout hook">
-        <strong>🎯 Why this matters:</strong>
-        This is THE most important chapter. AI will break things constantly. Debugging is how you unbreak them. This skill alone separates users from developers.
-    </div>
+              <!-- ==================== SECTION 5 ==================== -->
+              <section id="debugging" class="page-break-before">
+                <h2>5. Debugging: The Core Skill</h2>
+                <div class="callout hook">
+                  <strong>🎯 Why this matters:</strong>
+                  This is THE most important chapter. AI will break things constantly. Debugging is
+                  how you unbreak them. This skill alone separates users from developers.
+                </div>
 
-    <h3>Analogy: Doctor Diagnosis</h3>
-    <p>A patient says "my stomach hurts." A bad doctor prescribes pills immediately. A good doctor asks questions, runs tests, checks vitals. <strong>Debugging is diagnosis.</strong> Never guess — gather evidence first.</p>
+                <h3>Analogy: Doctor Diagnosis</h3>
+                <p>
+                  A patient says "my stomach hurts." A bad doctor prescribes pills immediately. A
+                  good doctor asks questions, runs tests, checks vitals.
+                  <strong>Debugging is diagnosis.</strong> Never guess — gather evidence first.
+                </p>
 
-    <h3>The 5-Step Diagnostic Order</h3>
-    <ol>
-        <li><strong>Read the EXACT error message</strong> (terminal/console) — copy it fully</li>
-        <li><strong>Check Network tab</strong> — did the request go out? What came back?</li>
-        <li><strong>Add strategic logs</strong> — trace data flow step by step</li>
-        <li><strong>Paste evidence to AI</strong> — error + code + what you tried</li>
-        <li><strong>Verify the fix</strong> — don’t accept blindly; test it</li>
-    </ol>
+                <h3>The 5-Step Diagnostic Order</h3>
+                <ol>
+                  <li>
+                    <strong>Read the EXACT error message</strong> (terminal/console) — copy it fully
+                  </li>
+                  <li>
+                    <strong>Check Network tab</strong> — did the request go out? What came back?
+                  </li>
+                  <li><strong>Add strategic logs</strong> — trace data flow step by step</li>
+                  <li><strong>Paste evidence to AI</strong> — error + code + what you tried</li>
+                  <li><strong>Verify the fix</strong> — don’t accept blindly; test it</li>
+                </ol>
 
-    <h3>What Browser DevTools Actually Looks Like</h3>
-    <div class="visual-anchor">Elements | Console | Sources | Network | ...
-─────────────────────────────────────────────
-&gt; POST /api/login 500 (Internal Server Error)
-  ⏱ 243ms  ↑ 1.2KB  ↓ 89B
-  
-  Headers | Payload | Response | Timing
-  
-  Response: {"error":"Invalid credentials"}
-─────────────────────────────────────────────</div>
-    <p><em>Open with F12 or Right Click → Inspect. The <strong>Console</strong> shows errors. The <strong>Network</strong> tab shows requests.</em></p>
+                <h3>What Browser DevTools Actually Looks Like</h3>
+                <div class="visual-anchor">
+                  Elements | Console | Sources | Network | ...
+                  ───────────────────────────────────────────── &gt; POST /api/login 500 (Internal
+                  Server Error) ⏱ 243ms ↑ 1.2KB ↓ 89B Headers | Payload | Response | Timing
+                  Response: {"error":"Invalid credentials"}
+                  ─────────────────────────────────────────────
+                </div>
+                <p>
+                  <em
+                    >Open with F12 or Right Click → Inspect. The <strong>Console</strong> shows
+                    errors. The <strong>Network</strong> tab shows requests.</em
+                  >
+                </p>
 
-    <h3>Status Code Quick Decode</h3>
-    <table>
-        <thead><tr><th>Code</th><th>Plain English</th><th>Your Next Step</th></tr></thead>
-        <tbody>
-            <tr><td>200</td><td>"All good"</td><td>Problem is elsewhere</td></tr>
-            <tr><td>400</td><td>"You sent bad data"</td><td>Check your payload/format</td></tr>
-            <tr><td>401</td><td>"Who are you?"</td><td>Log in / refresh token</td></tr>
-            <tr><td>404</td><td>"That doesn’t exist"</td><td>Check URL spelling</td></tr>
-            <tr><td>500</td><td>"Server crashed"</td><td>Check BACKEND logs, not frontend</td></tr>
-            <tr><td>CORS</td><td>"Browser blocked this"</td><td>Server config issue, not your code</td></tr>
-        </tbody>
-    </table>
+                <h3>Status Code Quick Decode</h3>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Code</th>
+                      <th>Plain English</th>
+                      <th>Your Next Step</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>200</td>
+                      <td>"All good"</td>
+                      <td>Problem is elsewhere</td>
+                    </tr>
+                    <tr>
+                      <td>400</td>
+                      <td>"You sent bad data"</td>
+                      <td>Check your payload/format</td>
+                    </tr>
+                    <tr>
+                      <td>401</td>
+                      <td>"Who are you?"</td>
+                      <td>Log in / refresh token</td>
+                    </tr>
+                    <tr>
+                      <td>404</td>
+                      <td>"That doesn’t exist"</td>
+                      <td>Check URL spelling</td>
+                    </tr>
+                    <tr>
+                      <td>500</td>
+                      <td>"Server crashed"</td>
+                      <td>Check BACKEND logs, not frontend</td>
+                    </tr>
+                    <tr>
+                      <td>CORS</td>
+                      <td>"Browser blocked this"</td>
+                      <td>Server config issue, not your code</td>
+                    </tr>
+                  </tbody>
+                </table>
 
-    <div class="callout warning">
-        <strong>🚫 Beginner Mistake #4</strong>
-        Saying "it doesn’t work" to AI. Always provide: <strong>exact error + relevant code + what you expected</strong>. Vague prompts get vague fixes.
-    </div>
+                <div class="callout warning">
+                  <strong>🚫 Beginner Mistake #4</strong>
+                  Saying "it doesn’t work" to AI. Always provide:
+                  <strong>exact error + relevant code + what you expected</strong>. Vague prompts
+                  get vague fixes.
+                </div>
 
-    <div class="self-check">
-        <strong>✅ Self-Check</strong>
-        1. You get a 500 error. Should you debug frontend or backend code?<br>
-        2. What key opens DevTools in most browsers?<br>
-        3. Before asking AI for help, what should you ALWAYS copy first?
-    </div>
-</section>
+                <div class="self-check">
+                  <strong>✅ Self-Check</strong>
+                  1. You get a 500 error. Should you debug frontend or backend code?<br />
+                  2. What key opens DevTools in most browsers?<br />
+                  3. Before asking AI for help, what should you ALWAYS copy first?
+                </div>
+              </section>
 
-<!-- ==================== SECTION 6 ==================== -->
-<section id="git" class="page-break-before">
-    <h2>6. Git: Save Points, Not Memorization</h2>
-    <div class="callout hook">
-        <strong>🎯 Why this matters:</strong>
-        Without Git, one bad AI edit can destroy hours of work. With Git, you can always rewind. Think save points, not computer science.
-    </div>
+              <!-- ==================== SECTION 6 ==================== -->
+              <section id="git" class="page-break-before">
+                <h2>6. Git: Save Points, Not Memorization</h2>
+                <div class="callout hook">
+                  <strong>🎯 Why this matters:</strong>
+                  Without Git, one bad AI edit can destroy hours of work. With Git, you can always
+                  rewind. Think save points, not computer science.
+                </div>
 
-    <h3>Analogy: Video Game Saves</h3>
-    <p>Before a boss fight, you save. If you die, you reload. <strong>Git commit = save point.</strong> Branch = alternate timeline. Push = cloud backup. That’s it.</p>
+                <h3>Analogy: Video Game Saves</h3>
+                <p>
+                  Before a boss fight, you save. If you die, you reload.
+                  <strong>Git commit = save point.</strong> Branch = alternate timeline. Push =
+                  cloud backup. That’s it.
+                </p>
 
-    <h3>Only 5 Commands You Need</h3>
-    <table>
-        <thead><tr><th>Command</th><th>Game Equivalent</th><th>When</th></tr></thead>
-        <tbody>
-            <tr><td><code>git pull</code></td><td>Load latest save</td><td>Before starting work</td></tr>
-            <tr><td><code>git add .</code></td><td>Select changes to save</td><td>Before committing</td></tr>
-            <tr><td><code>git commit -m "msg"</code></td><td>Create save point</td><td>After completing a task</td></tr>
-            <tr><td><code>git push</code></td><td>Upload save to cloud</td><td>After committing</td></tr>
-            <tr><td><code>git reset --soft HEAD~1</code></td><td>Undo last save (keep changes)</td><td>Bad commit message / forgot files</td></tr>
-        </tbody>
-    </table>
+                <h3>Only 5 Commands You Need</h3>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Command</th>
+                      <th>Game Equivalent</th>
+                      <th>When</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><code>git pull</code></td>
+                      <td>Load latest save</td>
+                      <td>Before starting work</td>
+                    </tr>
+                    <tr>
+                      <td><code>git add .</code></td>
+                      <td>Select changes to save</td>
+                      <td>Before committing</td>
+                    </tr>
+                    <tr>
+                      <td><code>git commit -m "msg"</code></td>
+                      <td>Create save point</td>
+                      <td>After completing a task</td>
+                    </tr>
+                    <tr>
+                      <td><code>git push</code></td>
+                      <td>Upload save to cloud</td>
+                      <td>After committing</td>
+                    </tr>
+                    <tr>
+                      <td><code>git reset --soft HEAD~1</code></td>
+                      <td>Undo last save (keep changes)</td>
+                      <td>Bad commit message / forgot files</td>
+                    </tr>
+                  </tbody>
+                </table>
 
-    <div class="callout warning">
-        <strong>🚫 Beginner Mistake #5</strong>
-        Committing <code>.env</code> files or API keys. <strong>Once pushed to GitHub, secrets are PUBLIC FOREVER</strong> even if deleted later. Always use <code>.gitignore</code>.
-    </div>
+                <div class="callout warning">
+                  <strong>🚫 Beginner Mistake #5</strong>
+                  Committing <code>.env</code> files or API keys.
+                  <strong>Once pushed to GitHub, secrets are PUBLIC FOREVER</strong> even if deleted
+                  later. Always use <code>.gitignore</code>.
+                </div>
 
-    <div class="self-check">
-        <strong>✅ Self-Check</strong>
-        1. You just finished adding a login form. What 3 commands run in order?<br>
-        2. You made a bad commit. How do you undo it WITHOUT losing code?<br>
-        3. What file prevents sensitive files from being committed?
-    </div>
-</section>
+                <div class="self-check">
+                  <strong>✅ Self-Check</strong>
+                  1. You just finished adding a login form. What 3 commands run in order?<br />
+                  2. You made a bad commit. How do you undo it WITHOUT losing code?<br />
+                  3. What file prevents sensitive files from being committed?
+                </div>
+              </section>
 
-<!-- ==================== SECTION 7 ==================== -->
-<section id="prompting" class="page-break-before">
-    <h2>7. AI Prompting Patterns for Debugging</h2>
-    <div class="callout hook">
-        <strong>🎯 Why this matters:</strong>
-        The difference between a 30-second fix and a 3-hour rabbit hole is HOW you ask. This template works every time.
-    </div>
+              <!-- ==================== SECTION 7 ==================== -->
+              <section id="prompting" class="page-break-before">
+                <h2>7. AI Prompting Patterns for Debugging</h2>
+                <div class="callout hook">
+                  <strong>🎯 Why this matters:</strong>
+                  The difference between a 30-second fix and a 3-hour rabbit hole is HOW you ask.
+                  This template works every time.
+                </div>
 
-    <h3>The Universal Debug Prompt Template</h3>
-<pre>CONTEXT: [App type] + [Tech stack]
+                <h3>The Universal Debug Prompt Template</h3>
+                <pre>
+CONTEXT: [App type] + [Tech stack]
 PROBLEM: [Symptom, NOT assumption]
 ERROR:   [FULL error message pasted verbatim]
 CODE:    [Relevant snippet ONLY]
 TRIED:   [What you already attempted]
 GOAL:    [Expected behavior]</pre>
 
-    <h3>Real Example: Bad vs. Good</h3>
-    <table>
-        <thead><tr><th>❌ Gets Vague Answer</th><th>✅ Gets Precise Fix</th></tr></thead>
-        <tbody>
-            <tr>
-                <td>"Login broken fix it"</td>
-                <td>"Next.js 14 + Supabase. Login spinner never stops. Console: POST /api/auth 500. Checked Supabase creds — valid. Curl also returns 500. Goal: redirect to /dashboard on success."</td>
-            </tr>
+                <h3>Real Example: Bad vs. Good</h3>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>❌ Gets Vague Answer</th>
+                      <th>✅ Gets Precise Fix</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>"Login broken fix it"</td>
+                      <td>
+                        "Next.js 14 + Supabase. Login spinner never stops. Console: POST /api/auth
+                        500. Checked Supabase creds — valid. Curl also returns 500. Goal: redirect
+                        to /dashboard on success."
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <h3>Post-Fix Verification Questions (ALWAYS Ask)</h3>
+                <ul>
+                  <li><em>"Explain WHAT changed and WHY."</em></li>
+                  <li><em>"What edge cases could still break this?"</em></li>
+                  <li><em>"Is any part of this deprecated?"</em></li>
+                </ul>
+
+                <div class="callout warning">
+                  <strong>🚫 Beginner Mistake #6</strong>
+                  Accepting AI code without asking it to explain. If you don’t understand the fix,
+                  you won’t be able to debug the NEXT bug it creates.
+                </div>
+
+                <div class="self-check">
+                  <strong>✅ Self-Check</strong>
+                  1. What 6 elements should every debug prompt include?<br />
+                  2. After AI fixes something, what should you ALWAYS ask?<br />
+                  3. True or False: "Fix this" is an acceptable debug prompt.
+                </div>
+              </section>
+
+              <!-- ==================== SECTION 8 ==================== -->
+              <section id="cheatsheets" class="page-break-before">
+                <h2>8. Quick Reference Cheat Sheets</h2>
+                <div class="callout hook">
+                  <strong>🎯 Why this matters:</strong>
+                  Tear this page out (metaphorically). Keep it open while coding. Speed reference =
+                  less frustration.
+                </div>
+
+                <h3>Emergency Troubleshooting Flowchart</h3>
+                <div class="flowchart">
+                  APP BROKEN? START HERE ↓ ├─ White Screen / Nothing Renders │ ├─ F12 → Console →
+                  Red errors? │ ├─ F12 → Network → Failed requests? │ └─ Terminal → Is dev server
+                  running? │ ├─ Data Not Loading │ ├─ Network tab → Status code? (see table below) │
+                  ├─ Payload tab → Sending correct format? │ └─ Backend terminal → Server errors? │
+                  ├─ Styling Broken │ ├─ F12 → Elements → Class applied? │ └─ Check Tailwind/CSS
+                  config │ └─ "Worked Yesterday!" ├─ git diff → What changed? ├─ Clear cache +
+                  restart dev server └─ External service down?
+                </div>
+
+                <h3>HTTP Status Codes at a Glance</h3>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Code</th>
+                      <th>Means</th>
+                      <td>Action</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>200</td>
+                      <td>OK</td>
+                      <td>Look elsewhere</td>
+                    </tr>
+                    <tr>
+                      <td>400</td>
+                      <td>Bad input</td>
+                      <td>Check your payload</td>
+                    </tr>
+                    <tr>
+                      <td>401</td>
+                      <td>Not logged in</td>
+                      <td>Auth/token issue</td>
+                    </tr>
+                    <tr>
+                      <td>404</td>
+                      <td>Wrong URL</td>
+                      <td>Spelling/route check</td>
+                    </tr>
+                    <tr>
+                      <td>500</td>
+                      <td>Server crash</td>
+                      <td>BACKEND logs</td>
+                    </tr>
+                    <tr>
+                      <td>CORS</td>
+                      <td>Browser block</td>
+                      <td>Server config</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <h3>Pre-Acceptance Checklist</h3>
+                <ul class="checklist">
+                  <li>No hardcoded secrets / API keys?</li>
+                  <li>Sensitive logic on server side?</li>
+                  <li>All packages actually installed?</li>
+                  <li>Error handling included?</li>
+                  <li>AI explained what changed?</li>
+                  <li>Tested manually after applying?</li>
+                </ul>
+
+                <div class="callout tip" style="margin-top: 2em">
+                  <strong>🌱 Final Encouragement</strong>
+                  Every error you solve makes the next one easier. Confusion is not failure — it’s
+                  the learning process working. Keep this guide handy, annotate it with your own
+                  discoveries, and remember:
+                  <strong>vibe coding is a skill built through doing, not memorizing.</strong>
+                </div>
+              </section>
+            </td>
+          </tr>
         </tbody>
-    </table>
-
-    <h3>Post-Fix Verification Questions (ALWAYS Ask)</h3>
-    <ul>
-        <li><em>"Explain WHAT changed and WHY."</em></li>
-        <li><em>"What edge cases could still break this?"</em></li>
-        <li><em>"Is any part of this deprecated?"</em></li>
-    </ul>
-
-    <div class="callout warning">
-        <strong>🚫 Beginner Mistake #6</strong>
-        Accepting AI code without asking it to explain. If you don’t understand the fix, you won’t be able to debug the NEXT bug it creates.
+      </table>
     </div>
-
-    <div class="self-check">
-        <strong>✅ Self-Check</strong>
-        1. What 6 elements should every debug prompt include?<br>
-        2. After AI fixes something, what should you ALWAYS ask?<br>
-        3. True or False: "Fix this" is an acceptable debug prompt.
-    </div>
-</section>
-
-<!-- ==================== SECTION 8 ==================== -->
-<section id="cheatsheets" class="page-break-before">
-    <h2>8. Quick Reference Cheat Sheets</h2>
-    <div class="callout hook">
-        <strong>🎯 Why this matters:</strong>
-        Tear this page out (metaphorically). Keep it open while coding. Speed reference = less frustration.
-    </div>
-
-    <h3>Emergency Troubleshooting Flowchart</h3>
-    <div class="flowchart">APP BROKEN? START HERE ↓
-
-├─ White Screen / Nothing Renders
-│  ├─ F12 → Console → Red errors?
-│  ├─ F12 → Network → Failed requests?
-│  └─ Terminal → Is dev server running?
-│
-├─ Data Not Loading
-│  ├─ Network tab → Status code? (see table below)
-│  ├─ Payload tab → Sending correct format?
-│  └─ Backend terminal → Server errors?
-│
-├─ Styling Broken
-│  ├─ F12 → Elements → Class applied?
-│  └─ Check Tailwind/CSS config
-│
-└─ "Worked Yesterday!"
-   ├─ git diff → What changed?
-   ├─ Clear cache + restart dev server
-   └─ External service down?</div>
-
-    <h3>HTTP Status Codes at a Glance</h3>
-    <table>
-        <thead><tr><th>Code</th><th>Means</th><td>Action</td></tr></thead>
-        <tbody>
-            <tr><td>200</td><td>OK</td><td>Look elsewhere</td></tr>
-            <tr><td>400</td><td>Bad input</td><td>Check your payload</td></tr>
-            <tr><td>401</td><td>Not logged in</td><td>Auth/token issue</td></tr>
-            <tr><td>404</td><td>Wrong URL</td><td>Spelling/route check</td></tr>
-            <tr><td>500</td><td>Server crash</td><td>BACKEND logs</td></tr>
-            <tr><td>CORS</td><td>Browser block</td><td>Server config</td></tr>
-        </tbody>
-    </table>
-
-    <h3>Pre-Acceptance Checklist</h3>
-    <ul class="checklist">
-        <li>No hardcoded secrets / API keys?</li>
-        <li>Sensitive logic on server side?</li>
-        <li>All packages actually installed?</li>
-        <li>Error handling included?</li>
-        <li>AI explained what changed?</li>
-        <li>Tested manually after applying?</li>
-    </ul>
-
-    <div class="callout tip" style="margin-top: 2em;">
-        <strong>🌱 Final Encouragement</strong>
-        Every error you solve makes the next one easier. Confusion is not failure — it’s the learning process working. Keep this guide handy, annotate it with your own discoveries, and remember: <strong>vibe coding is a skill built through doing, not memorizing.</strong>
-    </div>
-</section>
-
-</td></tr></tbody></table>
-</div>
-
-</body>
+  </body>
 </html>

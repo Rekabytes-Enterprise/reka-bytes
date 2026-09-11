@@ -20,7 +20,6 @@ import type {
 
 type Tx = Prisma.TransactionClient;
 
-
 // ── Mappers ─────────────────────────────────────────────────────
 
 function toQuestionAdmin(q: {
@@ -147,7 +146,10 @@ async function assertPublishable(tx: Tx, classId: string) {
   }
 }
 
-export async function createClass(input: ClassCreateInput, actorId: string): Promise<ClassSummaryDTO> {
+export async function createClass(
+  input: ClassCreateInput,
+  actorId: string,
+): Promise<ClassSummaryDTO> {
   const cls = await prisma.class.create({
     data: {
       title: input.title.trim(),
@@ -182,7 +184,14 @@ export async function updateClass(
         ...(input.order !== undefined ? { order: input.order } : {}),
       },
     });
-    await writeAuditTx(tx, actorId, input.published === true ? 'CLASS_PUBLISHED' : 'CLASS_UPDATED', 'Class', classId, {});
+    await writeAuditTx(
+      tx,
+      actorId,
+      input.published === true ? 'CLASS_PUBLISHED' : 'CLASS_UPDATED',
+      'Class',
+      classId,
+      {},
+    );
     return getClassTree(classId);
   });
 }
@@ -215,7 +224,9 @@ export async function createModule(input: ModuleCreateInput, actorId: string) {
         order: (maxOrder._max.order ?? -1) + 1,
       },
     });
-    await writeAuditTx(tx, actorId, 'MODULE_CREATED', 'Module', created.id, { title: created.title });
+    await writeAuditTx(tx, actorId, 'MODULE_CREATED', 'Module', created.id, {
+      title: created.title,
+    });
     return created;
   });
   return { id: mod.id };
@@ -236,7 +247,9 @@ export async function deleteModule(moduleId: string, actorId: string): Promise<v
   if (!existing) throw AppError.notFound('Module not found');
   await prisma.$transaction(async (tx) => {
     await tx.module.delete({ where: { id: moduleId } });
-    await writeAuditTx(tx, actorId, 'MODULE_DELETED', 'Module', moduleId, { title: existing.title });
+    await writeAuditTx(tx, actorId, 'MODULE_DELETED', 'Module', moduleId, {
+      title: existing.title,
+    });
   });
 }
 
@@ -263,7 +276,9 @@ export async function createLesson(input: LessonCreateInput, actorId: string) {
         order: (maxOrder._max.order ?? -1) + 1,
       },
     });
-    await writeAuditTx(tx, actorId, 'LESSON_CREATED', 'Lesson', created.id, { title: created.title });
+    await writeAuditTx(tx, actorId, 'LESSON_CREATED', 'Lesson', created.id, {
+      title: created.title,
+    });
     return created;
   });
   return { id: lesson.id };
@@ -277,9 +292,7 @@ export async function updateLesson(lessonId: string, input: LessonUpdateInput) {
     data: {
       ...(input.title !== undefined ? { title: input.title.trim() } : {}),
       ...(input.contentMarkdown !== undefined ? { contentMarkdown: input.contentMarkdown } : {}),
-      ...(input.blocks !== undefined
-        ? { blocks: toJsonInput(input.blocks) }
-        : {}),
+      ...(input.blocks !== undefined ? { blocks: toJsonInput(input.blocks) } : {}),
       ...(input.videoUrl !== undefined ? { videoUrl: input.videoUrl } : {}),
       ...(input.durationMinutes !== undefined ? { durationMinutes: input.durationMinutes } : {}),
     },
@@ -292,7 +305,9 @@ export async function deleteLesson(lessonId: string, actorId: string): Promise<v
   if (!existing) throw AppError.notFound('Lesson not found');
   await prisma.$transaction(async (tx) => {
     await tx.lesson.delete({ where: { id: lessonId } });
-    await writeAuditTx(tx, actorId, 'LESSON_DELETED', 'Lesson', lessonId, { title: existing.title });
+    await writeAuditTx(tx, actorId, 'LESSON_DELETED', 'Lesson', lessonId, {
+      title: existing.title,
+    });
   });
 }
 
@@ -401,13 +416,22 @@ export async function reorder(input: ReorderInput): Promise<void> {
   await prisma.$transaction(async (tx) => {
     for (const item of input.items) {
       if (input.type === 'classes') {
-        const res = await tx.class.updateMany({ where: { id: item.id }, data: { order: item.order } });
+        const res = await tx.class.updateMany({
+          where: { id: item.id },
+          data: { order: item.order },
+        });
         if (res.count === 0) throw AppError.notFound(`Class ${item.id} not found`);
       } else if (input.type === 'modules') {
-        const res = await tx.module.updateMany({ where: { id: item.id }, data: { order: item.order } });
+        const res = await tx.module.updateMany({
+          where: { id: item.id },
+          data: { order: item.order },
+        });
         if (res.count === 0) throw AppError.notFound(`Module ${item.id} not found`);
       } else {
-        const res = await tx.lesson.updateMany({ where: { id: item.id }, data: { order: item.order } });
+        const res = await tx.lesson.updateMany({
+          where: { id: item.id },
+          data: { order: item.order },
+        });
         if (res.count === 0) throw AppError.notFound(`Lesson ${item.id} not found`);
       }
     }
@@ -417,10 +441,18 @@ export async function reorder(input: ReorderInput): Promise<void> {
 // ── Audit helpers ───────────────────────────────────────────────
 
 function auditMeta(actorId: string, meta: Record<string, unknown>): Prisma.InputJsonValue {
-  return (actorId === ENV_ADMIN_ID ? { ...meta, actorType: 'env-admin' } : meta) as Prisma.InputJsonValue;
+  return (
+    actorId === ENV_ADMIN_ID ? { ...meta, actorType: 'env-admin' } : meta
+  ) as Prisma.InputJsonValue;
 }
 
-async function writeAudit(actorId: string, action: string, targetType: string, targetId: string, meta: Record<string, unknown>) {
+async function writeAudit(
+  actorId: string,
+  action: string,
+  targetType: string,
+  targetId: string,
+  meta: Record<string, unknown>,
+) {
   await prisma.auditLog.create({
     data: {
       actorId: actorId === ENV_ADMIN_ID ? null : actorId,
@@ -432,7 +464,14 @@ async function writeAudit(actorId: string, action: string, targetType: string, t
   });
 }
 
-function writeAuditTx(tx: Tx, actorId: string, action: string, targetType: string, targetId: string, meta: Record<string, unknown>) {
+function writeAuditTx(
+  tx: Tx,
+  actorId: string,
+  action: string,
+  targetType: string,
+  targetId: string,
+  meta: Record<string, unknown>,
+) {
   return tx.auditLog.create({
     data: {
       actorId: actorId === ENV_ADMIN_ID ? null : actorId,

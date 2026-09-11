@@ -59,6 +59,8 @@ const REGISTRY: Partial<Record<LessonBlock['type'], ComponentType<BlockComponent
   'inline-check': typed(InlineCheckBlockView),
 };
 
-export function getBlockComponent(type: LessonBlock['type']): ComponentType<BlockComponentProps> | null {
+export function getBlockComponent(
+  type: LessonBlock['type'],
+): ComponentType<BlockComponentProps> | null {
   return REGISTRY[type] ?? null;
 }

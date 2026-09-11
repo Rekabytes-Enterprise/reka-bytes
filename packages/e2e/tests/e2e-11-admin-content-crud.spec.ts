@@ -19,7 +19,9 @@ test.describe('E2E-11 · admin content CRUD', () => {
 
   test.afterAll(async () => {
     // remove class (cascades) + student
-    await pgClient.query(`DELETE FROM "Class" WHERE title LIKE 'E2E CRUD Class%'`).catch(() => undefined);
+    await pgClient
+      .query(`DELETE FROM "Class" WHERE title LIKE 'E2E CRUD Class%'`)
+      .catch(() => undefined);
     await cleanupUsers(email);
   });
 
@@ -29,7 +31,9 @@ test.describe('E2E-11 · admin content CRUD', () => {
     const adminCtx = await browser.newContext({ baseURL: ADMIN });
     const page = await adminCtx.newPage();
     const cookie = await adminLoginCookie();
-    await adminCtx.addCookies([{ name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' }]);
+    await adminCtx.addCookies([
+      { name: 'rb_session', value: cookie.split('=')[1] ?? '', domain: 'localhost', path: '/' },
+    ]);
 
     // create class
     await page.goto('/content/class/new');
@@ -51,7 +55,13 @@ test.describe('E2E-11 · admin content CRUD', () => {
     await expect(page.getByTestId('module-list')).toContainText('CRUD Lesson');
 
     // create quiz for the module
-    const moduleId = (await page.getByTestId('module-list').locator('[data-testid^="module-"]').first().getAttribute('data-testid'))?.replace('module-', '');
+    const moduleId = (
+      await page
+        .getByTestId('module-list')
+        .locator('[data-testid^="module-"]')
+        .first()
+        .getAttribute('data-testid')
+    )?.replace('module-', '');
     await page.goto(`/content/quizzes/new?moduleId=${moduleId}`);
     await page.getByTestId('quiz-create-btn').click();
 
@@ -82,7 +92,9 @@ test.describe('E2E-11 · admin content CRUD', () => {
     const studentCtx = await browser.newContext({ baseURL: 'http://localhost:4301' });
     const spage = await studentCtx.newPage();
     const sCookie = await loginCookie(email, password);
-    await studentCtx.addCookies([{ name: 'rb_session', value: sCookie.split('=')[1] ?? '', domain: 'localhost', path: '/' }]);
+    await studentCtx.addCookies([
+      { name: 'rb_session', value: sCookie.split('=')[1] ?? '', domain: 'localhost', path: '/' },
+    ]);
     await spage.goto('/learn');
     await expect(spage.getByTestId('learn-tree')).toContainText(classTitle);
 

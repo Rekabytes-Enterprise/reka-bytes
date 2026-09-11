@@ -136,7 +136,11 @@ export default function Step2Page() {
 
           {failed && (
             <div className="mt-4 h-2 w-full bg-inset" data-testid="ai-progress-bar">
-              <motion.div className="h-full bg-danger" initial={{ width: '0%' }} animate={{ width: '100%' }} />
+              <motion.div
+                className="h-full bg-danger"
+                initial={{ width: '0%' }}
+                animate={{ width: '100%' }}
+              />
             </div>
           )}
 

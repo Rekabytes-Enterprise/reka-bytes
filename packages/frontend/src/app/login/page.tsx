@@ -51,7 +51,9 @@ export default function LoginPage() {
     } catch (err) {
       if (isApiClientError(err)) {
         if (err.details) {
-          setErrors(Object.fromEntries(Object.entries(err.details).map(([k, v]) => [k, v[0] ?? ''])));
+          setErrors(
+            Object.fromEntries(Object.entries(err.details).map(([k, v]) => [k, v[0] ?? ''])),
+          );
         }
         pushToast({ variant: 'error', title: err.message });
       } else {

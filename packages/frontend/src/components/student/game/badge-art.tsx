@@ -52,9 +52,7 @@ export function BadgeArt({
           ? ({
               ...(color ? { color } : {}),
               '--badge-delay': `${(index % 6) * -0.45}s`,
-              ...(color
-                ? { filter: `drop-shadow(0 0 5px ${withAlpha(color, 0.5)})` }
-                : {}),
+              ...(color ? { filter: `drop-shadow(0 0 5px ${withAlpha(color, 0.5)})` } : {}),
             } as React.CSSProperties)
           : undefined
       }
@@ -151,9 +149,21 @@ const GLYPHS: Record<BadgeKey, React.ReactNode> = {
       </defs>
       <rect x="13" y="35" width="22" height="3" rx="1.5" fill="#8a6a4a" />
       <g className="badge-anim badge-origin-bottom badge-anim-sway">
-        <path d="M 24 35 V 26" stroke="#15803d" strokeWidth={3.5} strokeLinecap="round" fill="none" />
-        <path d="M 24 25 C 24 18 19 14 12 14 C 13 22 18 25 24 25 Z" fill="url(#bga-first-steps-leaf)" />
-        <path d="M 24 25 C 24 18 29 14 36 14 C 35 22 30 25 24 25 Z" fill="url(#bga-first-steps-leaf)" />
+        <path
+          d="M 24 35 V 26"
+          stroke="#15803d"
+          strokeWidth={3.5}
+          strokeLinecap="round"
+          fill="none"
+        />
+        <path
+          d="M 24 25 C 24 18 19 14 12 14 C 13 22 18 25 24 25 Z"
+          fill="url(#bga-first-steps-leaf)"
+        />
+        <path
+          d="M 24 25 C 24 18 29 14 36 14 C 35 22 30 25 24 25 Z"
+          fill="url(#bga-first-steps-leaf)"
+        />
       </g>
     </g>
   ),
@@ -170,7 +180,14 @@ const GLYPHS: Record<BadgeKey, React.ReactNode> = {
           </linearGradient>
         </defs>
         <polygon points="-2.4,-15 2.4,-15 0,-19.5" fill="url(#bga-module-slayer-blade)" />
-        <rect x="-2.4" y="-15" width="4.8" height="13.5" rx="2" fill="url(#bga-module-slayer-blade)" />
+        <rect
+          x="-2.4"
+          y="-15"
+          width="4.8"
+          height="13.5"
+          rx="2"
+          fill="url(#bga-module-slayer-blade)"
+        />
         <rect x="-8" y="-0.8" width="16" height="3.2" rx="1.6" fill="#facc15" />
         <rect x="-2.1" y="3.2" width="4.2" height="6.8" rx="2.1" fill="#b91c1c" />
         <rect x="-2.8" y="11.2" width="5.6" height="5.6" rx="1.6" fill="#facc15" />
@@ -187,9 +204,18 @@ const GLYPHS: Record<BadgeKey, React.ReactNode> = {
           <stop offset="1" stopColor="#d97706" />
         </linearGradient>
       </defs>
-      <polygon points="12,30 13.5,16 19.5,23 24,13.5 28.5,23 34.5,16 36,30" fill="url(#bga-class-conqueror-gold)" />
+      <polygon
+        points="12,30 13.5,16 19.5,23 24,13.5 28.5,23 34.5,16 36,30"
+        fill="url(#bga-class-conqueror-gold)"
+      />
       <rect x="12.5" y="31.5" width="23" height="3.8" rx="1.6" fill="#b45309" />
-      <circle cx="13.5" cy="13.2" r="1.8" fill="#fb7185" className="badge-anim badge-anim-twinkle" />
+      <circle
+        cx="13.5"
+        cy="13.2"
+        r="1.8"
+        fill="#fb7185"
+        className="badge-anim badge-anim-twinkle"
+      />
       <circle
         cx="24"
         cy="10.6"
@@ -235,7 +261,15 @@ const GLYPHS: Record<BadgeKey, React.ReactNode> = {
   // Teal crosshair with a red laser dot — 10 inline checks, dead center.
   'sharp-shooter': (
     <g>
-      <circle cx="24" cy="24" r="12" fill="none" stroke="#14b8a6" strokeWidth={2.6} opacity={0.45} />
+      <circle
+        cx="24"
+        cy="24"
+        r="12"
+        fill="none"
+        stroke="#14b8a6"
+        strokeWidth={2.6}
+        opacity={0.45}
+      />
       <circle cx="24" cy="24" r="7.2" fill="none" stroke="#2dd4bf" strokeWidth={2.6} />
       <circle cx="24" cy="24" r="2.8" fill="#f43f5e" className="badge-anim badge-anim-pulse" />
       <path
@@ -293,8 +327,24 @@ const GLYPHS: Record<BadgeKey, React.ReactNode> = {
       </defs>
       <g className="badge-anim badge-origin-bottom badge-anim-rock">
         <path d="M 15 11.5 H 33 V 19 A 9 9 0 0 1 15 19 Z" fill="url(#bga-quiz-champion-gold)" />
-        <circle cx="12.2" cy="17" r="3.2" fill="none" stroke="#facc15" strokeWidth={2.2} opacity={0.9} />
-        <circle cx="35.8" cy="17" r="3.2" fill="none" stroke="#facc15" strokeWidth={2.2} opacity={0.9} />
+        <circle
+          cx="12.2"
+          cy="17"
+          r="3.2"
+          fill="none"
+          stroke="#facc15"
+          strokeWidth={2.2}
+          opacity={0.9}
+        />
+        <circle
+          cx="35.8"
+          cy="17"
+          r="3.2"
+          fill="none"
+          stroke="#facc15"
+          strokeWidth={2.2}
+          opacity={0.9}
+        />
         <path
           d="M 19.5 19 L 23 22.5 L 28.5 16"
           fill="none"
@@ -334,7 +384,16 @@ const GLYPHS: Record<BadgeKey, React.ReactNode> = {
         className="badge-anim badge-origin-bottom badge-anim-flicker-core"
       />
       {Array.from({ length: 7 }).map((_, i) => (
-        <rect key={i} x={10 + i * 4.2} y="35" width="2.7" height="2.8" rx={0.9} fill="#fb923c" opacity={0.6} />
+        <rect
+          key={i}
+          x={10 + i * 4.2}
+          y="35"
+          width="2.7"
+          height="2.8"
+          rx={0.9}
+          fill="#fb923c"
+          opacity={0.6}
+        />
       ))}
     </g>
   ),
@@ -363,10 +422,28 @@ const GLYPHS: Record<BadgeKey, React.ReactNode> = {
         className="badge-anim badge-origin-bottom badge-anim-flicker-core"
       />
       {Array.from({ length: 7 }).map((_, i) => (
-        <rect key={i} x={10 + i * 4.2} y="33.8" width="2.7" height="2.5" rx={0.9} fill="#f472b6" opacity={0.6} />
+        <rect
+          key={i}
+          x={10 + i * 4.2}
+          y="33.8"
+          width="2.7"
+          height="2.5"
+          rx={0.9}
+          fill="#f472b6"
+          opacity={0.6}
+        />
       ))}
       {Array.from({ length: 7 }).map((_, i) => (
-        <rect key={`b${i}`} x={10 + i * 4.2} y="37.3" width="2.7" height="2.5" rx={0.9} fill="#f472b6" opacity={0.6} />
+        <rect
+          key={`b${i}`}
+          x={10 + i * 4.2}
+          y="37.3"
+          width="2.7"
+          height="2.5"
+          rx={0.9}
+          fill="#f472b6"
+          opacity={0.6}
+        />
       ))}
     </g>
   ),

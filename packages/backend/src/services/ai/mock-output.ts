@@ -28,8 +28,15 @@ function mockLesson1Blocks(): LessonBlock[] {
     {
       type: 'key-terms',
       terms: [
-        { term: 'Vibe coding', definition: 'Building software by describing what you want in plain language, then reviewing what the AI writes.' },
-        { term: 'Terminal', definition: 'A text interface for running commands directly on your computer.' },
+        {
+          term: 'Vibe coding',
+          definition:
+            'Building software by describing what you want in plain language, then reviewing what the AI writes.',
+        },
+        {
+          term: 'Terminal',
+          definition: 'A text interface for running commands directly on your computer.',
+        },
       ],
     },
     {
@@ -39,7 +46,8 @@ function mockLesson1Blocks(): LessonBlock[] {
     },
     {
       type: 'mermaid',
-      source: 'graph LR\n  A[You describe] --> B[AI generates]\n  B --> C[You review]\n  C --> D{Good enough?}\n  D -- yes --> E[Ship it]\n  D -- no --> B',
+      source:
+        'graph LR\n  A[You describe] --> B[AI generates]\n  B --> C[You review]\n  C --> D{Good enough?}\n  D -- yes --> E[Ship it]\n  D -- no --> B',
       caption: 'The vibe-coding loop: direct, read, refine.',
     },
     {
@@ -47,14 +55,22 @@ function mockLesson1Blocks(): LessonBlock[] {
       question: 'In vibe coding, who is responsible for verifying that generated code is correct?',
       options: ['The AI tool', 'Nobody — trust it', 'You, the developer', 'The code editor'],
       correctIndex: 2,
-      explanation: 'AI is your fast, sometimes-wrong assistant — you stay the architect and always verify.',
+      explanation:
+        'AI is your fast, sometimes-wrong assistant — you stay the architect and always verify.',
     },
     {
       type: 'steps',
       title: 'Walkthrough: create your first project',
       steps: [
-        { title: 'Run the scaffold command', markdown: '```bash\nnpx create-next-app@latest my-app\n# npx → runs a tool without installing it globally\n# @latest → use the newest version\n```' },
-        { title: 'Read the output', markdown: 'The command prints each step it takes. Never skip reading it.' },
+        {
+          title: 'Run the scaffold command',
+          markdown:
+            '```bash\nnpx create-next-app@latest my-app\n# npx → runs a tool without installing it globally\n# @latest → use the newest version\n```',
+        },
+        {
+          title: 'Read the output',
+          markdown: 'The command prints each step it takes. Never skip reading it.',
+        },
       ],
     },
     {
@@ -67,9 +83,15 @@ function mockLesson1Blocks(): LessonBlock[] {
     {
       type: 'inline-check',
       question: 'What does `@latest` do in `npx create-next-app@latest my-app`?',
-      options: ['Installs the newest version of the tool', 'Creates a folder named latest', 'Locks the project version forever', 'Updates your operating system'],
+      options: [
+        'Installs the newest version of the tool',
+        'Creates a folder named latest',
+        'Locks the project version forever',
+        'Updates your operating system',
+      ],
       correctIndex: 0,
-      explanation: '`@latest` tells npx to fetch the newest version of the scaffolding tool before running it.',
+      explanation:
+        '`@latest` tells npx to fetch the newest version of the scaffolding tool before running it.',
     },
     {
       type: 'recap',
@@ -129,12 +151,22 @@ export function mockGeneratedClass(classTitle: string): GeneratedClass {
           questions: [
             {
               question: 'Which command creates a new Next.js app in this course?',
-              options: ['npx create-next-app@latest my-app', 'npm install next-only', 'node make-app', 'yarn brew next'],
+              options: [
+                'npx create-next-app@latest my-app',
+                'npm install next-only',
+                'node make-app',
+                'yarn brew next',
+              ],
               correctIndex: 0,
             },
             {
               question: 'What does the course say AI tools need from your environment?',
-              options: ['A GPU farm', 'A boring, predictable setup', 'A paid subscription', 'Docker swarm'],
+              options: [
+                'A GPU farm',
+                'A boring, predictable setup',
+                'A paid subscription',
+                'Docker swarm',
+              ],
               correctIndex: 1,
             },
             {
@@ -169,7 +201,12 @@ export function mockGeneratedClass(classTitle: string): GeneratedClass {
           questions: [
             {
               question: 'What should you do right after AI generates code?',
-              options: ['Ship immediately', 'Read and understand it', 'Delete it', 'Ask another AI'],
+              options: [
+                'Ship immediately',
+                'Read and understand it',
+                'Delete it',
+                'Ask another AI',
+              ],
               correctIndex: 1,
             },
           ],

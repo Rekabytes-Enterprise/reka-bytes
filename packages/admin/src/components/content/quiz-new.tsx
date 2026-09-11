@@ -39,7 +39,9 @@ export function QuizNew({ moduleId }: { moduleId: string }) {
       <h1 className="font-display text-3xl font-semibold">Create Quiz</h1>
       <div className="mt-8 grid gap-5 border border-line bg-elevated p-6">
         <label className="block">
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">Title</span>
+          <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
+            Title
+          </span>
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -47,7 +49,9 @@ export function QuizNew({ moduleId }: { moduleId: string }) {
           />
         </label>
         <label className="block">
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">Passing score (%)</span>
+          <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-faint">
+            Passing score (%)
+          </span>
           <input
             type="number"
             min={50}
