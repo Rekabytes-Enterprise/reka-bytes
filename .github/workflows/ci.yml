@@ -31,6 +31,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # packages/db/src/generated is gitignored — fresh clones have no Prisma
+      # client, so generate before typecheck (same as the Docker builds do).
+      - name: Generate Prisma client
+        run: pnpm --filter @reka-bytes/db generate
+
       - name: Typecheck (all packages)
         run: pnpm -r typecheck
 
