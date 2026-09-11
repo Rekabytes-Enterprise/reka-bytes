@@ -18,15 +18,6 @@ const nextConfig: NextConfig = {
     // Pin the workspace root so Next doesn't infer it from a stray lockfile
     root: workspaceRoot,
   },
-  async rewrites() {
-    // Same-origin API proxy → avoids cross-origin cookie issues between ports
-    return [
-      {
-        source: '/api/:path*',
-        destination: `${process.env.BACKEND_URL ?? 'http://localhost:4300'}/api/:path*`,
-      },
-    ];
-  },
 };
 
 export default nextConfig;
