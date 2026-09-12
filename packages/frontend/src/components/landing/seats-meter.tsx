@@ -43,6 +43,7 @@ export function SeatsMeter({ variant }: { variant: 'chip' | 'block' }) {
   if (!seats) return null;
 
   const full = seats.remaining === 0;
+  const cohortLabel = seats.cohort || 'the cohort';
 
   if (variant === 'chip') {
     return (
@@ -54,7 +55,9 @@ export function SeatsMeter({ variant }: { variant: 'chip' | 'block' }) {
         data-testid="seats-chip"
       >
         <span className="size-2 rounded-full bg-current" aria-hidden />
-        {full ? 'Cohort 001 — full' : `${seats.remaining}/${seats.cap} seats left — cohort 001`}
+        {full
+          ? `${cohortLabel} — full`
+          : `${seats.remaining}/${seats.cap} seats left — ${cohortLabel}`}
       </p>
     );
   }
@@ -63,7 +66,7 @@ export function SeatsMeter({ variant }: { variant: 'chip' | 'block' }) {
     <div data-testid="seats-meter">
       <div className="flex items-baseline justify-between">
         <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted">
-          Cohort 001 capacity
+          {cohortLabel} capacity
         </p>
         <p className={cn('font-mono text-sm font-bold', full ? 'text-danger' : 'text-accent')}>
           {seats.approved}/{seats.cap} CLAIMED

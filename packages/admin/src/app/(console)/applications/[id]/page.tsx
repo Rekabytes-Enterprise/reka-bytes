@@ -184,7 +184,7 @@ export default function ApplicationReviewPage({ params }: { params: Promise<{ id
               </h2>
               <p className="mt-2 font-body text-sm text-muted">
                 {modal === 'APPROVED'
-                  ? 'A seat will be claimed in Cohort 001. Remember to send the Discord invite manually after approving.'
+                  ? `A seat will be claimed in ${app?.cohortName ?? 'the current cohort'}. Remember to send the Discord invite manually after approving.`
                   : 'The applicant will see a rejection status when they log in.'}
               </p>
               <Textarea

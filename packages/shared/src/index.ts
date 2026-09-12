@@ -11,6 +11,7 @@ export * from './types';
 
 // Schemas
 export * from './schemas/questionnaire';
+export * from './schemas/cohorts';
 export * from './schemas/content';
 export * from './schemas/ai';
 

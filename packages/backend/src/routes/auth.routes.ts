@@ -12,6 +12,18 @@ import {
 } from '../middleware/auth';
 import { rateLimit } from '../middleware/rate-limit';
 import { registerApplicant } from '../services/application.service';
+import type { AuthedUser } from '../middleware/auth';
+import type { SessionUser } from '@reka-bytes/shared';
+
+/** SessionUser enriched with the applicant's own cohort name (USER role only). */
+async function toSessionUser(user: AuthedUser): Promise<SessionUser> {
+  if (user.role !== 'USER') return user;
+  const application = await prisma.application.findUnique({
+    where: { userId: user.id },
+    select: { cohort: { select: { name: true } } },
+  });
+  return { ...user, cohortName: application?.cohort?.name ?? null };
+}
 
 export const authRoutes = new Hono<AppEnv>()
   .post('/register', rateLimit('register'), zValidator('json', registerSchema), async (c) => {
@@ -34,15 +46,7 @@ export const authRoutes = new Hono<AppEnv>()
     }
 
     await setSessionCookie(c, { sub: user.id, role: user.role });
-    return c.json({
-      data: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-        status: user.status,
-      },
-    });
+    return c.json({ data: await toSessionUser(user) });
   })
   .post('/logout', async (c) => {
     clearSessionCookie(c);
@@ -50,5 +54,5 @@ export const authRoutes = new Hono<AppEnv>()
   })
   .get('/me', requireAuth, async (c) => {
     const user = authedUser(c);
-    return c.json({ data: user });
+    return c.json({ data: await toSessionUser(user) });
   });

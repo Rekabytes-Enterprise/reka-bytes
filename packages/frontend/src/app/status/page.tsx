@@ -8,17 +8,20 @@ import { apiFetch, isApiClientError, type SessionUser } from '@reka-bytes/shared
 import { sessionAtom } from '@/atoms/auth';
 import { StatusBadge } from '@/components/ui/status-badge';
 
-const STATUS_COPY: Record<SessionUser['status'], { title: string; body: string }> = {
+const STATUS_COPY: Record<
+  SessionUser['status'],
+  { title: (cohort: string) => string; body: string }
+> = {
   PENDING: {
-    title: 'Application under review',
+    title: () => 'Application under review',
     body: 'We review every application personally. Check back soon — you will see your status change here the moment a decision is made.',
   },
   APPROVED: {
-    title: "You're in — welcome to Cohort 001 🎉",
+    title: (cohort) => `You're in — welcome to ${cohort} 🎉`,
     body: 'Congratulations! Your seat is confirmed. The Discord invite has been sent to your email / will be shared by the team. Class materials open on day one of the cohort.',
   },
   REJECTED: {
-    title: 'Application not accepted this time',
+    title: () => 'Application not accepted this time',
     body: 'Thank you for applying. This cohort is intentionally tiny, so we could not take everyone. Keep an eye out for the next intake.',
   },
 };
@@ -93,6 +96,7 @@ export default function StatusPage() {
   if (!user) return null;
 
   const copy = STATUS_COPY[user.status];
+  const cohortName = user.cohortName || 'the cohort';
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-xl flex-col justify-center px-6">
@@ -110,7 +114,7 @@ export default function StatusPage() {
             log out
           </button>
         </div>
-        <h1 className="mt-10 font-display text-4xl font-semibold">{copy.title}</h1>
+        <h1 className="mt-10 font-display text-4xl font-semibold">{copy.title(cohortName)}</h1>
         <p className="mt-5 font-body text-sm leading-relaxed text-muted">{copy.body}</p>
 
         <dl className="mt-10 grid grid-cols-[120px_1fr] gap-y-3 border-t border-line pt-8">

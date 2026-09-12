@@ -13,11 +13,14 @@ export interface SessionUser {
   name: string;
   role: Role;
   status: UserStatus;
+  /** Name of the cohort the user's application belongs to (USER role only). */
+  cohortName?: string | null;
 }
 
 export interface ApplicationDTO {
   id: string;
   userId: string;
+  cohortName: string | null;
   schemaVersion: number;
   answers: Record<string, unknown>;
   internalNote: string | null;
@@ -31,6 +34,8 @@ export interface ApplicationDTO {
 }
 
 export interface SeatsDTO {
+  /** Display name of the current cohort, e.g. "Cohort 001". Empty string when none is active. */
+  cohort: string;
   cap: number;
   approved: number;
   remaining: number;
@@ -40,6 +45,22 @@ export interface AdminStatsDTO extends SeatsDTO {
   pending: number;
   rejected: number;
   totalApplications: number;
+}
+
+// ── Admin · Cohorts (dynamic cohort capacity) ────────────────────
+
+export interface CohortDTO {
+  id: string;
+  name: string;
+  cap: number;
+  isCurrent: boolean;
+  /** Approved students whose application belongs to this cohort. */
+  approved: number;
+  /** Applications still under review in this cohort. */
+  pending: number;
+  /** Total applications stamped into this cohort. */
+  applications: number;
+  createdAt: string;
 }
 
 // ── Admin · Students & Analytics (PRD-03 §3.3–3.4) ──────────────

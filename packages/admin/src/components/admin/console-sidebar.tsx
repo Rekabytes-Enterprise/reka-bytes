@@ -11,6 +11,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   Inbox,
+  Layers,
   BookOpen,
   GraduationCap,
   Users,
@@ -24,6 +25,7 @@ import { apiFetch } from '@reka-bytes/shared';
 const NAV = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/applications', label: 'Applications', icon: Inbox },
+  { href: '/cohorts', label: 'Cohorts', icon: Layers },
   { href: '/content', label: 'Content', icon: BookOpen },
   { href: '/students', label: 'Students', icon: Users },
   { href: '/analytics', label: 'Analytics', icon: BarChart3 },

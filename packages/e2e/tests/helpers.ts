@@ -114,18 +114,30 @@ export async function findApplicationIdByEmail(email: string): Promise<string | 
  */
 export async function fillApprovedSeats(target: number): Promise<string[]> {
   const created: string[] = [];
+  // Seats are scoped per-cohort: the cap counts APPROVED users through their
+  // application's cohort, so each filler needs an Application row stamped with
+  // the current cohort (mirrors the real registration path).
   const countRes = await pgClient.query<{ count: string }>(
-    `SELECT COUNT(*)::text AS count FROM "User" WHERE status = 'APPROVED' AND role = 'USER'`,
+    `SELECT COUNT(*)::text AS count FROM "User" u
+     JOIN "Application" a ON a."userId" = u.id
+     WHERE u.status = 'APPROVED' AND u.role = 'USER'
+       AND a."cohortId" = (SELECT id FROM "Cohort" WHERE "isCurrent" LIMIT 1)`,
   );
   const approvedCount = parseInt(countRes.rows[0]?.count ?? '0', 10);
   const missing = Math.max(0, target - approvedCount);
 
   for (let i = 0; i < missing; i++) {
     const email = uniqueEmail(`filler-${i}`);
+    const userId = randomUUID();
     await pgClient.query(
       `INSERT INTO "User" (id, email, "passwordHash", name, role, status, "createdAt", "updatedAt")
        VALUES ($1, $2, $3, $4, 'USER', 'APPROVED', NOW(), NOW())`,
-      [randomUUID(), email, hashPassword('password123'), `Filler ${i}`],
+      [userId, email, hashPassword('password123'), `Filler ${i}`],
+    );
+    await pgClient.query(
+      `INSERT INTO "Application" (id, "userId", "cohortId", "schemaVersion", answers, "createdAt", "updatedAt")
+       VALUES ($1, $2, (SELECT id FROM "Cohort" WHERE "isCurrent" LIMIT 1), 1, '{}'::jsonb, NOW(), NOW())`,
+      [randomUUID(), userId],
     );
     created.push(email);
   }

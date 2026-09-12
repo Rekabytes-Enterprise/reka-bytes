@@ -1,9 +1,20 @@
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
-import { decisionSchema, AppError } from '@reka-bytes/shared';
+import {
+  cohortCreateSchema,
+  cohortUpdateSchema,
+  decisionSchema,
+  AppError,
+} from '@reka-bytes/shared';
 import { prisma } from '../lib/prisma';
 import { authedUser, requireAdmin, type AppEnv } from '../middleware/auth';
 import { decideApplication } from '../services/application.service';
+import {
+  activateCohort,
+  createCohort,
+  listCohorts,
+  updateCohort,
+} from '../services/cohort.service';
 import { adminStats } from './public.routes';
 import { contentRoutes } from './content.routes';
 import { aiRoutes } from './ai.routes';
@@ -19,6 +30,19 @@ export const adminRoutes = new Hono<AppEnv>()
   .get('/stats', async (c) => {
     return c.json({ data: await adminStats() });
   })
+  // ── Cohorts: admin-owned capacity per intake ────────────────────────
+  .get('/cohorts', async (c) => {
+    return c.json({ data: await listCohorts() });
+  })
+  .post('/cohorts', zValidator('json', cohortCreateSchema), async (c) => {
+    return c.json({ data: await createCohort(c.req.valid('json')) }, 201);
+  })
+  .patch('/cohorts/:id', zValidator('json', cohortUpdateSchema), async (c) => {
+    return c.json({ data: await updateCohort(c.req.param('id'), c.req.valid('json')) });
+  })
+  .post('/cohorts/:id/activate', async (c) => {
+    return c.json({ data: await activateCohort(c.req.param('id')) });
+  })
   .get('/applications', async (c) => {
     const status = c.req.query('status');
     if (status && !['PENDING', 'APPROVED', 'REJECTED'].includes(status)) {
@@ -29,7 +53,10 @@ export const adminRoutes = new Hono<AppEnv>()
       where: status
         ? { user: { status: status as 'PENDING' | 'APPROVED' | 'REJECTED' } }
         : undefined,
-      include: { user: { select: { name: true, email: true, status: true } } },
+      include: {
+        user: { select: { name: true, email: true, status: true } },
+        cohort: { select: { name: true } },
+      },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -37,6 +64,7 @@ export const adminRoutes = new Hono<AppEnv>()
       data: applications.map((a) => ({
         id: a.id,
         userId: a.userId,
+        cohortName: a.cohort?.name ?? null,
         schemaVersion: a.schemaVersion,
         answers: a.answers as Record<string, unknown>,
         internalNote: a.internalNote,
@@ -50,7 +78,10 @@ export const adminRoutes = new Hono<AppEnv>()
     const id = c.req.param('id');
     const application = await prisma.application.findUnique({
       where: { id },
-      include: { user: { select: { name: true, email: true, status: true } } },
+      include: {
+        user: { select: { name: true, email: true, status: true } },
+        cohort: { select: { name: true } },
+      },
     });
     if (!application) throw AppError.notFound('Application not found');
 
@@ -58,6 +89,7 @@ export const adminRoutes = new Hono<AppEnv>()
       data: {
         id: application.id,
         userId: application.userId,
+        cohortName: application.cohort?.name ?? null,
         schemaVersion: application.schemaVersion,
         answers: application.answers as Record<string, unknown>,
         internalNote: application.internalNote,
