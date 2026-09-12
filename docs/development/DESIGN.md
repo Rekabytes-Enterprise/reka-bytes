@@ -264,3 +264,16 @@ Same tokens but denser: table rows as hairline-divided list rows (not boxed card
 ---
 
 _Maintained in `docs/development/DESIGN.md`. Tokens are the single source of truth — implement once in `packages/shared/src/theme/`, consume everywhere._
+
+### 5c. Interactive scenes (PRD-06, shipped)
+
+AI-authored widget blocks render inside `scene-frame.tsx` — an opaque-origin sandboxed iframe. The scene's _internal_ look is authored by the model; the frame chrome follows Soft Terminal:
+
+| Element          | Spec                                                                                                                                                               |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Frame            | `w-full rounded-lg border border-line bg-white`; height animates from postMessage reports (clamped 240–4000px); `loading="lazy"`                                   |
+| Figure caption   | Top: mono uppercase `scene-title` (accent-dim) + `interactive · sandboxed` hint (faint). Bottom: the model's one-sentence `brief` in `font-mono text-[11px] muted` |
+| Fallback card    | `border-line bg-inset` panel: mono title line (`// {title}`) + `fallbackMarkdown` rendered through the standard `Markdown` component (same XSS boundary)           |
+| Review-pending   | Same as fallback but `border-dashed` + `// interactive section pending review` mono label — students see this until the admin acknowledges in the editor           |
+| Admin preview    | Editor scenes section: fixed `h-80` scrollable sandboxed preview, read-only HTML code view (`scene-code-view`), `mark reviewed` primary pill                       |
+| Scene authorship | Scenes must look native to the lesson: system fonts, consistent padding, visible focus states, `prefers-reduced-motion` honored (hard prompt mandate)              |

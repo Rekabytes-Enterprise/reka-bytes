@@ -122,7 +122,16 @@ export const simulationBlockSchema = z.object({
 export const widgetBlockSchema = z.object({
   type: z.literal('widget'),
   title: z.string().min(1).max(200),
+  /** Complete self-contained document: inline CSS/JS, data: URIs, no external requests.
+   *  Server injects a CSP <meta> + height reporter at generation time (PRD-06 §6). */
   html: z.string().min(1).max(200_000),
+  /** Learner-facing one-liner: what to try with the scene. */
+  brief: z.string().min(1).max(500),
+  /** What to show when the scene can't run: no-JS, unreviewed, oversized, error. */
+  fallbackMarkdown: z.string().min(1).max(20_000),
+  /** Server-forced false at generation; admin acknowledge via lesson editor is
+   *  the only writer of true. Unreviewed scenes never render to students. */
+  reviewed: z.boolean().default(false),
 });
 
 export const recapBlockSchema = z.object({
@@ -279,7 +288,17 @@ export function flattenBlocksToMarkdown(blocks: LessonBlock[]): string {
         parts.push(`_[interactive exercise: ${block.sim}]_`);
         break;
       case 'widget':
-        parts.push(`_[interactive widget: ${block.title}]_`);
+        parts.push(
+          [
+            `### ${block.title}`,
+            '',
+            block.brief,
+            '',
+            '> _This is a hands-on interactive section — it comes alive in the lesson viewer._',
+            '',
+            block.fallbackMarkdown,
+          ].join('\n'),
+        );
         break;
       case 'recap':
         parts.push(['## Recap', '', ...block.points.map((p) => `- ${p}`)].join('\n'));

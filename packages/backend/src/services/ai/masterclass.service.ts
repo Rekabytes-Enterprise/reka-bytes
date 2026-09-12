@@ -35,6 +35,7 @@ import { chunkText } from './chunks';
 import { extractText } from './extract';
 import { mockGeneratedClass, mockReviewNotes } from './mock-output';
 import { getBamlRegistry } from './baml-env';
+import { hardenSceneHtml } from '../scene-hardening';
 
 /**
  * AI Masterclass pipeline (PRD-02 §5) — multi-pass via packages/baml, split
@@ -324,6 +325,7 @@ const BLOCK_TYPE_MAP: Record<string, LessonBlock['type']> = {
   MERMAID: 'mermaid',
   STEPS: 'steps',
   INLINE_CHECK: 'inline-check',
+  WIDGET: 'widget',
   RECAP: 'recap',
 };
 
@@ -331,14 +333,28 @@ const BLOCK_TYPE_MAP: Record<string, LessonBlock['type']> = {
  *  one malformed block must never fail a lesson (LESSON-PLAN §4.3). */
 function toLessonBlocks(raw: BamlLessonBlockRaw[]): LessonBlock[] {
   const out: LessonBlock[] = [];
+  let widgetSeen = false; // PRD-06: ≤ 1 scene per lesson — first valid one wins
   for (const item of raw ?? []) {
     const type = BLOCK_TYPE_MAP[item.type];
     if (!type) continue;
+    let html: string | undefined;
+    if (type === 'widget') {
+      if (widgetSeen) continue;
+      // Static gate + CSP/reporter injection in one step — a scene that fails
+      // the check is dropped, never stored (PRD-06 §6).
+      const hardened = hardenSceneHtml(item.html ?? '');
+      if (!hardened) continue;
+      html = hardened;
+      widgetSeen = true;
+    }
     const candidate = {
       ...item,
       type,
       ...(item.correct_index !== undefined && item.correct_index !== null
         ? { correctIndex: item.correct_index }
+        : {}),
+      ...(type === 'widget' && html !== undefined
+        ? { html, fallbackMarkdown: item.fallback_markdown, reviewed: false as const }
         : {}),
     } as unknown;
     const parsed = parseBlock(candidate);

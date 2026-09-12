@@ -2,6 +2,7 @@ import { prisma } from '../lib/prisma';
 import { AppError, parseBlocks } from '@reka-bytes/shared';
 import { Prisma, toJsonInput } from '@reka-bytes/db';
 import { ENV_ADMIN_ID } from '../lib/env-admin';
+import { hardenSceneBlocks, hardenSceneHtml } from './scene-hardening';
 import type {
   ClassTreeDTO,
   ClassSummaryDTO,
@@ -270,7 +271,7 @@ export async function createLesson(input: LessonCreateInput, actorId: string) {
         moduleId: input.moduleId,
         title: input.title.trim(),
         contentMarkdown: input.contentMarkdown,
-        blocks: toJsonInput(input.blocks),
+        blocks: toJsonInput(input.blocks ? hardenSceneBlocks(input.blocks) : input.blocks),
         videoUrl: input.videoUrl ?? null,
         durationMinutes: input.durationMinutes,
         order: (maxOrder._max.order ?? -1) + 1,
@@ -287,12 +288,41 @@ export async function createLesson(input: LessonCreateInput, actorId: string) {
 export async function updateLesson(lessonId: string, input: LessonUpdateInput) {
   const existing = await prisma.lesson.findUnique({ where: { id: lessonId } });
   if (!existing) throw AppError.notFound('Lesson not found');
+
+  // Scene hygiene (PRD-06): every stored widget is hardened (idempotent), and
+  // an edited scene loses its review (content changed = review invalidated).
+  // Re-acknowledging lives in the editor's scenes section.
+  let blocksJson: Prisma.InputJsonValue | undefined;
+  if (input.blocks !== undefined) {
+    const existingBlocks = parseBlocks(existing.blocks);
+    const previousHtml = new Map(
+      existingBlocks
+        .filter((b): b is Extract<typeof b, { type: 'widget' }> => b.type === 'widget')
+        .map((b) => [b.html, b.reviewed]),
+    );
+    const hardened = input.blocks.map((b) => {
+      if (b.type !== 'widget') return b;
+      const was = previousHtml.get(b.html);
+      const scene = was !== undefined ? b : { ...b, reviewed: false };
+      const sceneHtml = hardenSceneHtml(scene.html);
+      // An admin-authored scene that fails the static gate is rejected loudly,
+      // not silently dropped — the editor should know its code was refused.
+      if (sceneHtml === null) {
+        throw AppError.badRequest(
+          `Scene "${scene.title}" was rejected: it references external resources, storage, or another window. Scenes must be fully self-contained.`,
+        );
+      }
+      return { ...scene, html: sceneHtml };
+    });
+    blocksJson = toJsonInput(hardened);
+  }
+
   await prisma.lesson.update({
     where: { id: lessonId },
     data: {
       ...(input.title !== undefined ? { title: input.title.trim() } : {}),
       ...(input.contentMarkdown !== undefined ? { contentMarkdown: input.contentMarkdown } : {}),
-      ...(input.blocks !== undefined ? { blocks: toJsonInput(input.blocks) } : {}),
+      ...(blocksJson !== undefined ? { blocks: blocksJson } : {}),
       ...(input.videoUrl !== undefined ? { videoUrl: input.videoUrl } : {}),
       ...(input.durationMinutes !== undefined ? { durationMinutes: input.durationMinutes } : {}),
     },
