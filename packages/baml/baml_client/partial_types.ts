@@ -62,6 +62,9 @@ export namespace partial_types {
       options?: string[] | null
       correct_index?: number | null
       explanation?: string | null
+      html?: string | null
+      brief?: string | null
+      fallback_markdown?: string | null
     }
     export interface LessonOutline {
       title?: string | null

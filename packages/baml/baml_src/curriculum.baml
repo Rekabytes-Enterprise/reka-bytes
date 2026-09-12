@@ -84,6 +84,7 @@ enum BlockType {
   MERMAID
   STEPS
   INLINE_CHECK
+  WIDGET @description("ONE self-contained interactive HTML scene per lesson, only when hands-on interaction teaches better than prose")
   RECAP
 }
 
@@ -116,6 +117,9 @@ class LessonBlockRaw {
   options string[]? @description("INLINE_CHECK only: 2-8 answer options")
   correct_index int? @description("INLINE_CHECK only: index of the correct option")
   explanation string? @description("INLINE_CHECK only: why the answer is right")
+  html string? @description("WIDGET only: a COMPLETE self-contained HTML document — inline <style> and <script> allowed, images/fonts as data: URIs only, ZERO external requests, no <form>. Rendered in a locked sandbox.")
+  brief string? @description("WIDGET only: one sentence telling the learner what to try with the scene")
+  fallback_markdown string? @description("WIDGET only: markdown conveying the same lesson point in words — shown to no-JS / pending-review users")
 }
 
 class WrittenLesson {
@@ -266,6 +270,18 @@ function WriteLesson(
     5. At least TWO INLINE_CHECK blocks spread through the lesson: a short
        question, 3-4 plausible options, correct_index pointing at the right
        one, and an explanation that teaches why.
+    5b. At most ONE WIDGET block (only when interaction genuinely teaches this
+       topic better than words): a complete self-contained HTML document with
+       inline <style> and <script>. Rules: must work at 375px width; use
+       system fonts; images/fonts only as data: URIs; NEVER fetch/load from
+       any external URL; no <form>; everything interactive works with zero
+       network; respect prefers-reduced-motion (stop looping animations);
+       visible focus styles on controls. Do NOT write any postMessage or
+       height-reporting code — the platform injects it. Describe the scene in
+       brief (one sentence: what the learner should try) and write
+       fallback_markdown that conveys the same point in words for students
+       who cannot run it. The scene must look clean and modern — consistent
+       spacing, readable font sizes, clear interactive affordances.
     6. RECAP — 3-5 bullet points of what the student now knows.
 
     Hard rules:
@@ -284,6 +300,7 @@ function WriteLesson(
                 | { "type": "MERMAID", "source": string, "caption": string? }
                 | { "type": "STEPS", "title": string, "steps": [ { "title": string, "markdown": string } ] }
                 | { "type": "INLINE_CHECK", "question": string, "options": string[], "correct_index": int, "explanation": string }
+                | { "type": "WIDGET", "title": string, "html": string, "brief": string, "fallback_markdown": string }
                 | { "type": "RECAP", "points": string[] } ],
       "key_terms": string[] }
 

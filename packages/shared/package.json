@@ -13,7 +13,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/",
-    "test": "tsx --test src/game/*.test.ts"
+    "test": "tsx --test src/game/*.test.ts src/blocks.test.ts"
   },
   "dependencies": {
     "zod": "^4.4.0"

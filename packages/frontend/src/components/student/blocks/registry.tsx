@@ -16,6 +16,7 @@ import { StepsBlockView } from './steps-block';
 import { RecapBlockView } from './recap-block';
 import { MermaidBlockView } from './mermaid-block';
 import { InlineCheckBlockView } from './inline-check-block';
+import { SceneFrameView } from './scene-frame';
 
 export interface BlockComponentProps {
   block: StudentLessonBlock;
@@ -57,6 +58,7 @@ const REGISTRY: Partial<Record<LessonBlock['type'], ComponentType<BlockComponent
   recap: typed(RecapBlockView),
   mermaid: typed(MermaidBlockView),
   'inline-check': typed(InlineCheckBlockView),
+  widget: typed(SceneFrameView),
 };
 
 export function getBlockComponent(

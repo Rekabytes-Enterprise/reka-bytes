@@ -55,6 +55,7 @@ export enum BlockType {
   MERMAID = "MERMAID",
   STEPS = "STEPS",
   INLINE_CHECK = "INLINE_CHECK",
+  WIDGET = "WIDGET",
   RECAP = "RECAP",
 }
 
@@ -94,6 +95,9 @@ export interface LessonBlockRaw {
   options?: string[] | null
   correct_index?: number | null
   explanation?: string | null
+  html?: string | null
+  brief?: string | null
+  fallback_markdown?: string | null
   
 }
 

@@ -31,7 +31,7 @@ export default class TypeBuilder {
     
     DocumentAnalysis: ClassViewer<'DocumentAnalysis', "summary" | "topics" | "prerequisites" | "suggested_module_count" | "warnings">;
     
-    LessonBlockRaw: ClassViewer<'LessonBlockRaw', "type" | "markdown" | "variant" | "title" | "terms" | "headers" | "rows" | "steps" | "points" | "source" | "caption" | "question" | "options" | "correct_index" | "explanation">;
+    LessonBlockRaw: ClassViewer<'LessonBlockRaw', "type" | "markdown" | "variant" | "title" | "terms" | "headers" | "rows" | "steps" | "points" | "source" | "caption" | "question" | "options" | "correct_index" | "explanation" | "html" | "brief" | "fallback_markdown">;
     
     LessonOutline: ClassViewer<'LessonOutline', "title" | "objectives" | "chunk_refs" | "estimated_minutes">;
     
@@ -50,7 +50,7 @@ export default class TypeBuilder {
     WrittenLesson: ClassViewer<'WrittenLesson', "blocks" | "key_terms">;
     
     
-    BlockType: EnumViewer<'BlockType', "PROSE" | "CALLOUT" | "KEY_TERMS" | "COMPARISON" | "MERMAID" | "STEPS" | "INLINE_CHECK" | "RECAP">;
+    BlockType: EnumViewer<'BlockType', "PROSE" | "CALLOUT" | "KEY_TERMS" | "COMPARISON" | "MERMAID" | "STEPS" | "INLINE_CHECK" | "WIDGET" | "RECAP">;
     
     Coverage: EnumViewer<'Coverage', "EXPLAINED" | "PARTIAL" | "MENTIONED">;
     
@@ -75,7 +75,7 @@ export default class TypeBuilder {
         ]);
         
         this.LessonBlockRaw = this.tb.classViewer("LessonBlockRaw", [
-          "type","markdown","variant","title","terms","headers","rows","steps","points","source","caption","question","options","correct_index","explanation",
+          "type","markdown","variant","title","terms","headers","rows","steps","points","source","caption","question","options","correct_index","explanation","html","brief","fallback_markdown",
         ]);
         
         this.LessonOutline = this.tb.classViewer("LessonOutline", [
@@ -112,7 +112,7 @@ export default class TypeBuilder {
         
         
         this.BlockType = this.tb.enumViewer("BlockType", [
-          "PROSE","CALLOUT","KEY_TERMS","COMPARISON","MERMAID","STEPS","INLINE_CHECK","RECAP",
+          "PROSE","CALLOUT","KEY_TERMS","COMPARISON","MERMAID","STEPS","INLINE_CHECK","WIDGET","RECAP",
         ]);
         
         this.Coverage = this.tb.enumViewer("Coverage", [
