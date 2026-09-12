@@ -38,10 +38,22 @@ model User {
   @@index([status])
 }
 
+model Cohort {
+  id           String        @id @default(cuid())
+  name         String        @unique
+  cap          Int
+  isCurrent    Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  applications Application[]
+}
+
 model Application {
   id            String     @id @default(cuid())
   userId        String     @unique
   user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cohortId      String?
+  cohort        Cohort?    @relation(fields: [cohortId], references: [id])
   schemaVersion Int
   answers       Json
   internalNote  String?
@@ -52,6 +64,7 @@ model Application {
   updatedAt     DateTime   @updatedAt
 
   @@index([createdAt])
+  @@index([cohortId])
 }
 
 model AuditLog {

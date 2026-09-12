@@ -1,5 +1,13 @@
 # Memory — Reka Bytes (distilled facts & gotchas)
 
+## Cohorts (dynamic capacity, shipped 2026-09-12)
+- **Capacity is per-cohort in the DB** (`Cohort.cap`); `COHORT_CAP` constant is GONE. Migration `20260912080204_cohorts`: CREATE `Cohort` + `Application.cohortId` (nullable, FK SET NULL, indexed) + seed "Cohort 001" cap 5 isCurrent + backfill ALL applications into it. Applications are STAMPED at registration; cap checks (register + approve) count APPROVED users through `application.cohortId` — scoped to the application's own cohort, so pending 001 apps stay reviewable against 001's cap after 002 activates.
+- Exactly one `isCurrent` cohort = where new registrations land + what `/api/public/seats` reports (seats DTO gained `cohort: name`; activation swap = one transaction: updateMany false → update true).
+- Admin control: `/api/admin/cohorts` (GET list, POST create, PATCH :id name/cap, POST :id/activate) + `/cohorts` console page (InlineText for name/cap, activate button, approved/pending/total counts; nav icon Layers). Approve dialog + applications rows show the cohort name.
+- `SessionUser.cohortName?` — USER role only, fetched from application.cohort in login + /me (env-admin: absent). Powers dynamic copy: status "welcome to {cohort}", dashboard banner + `cohort · live` chip, seats-meter chip/block.
+- e2e `fillApprovedSeats` helper was UPDATED: seat-cap counting goes through Application rows now, so fillers need `Application` inserts stamped with the current cohort (E2E-06 keeps working). **E2E suites not yet re-run — user's call.**
+- Decision: cap counts APPROVED only (not pending) — a full cohort + pending queue = pendings stuck until admin raises the cap; counts are visible on /cohorts. Marketing copy (landing hero, about "five seats", layout meta) intentionally stays static hand-edited copy.
+
 ## Frontend 404 (`app/not-found.tsx` + `components/landing/not-found-scene.tsx`)
 - Custom "Block not found" 404, **now an interactive voxel viewer** modelled on petalwind (three.js reference site): drag to orbit, wheel to zoom, click a tile and the ghost block hops there in a petal burst; cursor velocity becomes wind on the petals. Scene = 11×11 grass chunk, 2×2 fountain pool sunk below a 12-block stone rim, stone arch across the back edge, two benches, two sakura trees, flower specks, a floating islet, 28 falling petals. **Canvas 2D, zero dependencies** — no three.js; house pattern is canvas components in `components/landing/`.
 - **`metadata` export WORKS in `not-found.tsx` on Next 16** — `<title>Block not found — Reka Bytes</title>` confirmed in prerendered HTML (old Next lore says it's ignored; it isn't here).

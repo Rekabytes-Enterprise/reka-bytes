@@ -76,6 +76,7 @@ export default function ApplicationsPage() {
                     <p className="font-mono text-xs text-muted">{app.user.email}</p>
                   </div>
                   <p className="font-mono text-xs text-faint">
+                    {app.cohortName ? `${app.cohortName} · ` : ''}
                     {new Date(app.createdAt).toLocaleDateString()} · schema v{app.schemaVersion}
                   </p>
                   <StatusBadge status={app.user.status} />

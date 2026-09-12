@@ -1,5 +1,7 @@
 /** Cross-package constants. */
-export const COHORT_CAP = 5;
+// COHORT_CAP removed — capacity now lives per-cohort in the DB (Cohort.cap),
+// seeded by migration 20260912080204_cohorts ("Cohort 001", cap 5).
+// Admins manage cohorts at /cohorts in the admin console.
 
 export const SESSION_COOKIE = 'rb_session';
 export const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7; // 7 days

@@ -2,7 +2,9 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useAtomValue } from 'jotai';
 import type { LearnDashboardDTO } from '@reka-bytes/shared';
+import { sessionAtom } from '@/atoms/auth';
 import { useStudentGuard } from '@/hooks/use-student-guard';
 import { useApiQuery } from '@/hooks/api-query';
 import { Card } from '@/components/ui/card';
@@ -48,6 +50,7 @@ function ProgressRing({ completed, total }: { completed: number; total: number }
 
 export default function DashboardPage() {
   const state = useStudentGuard();
+  const session = useAtomValue(sessionAtom);
 
   // Skip until the auth guard is ready — avoids a doomed request on hard reloads.
   const { data, loading } = useApiQuery<LearnDashboardDTO>(
@@ -77,7 +80,7 @@ export default function DashboardPage() {
       <header className="pb-8">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-accent-dim">
-            cohort 001 · live
+            {(session?.cohortName || 'cohort').toLowerCase()} · live
           </p>
           <LevelPill level={data.game.xp.level} />
         </div>
@@ -202,8 +205,8 @@ export default function DashboardPage() {
               </p>
               <div className="mt-4 border-l-2 border-accent pl-4">
                 <p className="font-body text-sm leading-relaxed text-muted">
-                  📌 Welcome to Cohort 001! Class materials are live — start with Module 1 and work
-                  through the lessons in order.
+                  📌 Welcome to {session?.cohortName || 'the cohort'}! Class materials are live —
+                  start with Module 1 and work through the lessons in order.
                 </p>
               </div>
             </Card>

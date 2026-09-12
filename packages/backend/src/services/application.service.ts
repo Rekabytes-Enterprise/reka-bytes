@@ -1,9 +1,10 @@
 import { prisma } from '../lib/prisma';
-import { COHORT_CAP, QUESTIONNAIRE_VERSION, AppError } from '@reka-bytes/shared';
+import { QUESTIONNAIRE_VERSION, AppError } from '@reka-bytes/shared';
 import { Prisma } from '@reka-bytes/db';
 import { hashPassword } from '@reka-bytes/shared/password';
-import type { RegisterInput } from '@reka-bytes/shared';
+import type { RegisterInput, SeatsDTO } from '@reka-bytes/shared';
 import { ENV_ADMIN_ID } from '../lib/env-admin';
+import { countApprovedInCohort, getCurrentCohort } from './cohort.service';
 
 /**
  * Register a new applicant. Race-safe: email check + seat-cap count + create
@@ -17,9 +18,20 @@ export async function registerApplicant(input: RegisterInput) {
       throw AppError.conflict('EMAIL_TAKEN', 'This email is already registered.');
     }
 
-    const approvedCount = await tx.user.count({ where: { status: 'APPROVED', role: 'USER' } });
-    if (approvedCount >= COHORT_CAP) {
-      throw AppError.conflict('COHORT_FULL', 'Cohort 001 is full. Registration is closed.');
+    // Applications land in the current cohort; its cap governs registration.
+    const cohort = await tx.cohort.findFirst({ where: { isCurrent: true } });
+    if (!cohort) {
+      throw AppError.conflict(
+        'REGISTRATION_CLOSED',
+        'Registration is not open right now. Check back soon.',
+      );
+    }
+
+    const approvedCount = await tx.user.count({
+      where: { status: 'APPROVED', role: 'USER', application: { cohortId: cohort.id } },
+    });
+    if (approvedCount >= cohort.cap) {
+      throw AppError.conflict('COHORT_FULL', `${cohort.name} is full. Registration is closed.`);
     }
 
     const user = await tx.user.create({
@@ -35,6 +47,7 @@ export async function registerApplicant(input: RegisterInput) {
     await tx.application.create({
       data: {
         userId: user.id,
+        cohortId: cohort.id,
         schemaVersion: QUESTIONNAIRE_VERSION,
         answers: input.answers as Prisma.InputJsonValue,
       },
@@ -45,8 +58,9 @@ export async function registerApplicant(input: RegisterInput) {
 }
 
 /**
- * Approve/reject an application. Approval is race-safe against the cap:
- * the count check and status write share one transaction.
+ * Approve/reject an application. Approval is race-safe against the cap of
+ * the application's own cohort: the count check and status write share one
+ * transaction.
  */
 export async function decideApplication(opts: {
   applicationId: string;
@@ -65,9 +79,24 @@ export async function decideApplication(opts: {
     }
 
     if (opts.decision === 'APPROVED') {
-      const approvedCount = await tx.user.count({ where: { status: 'APPROVED', role: 'USER' } });
-      if (approvedCount >= COHORT_CAP) {
-        throw AppError.conflict('COHORT_FULL', 'Cannot approve — the cohort is already full.');
+      // Legacy rows without a cohort (shouldn't exist post-backfill) skip the cap.
+      if (application.cohortId) {
+        const cohort = await tx.cohort.findUnique({ where: { id: application.cohortId } });
+        if (cohort) {
+          const approvedCount = await tx.user.count({
+            where: {
+              status: 'APPROVED',
+              role: 'USER',
+              application: { cohortId: cohort.id },
+            },
+          });
+          if (approvedCount >= cohort.cap) {
+            throw AppError.conflict(
+              'COHORT_FULL',
+              `Cannot approve — ${cohort.name} is already full. Raise its cap or open the next cohort.`,
+            );
+          }
+        }
       }
     }
 
@@ -106,11 +135,17 @@ export async function decideApplication(opts: {
   });
 }
 
-export async function getSeats() {
-  const approved = await prisma.user.count({ where: { status: 'APPROVED', role: 'USER' } });
+export async function getSeats(): Promise<SeatsDTO> {
+  // Seats are scoped to the current cohort; the landing meter shows its name.
+  const cohort = await getCurrentCohort();
+  if (!cohort) {
+    return { cohort: '', cap: 0, approved: 0, remaining: 0 };
+  }
+  const approved = await countApprovedInCohort(cohort.id);
   return {
-    cap: COHORT_CAP,
+    cohort: cohort.name,
+    cap: cohort.cap,
     approved,
-    remaining: Math.max(0, COHORT_CAP - approved),
+    remaining: Math.max(0, cohort.cap - approved),
   };
 }

@@ -1,5 +1,4 @@
 import { Hono } from 'hono';
-import { COHORT_CAP } from '@reka-bytes/shared';
 import { prisma } from '../lib/prisma';
 import { getSeats } from '../services/application.service';
 import type { AdminStatsDTO } from '@reka-bytes/shared';
@@ -21,9 +20,6 @@ export const publicRoutes = new Hono()
       // redis down → serve fresh
       return c.json({ data: await getSeats() });
     }
-  })
-  .get('/cohort-info', (c) => {
-    return c.json({ data: { cap: COHORT_CAP, cohort: '001' } });
   });
 
 export const adminStats = async (): Promise<AdminStatsDTO> => {
