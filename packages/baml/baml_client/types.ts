@@ -117,7 +117,7 @@ export interface ModuleOutline {
 }
 
 export interface ModuleQuiz {
-  title: string
+  title?: string | null
   questions: QuizQuestion[]
   
 }
