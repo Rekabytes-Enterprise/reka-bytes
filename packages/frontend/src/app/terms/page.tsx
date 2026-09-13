@@ -16,6 +16,10 @@ import {
   mailtoHref,
 } from '@/lib/legal';
 
+// LEG_* env vars must be read per request (PRD: runtime-only images) —
+// static prerender would bake the placeholder fallbacks at build time.
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Terms of Use — Reka Bytes',
   description:

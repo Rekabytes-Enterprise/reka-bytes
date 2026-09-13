@@ -448,16 +448,32 @@ async function writeLessonsAndQuizzes(
   }
 
   // Quizzes run per module AFTER its lessons are fully written.
+  // A quiz that stays unparseable after retries degrades to null — never
+  // destroy a 15-40 min generation over its cheapest pass (PRD-06 follow-up,
+  // 2026-09-13 prod incident). The write path already handles quiz-less
+  // modules and the /learn module map renders them fine.
   for (const m of outline.modules) {
     const lessons = m.lessons
       .map((l, li) => results.get(`${m.title}::${li}`))
       .filter((x): x is GeneratedLesson => Boolean(x));
     await appendProgress(job, `Generating quiz: ${m.title}`);
-    const quiz = await b.GenerateQuiz(
-      m.title,
-      lessons.map((l) => l.contentMarkdown),
-      bamlOpts,
-    );
+    let quiz: ModuleQuiz | null = null;
+    try {
+      quiz = await withBamlRetry(`GenerateQuiz(${m.title})`, () =>
+        b.GenerateQuiz(
+          m.title,
+          lessons.map((l) => l.contentMarkdown),
+          bamlOpts,
+        ),
+      );
+    } catch (e) {
+      // BamlValidationError / network — degrade to a quiz-less module.
+      const message = e instanceof Error ? e.message : String(e);
+      await appendProgress(
+        job,
+        `Quiz failed for ${m.title} — module written without one (${message.slice(0, 120)})`,
+      );
+    }
     modules.push({ title: m.title, lessons, quiz });
   }
 
@@ -467,7 +483,7 @@ async function writeLessonsAndQuizzes(
     modules: modules.map(({ title, lessons, quiz }) => ({
       title,
       lessons,
-      ...(quiz ? { quiz: normalizeQuiz(quiz) } : {}),
+      ...(quiz ? { quiz: normalizeQuiz(quiz, title) } : {}),
     })),
   };
 }
@@ -476,7 +492,10 @@ function keyOf(entry: { module: { title: string }; lessonIndex: number }) {
   return `${entry.module.title}::${entry.lessonIndex}`;
 }
 
-function normalizeQuiz(quiz: ModuleQuiz): NonNullable<GeneratedClass['modules'][number]['quiz']> {
+function normalizeQuiz(
+  quiz: ModuleQuiz,
+  moduleTitle: string,
+): NonNullable<GeneratedClass['modules'][number]['quiz']> {
   const questions = quiz.questions.slice(0, 5).map((q) => {
     const options = q.options.slice(0, 4);
     while (options.length < 4) options.push('None of the above');
@@ -486,7 +505,8 @@ function normalizeQuiz(quiz: ModuleQuiz): NonNullable<GeneratedClass['modules'][
       correctIndex: clamp(q.correct_index, 0, 3, 0),
     };
   });
-  return { title: quiz.title, passingScore: 80, questions };
+  // title is optional in the BAML contract — the pipeline owns it (2026-09-13).
+  return { title: quiz.title ?? moduleTitle, passingScore: 80, questions };
 }
 
 function clamp(n: number, min: number, max: number, fallback: number): number {
@@ -688,6 +708,8 @@ export async function regenerateQuizQuestions(
     .sort((a, b) => a.order - b.order)
     .map((l) => l.contentMarkdown);
 
-  const result = await b.GenerateQuiz(quiz.module.title, lessonContents, bamlOpts);
-  return normalizeQuiz(result).questions;
+  const result = await withBamlRetry(`GenerateQuiz(regen ${quiz.module.title})`, () =>
+    b.GenerateQuiz(quiz.module.title, lessonContents, bamlOpts),
+  );
+  return normalizeQuiz(result, quiz.module.title).questions;
 }

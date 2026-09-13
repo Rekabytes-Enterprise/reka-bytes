@@ -10,6 +10,10 @@ import { Breadcrumb } from '@/components/layout/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { CONTACT, FOUNDER, OPERATOR, SOCIAL, mailtoHref } from '@/lib/legal';
 
+// LEG_* env vars must be read per request (PRD: runtime-only images) —
+// static prerender would bake the placeholder fallbacks at build time.
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'About — Reka Bytes',
   description:
