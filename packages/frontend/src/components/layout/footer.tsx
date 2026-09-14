@@ -11,9 +11,9 @@ import { OPERATOR } from '@/lib/legal';
  * `{title, links: [...]}` entry below; the grid (3 cols on desktop, 2 on
  * mobile) will adapt.
  *
- * NOTE: About / Project / News / Showcase are planned routes that do not exist
- * yet — they will 404 until the corresponding `app/(routes)/<slug>/page.tsx`
- * is created. Remove or relabel freely.
+ * NOTE: Project / News / Showcase are planned routes that do not exist yet —
+ * they will 404 until the corresponding page is created. Remove or relabel
+ * freely.
  */
 const FOOTER_COLUMNS: ReadonlyArray<{
   title: string;
@@ -22,14 +22,17 @@ const FOOTER_COLUMNS: ReadonlyArray<{
   {
     title: 'Company',
     links: [
-      { label: 'About', href: '/about' },
+      { label: 'About', href: '/academy/about' },
       { label: 'Project', href: '/project' },
       { label: 'News', href: '/news' },
     ],
   },
   {
     title: 'Product',
-    links: [{ label: 'Showcase', href: '/showcase' }],
+    links: [
+      { label: 'Academy', href: '/academy' },
+      { label: 'Showcase', href: '/showcase' },
+    ],
   },
   {
     title: 'Legal',
@@ -42,10 +45,14 @@ const FOOTER_COLUMNS: ReadonlyArray<{
 ];
 
 /**
- * Global site footer — compact sizing, used on EVERY public page (landing,
- * about, legal pages, login, register, 404). Same structure as the original
- * full footer (brand + link columns + bottom bar) with tightened paddings so
- * it doesn't dominate short pages like /login.
+ * Global site footer — compact sizing, used on EVERY public page (company
+ * home, academy, about, legal pages, login, register, 404). Same structure as
+ * the original full footer (brand + link columns + bottom bar) with tightened
+ * paddings so it doesn't dominate short pages like /login.
+ *
+ * Two variants, matching SiteNav:
+ * - 'main'    — company blurb + `start a project` mailto CTA.
+ * - 'academy' — academy blurb + `apply to cohort → /register` CTA.
  *
  * The country in the bottom bar comes from `LEG_OPERATOR_COUNTRY` (default
  * "Malaysia") — see `src/lib/legal.ts`.
@@ -54,8 +61,9 @@ const FOOTER_COLUMNS: ReadonlyArray<{
  * short content (login/register) should wrap their main in a `flex
  * min-h-dvh flex-col` container so the footer stays anchored to the bottom.
  */
-export function Footer() {
+export function Footer({ variant = 'main' }: { variant?: 'main' | 'academy' }) {
   const t = typeStyles;
+  const isAcademy = variant === 'academy';
 
   return (
     <footer className="border-t border-line bg-elevated" data-testid="site-footer">
@@ -72,15 +80,24 @@ export function Footer() {
               <span className="text-muted">·</span>
               <span className="text-ink">bytes</span>
             </Link>
-            <p className="mt-3 max-w-sm font-body text-sm leading-relaxed text-muted">
-              Teaching non-CS people to vibe code properly — fundamentals first.
-            </p>
-            <Link
-              href="/register"
-              className="mt-4 inline-flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-accent transition-colors hover:text-accent-hover"
-            >
-              Apply to cohort <span aria-hidden>→</span>
-            </Link>
+            {isAcademy ? (
+              <>
+                <p className="mt-3 max-w-sm font-body text-sm leading-relaxed text-muted">
+                  Teaching non-CS people to vibe code properly — fundamentals first.
+                </p>
+                <Link
+                  href="/register"
+                  className="mt-4 inline-flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-accent transition-colors hover:text-accent-hover"
+                >
+                  Apply to cohort <span aria-hidden>→</span>
+                </Link>
+              </>
+            ) : (
+              <p className="mt-3 max-w-sm font-body text-sm leading-relaxed text-muted">
+                We design and build mobile and web apps — fundamentals-first engineering with
+                budgets that flex to your stage.
+              </p>
+            )}
           </div>
 
           {/* Link columns */}

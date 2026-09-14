@@ -203,3 +203,55 @@ model XpEvent {
   @@unique([userId, reason, refId])
   @@index([userId, createdAt])
 }
+
+// ── Marketing site (company /) ─────────────────────────────────────────────
+
+enum LeadService {
+  CONSULTATION
+  MOCKUP
+  PRD
+  BUILD
+}
+
+enum LeadPlatform {
+  MOBILE
+  WEB
+  BOTH
+  UNSURE
+}
+
+enum LeadBudget {
+  UNDER_5K
+  RANGE_5_15K
+  RANGE_15_50K
+  OVER_50K
+  UNSURE
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  WON
+  LOST
+  ARCHIVED
+}
+
+/// Inbound enquiry from the public company site "start small" funnel — free
+/// consultation / free mockup / RM 150 PRD. No user relation: submitters are
+/// NOT registered users. Honeypot submissions never reach this table.
+model Lead {
+  id         String       @id @default(cuid())
+  name       String
+  email      String
+  phone      String?
+  service    LeadService  @default(CONSULTATION)
+  platform   LeadPlatform @default(UNSURE)
+  budget     LeadBudget   @default(UNSURE)
+  message    String       @db.Text
+  status     LeadStatus   @default(NEW)
+  adminNotes String?      @db.Text
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  @@index([status, createdAt])
+}

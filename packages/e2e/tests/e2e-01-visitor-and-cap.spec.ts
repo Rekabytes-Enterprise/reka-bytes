@@ -3,7 +3,7 @@ import { uniqueEmail, registerViaApi } from './helpers';
 
 test.describe('E2E-01 · visitor journey', () => {
   test('landing renders → seats counter → navigate to register', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/academy');
 
     // headline
     await expect(page.getByRole('heading', { level: 1 })).toContainText(/vibe code/i);

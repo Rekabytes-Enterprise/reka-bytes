@@ -146,10 +146,10 @@ export default function StatusPage() {
           </div>
         ) : (
           <Link
-            href="/"
+            href="/academy"
             className="mt-10 inline-block font-mono text-xs uppercase tracking-[0.12em] text-accent hover:underline"
           >
-            ← back to reka·bytes
+            ← back to reka·bytes academy
           </Link>
         )}
       </div>
