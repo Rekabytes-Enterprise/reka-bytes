@@ -37,8 +37,14 @@ Reka Bytes teaches **non-CS people how to vibe code properly** — pairing the s
 | **3** | Community & Growth | Waitlist, payments, cohort 2+, email lifecycle                     | planned   |
 | **4** | Academy            | Multiple classes, instructor tools, analytics, public site content | planned   |
 | **5** | Scale              | PWA/mobile polish, public API, alumni network, marketplace         | future    |
+|       | **PRD-02**         | Classroom + AI Masterclass                                         | shipped   |
+|       | **PRD-03**         | Auto-complete + admin console + lesson polish                      | shipped   |
+|       | **PRD-04**         | Soft Terminal reskin + XP ledger + gamification UI                 | shipped   |
+|       | **PRD-05**         | Interactive Lesson Engine (typed blocks)                           | shipped   |
+|       | **PRD-06**         | Sandboxed AI-authored scenes (widget blocks)                       | shipped   |
+|       | **PRD-07**         | Public studio journal (`/journal`) — MD files + interactive widgets | draft (awaiting approval) |
 
-Each phase ships **complete and usable on its own** — no half-built features carry over.
+Each phase ships **complete and usable on its own** — no half-built features carry over. Per-feature PRDs (PRD-NN) ship additively on top of a phase.
 
 ---
 
