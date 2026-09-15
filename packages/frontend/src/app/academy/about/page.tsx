@@ -34,12 +34,12 @@ export default function AboutPage() {
 
   return (
     <main>
-      <SiteNav />
+      <SiteNav variant="academy" />
 
       {/* ── Header ────────────────────────────────────────────────────── */}
       <section className="border-b border-line">
         <div className="mx-auto max-w-[1240px] px-6 py-20 lg:px-10 lg:py-24">
-          <Breadcrumb items={[{ label: 'home', href: '/' }, { label: 'about' }]} />
+          <Breadcrumb items={[{ label: 'home', href: '/academy' }, { label: 'about' }]} />
           <SectionHeader
             name="ABOUT"
             title="We teach the fundamentals behind the vibe."
@@ -365,7 +365,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <Footer />
+      <Footer variant="academy" />
     </main>
   );
 }

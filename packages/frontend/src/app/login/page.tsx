@@ -113,7 +113,7 @@ export default function LoginPage() {
         </p>
       </main>
 
-      <Footer />
+      <Footer variant="academy" />
     </div>
   );
 }

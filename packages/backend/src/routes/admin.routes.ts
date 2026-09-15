@@ -4,6 +4,7 @@ import {
   cohortCreateSchema,
   cohortUpdateSchema,
   decisionSchema,
+  leadUpdateSchema,
   AppError,
 } from '@reka-bytes/shared';
 import { prisma } from '../lib/prisma';
@@ -15,6 +16,7 @@ import {
   listCohorts,
   updateCohort,
 } from '../services/cohort.service';
+import { listLeads, updateLead } from '../services/lead.service';
 import { adminStats } from './public.routes';
 import { contentRoutes } from './content.routes';
 import { aiRoutes } from './ai.routes';
@@ -42,6 +44,13 @@ export const adminRoutes = new Hono<AppEnv>()
   })
   .post('/cohorts/:id/activate', async (c) => {
     return c.json({ data: await activateCohort(c.req.param('id')) });
+  })
+  // ── Leads: company-site enquiries (start small funnel) ──────────────
+  .get('/leads', async (c) => {
+    return c.json({ data: await listLeads() });
+  })
+  .patch('/leads/:id', zValidator('json', leadUpdateSchema), async (c) => {
+    return c.json({ data: await updateLead(c.req.param('id'), c.req.valid('json')) });
   })
   .get('/applications', async (c) => {
     const status = c.req.query('status');

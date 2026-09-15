@@ -128,12 +128,12 @@ export default function RegisterPage() {
           </p>
           <div className="mt-10 flex gap-4">
             <Button onClick={() => router.push('/login')}>Go to login</Button>
-            <Link href="/">
-              <Button variant="ghost">Back home</Button>
+            <Link href="/academy">
+              <Button variant="ghost">Back to academy</Button>
             </Link>
           </div>
         </main>
-        <Footer />
+        <Footer variant="academy" />
       </div>
     );
   }
@@ -378,7 +378,7 @@ export default function RegisterPage() {
         </div>
       </main>
 
-      <Footer />
+      <Footer variant="academy" />
     </div>
   );
 }
