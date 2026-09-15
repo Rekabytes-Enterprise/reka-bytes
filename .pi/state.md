@@ -1,16 +1,18 @@
-# State — 2026-09-15 (site split + leads funnel — pushed dev `923321b`)
+# State — 2026-09-15 (PRD-07 journal spec + 3 skills drafted — committing + pushing this session)
 
 ## Current state
-- **2026-09-15: SITE SPLIT + LEADS FUNNEL COMMITTED `923321b` + PUSHED to origin/dev** — (1) `/` = company page (app-dev studio, free consult/mockup + PRD RM 150), academy at `/academy`, `/academy/about`; SiteNav/Footer `variant: 'main'|'academy'` (login only on academy side). (2) Lead form on `/` (#start) → `POST /api/public/leads` (rate-limit + honeypot) → `Lead` table (migration `20260914064039_leads`, applied) → admin `/leads` triage page (filters, expand, status, notes). Full details in `.pi/memory.md` (Site split + Leads funnel entries). Verified: `pnpm -r typecheck` 7/7 ✅ lint ✅ frontend build 16 routes ✅ admin 18 ✅ format ✅ Lead table in dev DB ✅. User already tagged v0.1.5 (fetched during push).
-- e2e-01 updated to `goto('/academy')` — NOT re-run. No live API probe yet (dev servers down) — worth a curl smoke of `/api/public/leads` + `/api/admin/leads` when servers come up.
-- next-env.d.ts quote-flips (frontend+admin) left uncommitted (generator-owned cosmetic); reverted in tree.
-- Prod: v0.1.4 + v0.1.5 tags exist; v0.1.5 does NOT include this split/funnel — next image tag (v0.1.6?) will.
-- Dev servers were NOT running this session; verification via typecheck/lint/build/prerendered HTML + psql only.
+- **2026-09-15 (this session): PRD-07 PUBLIC STUDIO JOURNAL SPEC DRAFTED + 3 AGENT SKILLS CREATED — committing + pushing**
+  - `docs/development/PRD-07.md` (428 lines, 3 phases) — P1 read-only foundation (e2e-19), P2 interactive widgets reusing PRD-06 (e2e-20), P3 discovery/polish (e2e-21). Master PRD roadmap table updated to slot PRD-07.
+  - `.pi/skills/journal-{write,images,sensitivity}/SKILL.md` (442 lines) — workflow + voice + image strategy + sensitivity NEVER list.
+  - Decisions locked in memory.md. No code touched — no typecheck/lint/build run needed.
+  - User has green-lit the commit + push.
+- Last pushed commit: `923321b` site split + leads funnel (2026-09-15).
 
 ## Next steps
-1. Main-page content backlog (user hasn't picked yet): portfolio/showcase, testimonials, FAQ, WhatsApp CTA, engagement pricing bands — showcase + FAQ recommended next.
-2. Live-server smoke of leads flow + e2e re-runs (user's call).
-3. Phase B — simulation template library (LESSON-PLAN §11) + real-AI scene smoke.
+1. **PRD-07 Phase 1 R1** (user's call to start): seed 2 fixture posts + 1 draft in `content/journal/` + frontmatter zod schema in `packages/shared/src/schemas/journal.ts` + unit test. Exit: `pnpm --filter @reka-bytes/shared test` green.
+2. Phase 1 R2 → R5: `journal.service.ts` (in-memory cache, gray-matter parser) + 4 public routes (`/api/public/posts`, `/api/public/posts/featured`, `/api/public/posts/:slug`, `/api/public/journal-assets/{slug}/*`) + frontend `/journal` + `/journal/[slug]` + featured slot on `/` + admin `/admin/journal` read-only + backend Dockerfile COPY + e2e-19 green.
+3. (Later) Phase 2 R1 → R3: `widget` fence remark plugin + `JournalWidget` reusing `scene-frame.tsx` + e2e-20 via override config.
+4. (Later) Phase 3 R1 → R2: pagination + tag pages + read-time + cover images + e2e-21.
 
 ## Blocked / waiting on
-Nothing.
+Nothing — awaiting user's "start Phase 1 R1" call.
