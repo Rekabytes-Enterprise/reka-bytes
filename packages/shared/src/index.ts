@@ -15,6 +15,7 @@ export * from './schemas/cohorts';
 export * from './schemas/content';
 export * from './schemas/ai';
 export * from './schemas/leads';
+export * from './schemas/journal';
 
 // Content DTOs (Phase 1 classroom)
 export * from './content';

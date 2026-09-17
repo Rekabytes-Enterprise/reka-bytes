@@ -2,7 +2,8 @@
 
 > **Prerequisite**: Read `PRD.md`, `PRD-06.md` (widget block infrastructure this
 > PRD reuses), `DESIGN.md` §5a (Soft Terminal: Paper tokens), `LESSON-PLAN.md`.
-> **Status**: Draft v1 — awaiting approval (2026-09-15)
+> **Status**: **Implemented** (2026-09-16) — Phases 1–3 on `dev`; E2E specs
+> 19/20/21 written, NOT yet run against live servers (user's call). See §11.
 > **Slot**: Next available (PRD-06's "stepper lesson-flow" candidate yields).
 
 ---
@@ -23,6 +24,7 @@ co-located with their images and embedded interactive widgets. The journal is
 PRD-06 widget infrastructure) directly inside posts.
 
 **Why MD files, not an admin CMS**:
+
 - The brand promise is "build-in-public" — the commit IS the publication.
 - One author (founder) means no multi-author bottleneck to remove.
 - PR review is built-in quality control.
@@ -55,6 +57,7 @@ subscriptions/RSS, search, multi-author, post scheduling, full WYSIWYG editor.
 interactive widgets yet. E2E covers the full read flow.
 
 **Exit criteria**:
+
 - Posts authored as MD files in `content/journal/` render at `/journal/{slug}`.
 - `/journal` lists published posts newest-first with excerpts.
 - Featured slot on `/` surfaces one post before the lead form.
@@ -78,16 +81,16 @@ Frontmatter schema (single source of truth for metadata; zod schema lives in
 
 ```yaml
 ---
-slug: shipping-v0.1.0                  # url segment; must match filename minus date + .md
+slug: shipping-v0.1.0 # url segment; must match filename minus date + .md
 title: Shipping v0.1.0
-excerpt: >                              # ≤ 280 chars, shown on cards
+excerpt: > # ≤ 280 chars, shown on cards
   Docker, GHCR, and the migrations
   story — what we shipped and what we learned.
-publishedAt: 2026-09-15                 # ISO date; sort key
-featured: false                         # bool; at most one true across all posts
-tags: [shipping, docker, lessons]       # string[]; lower-case, kebab-case
+publishedAt: 2026-09-15 # ISO date; sort key
+featured: false # bool; at most one true across all posts
+tags: [shipping, docker, lessons] # string[]; lower-case, kebab-case
 coverImage: ./docker-compose-diagram.png # optional; relative to the post folder
-status: published                       # draft | published; only published renders
+status: published # draft | published; only published renders
 ---
 ```
 
@@ -111,12 +114,12 @@ New `services/journal.service.ts` (parallel to `lead.service.ts`):
 
 ### 3.3 Public API (mounted on existing `publicRoutes`)
 
-| Method | Path | Returns |
-|---|---|---|
-| GET | `/api/public/posts` | `{ posts: PostSummary[] }` — slug, title, excerpt, publishedAt, tags, coverImage. Paginated: `?page=1&limit=10` (default 10, max 50). |
-| GET | `/api/public/posts/featured` | `PostSummary \| null` — the one featured post. |
-| GET | `/api/public/posts/:slug` | `{ post: PostDetail }` — full body (markdown string). |
-| GET | `/api/public/journal-assets/{slug}/*` | Static file stream from `content/journal/{slug-folder}/*`. Content-type by extension; `cache-control: public, max-age=300`. |
+| Method | Path                                  | Returns                                                                                                                               |
+| ------ | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| GET    | `/api/public/posts`                   | `{ posts: PostSummary[] }` — slug, title, excerpt, publishedAt, tags, coverImage. Paginated: `?page=1&limit=10` (default 10, max 50). |
+| GET    | `/api/public/posts/featured`          | `PostSummary \| null` — the one featured post.                                                                                        |
+| GET    | `/api/public/posts/:slug`             | `{ post: PostDetail }` — full body (markdown string).                                                                                 |
+| GET    | `/api/public/journal-assets/{slug}/*` | Static file stream from `content/journal/{slug-folder}/*`. Content-type by extension; `cache-control: public, max-age=300`.           |
 
 **Path rewriter**: backend post-processes the markdown body in
 `getPostBySlug` — rewrites `src="./..."` and `![](./...)` image refs to
@@ -135,6 +138,7 @@ group `(public)` is overkill. Plain pages under `/`:
   (the existing react-markdown renderer). NO `rehype-raw`. NO new renderer.
 
 **Featured slot on `/`**:
+
 - `packages/frontend/src/app/page.tsx` gains a `<FeaturedJournalPost>` server
   component (fetches `/api/public/posts/featured` at render).
 - Renders between the "Why Reka Bytes" section and the lead form (`#start`).
@@ -145,6 +149,7 @@ group `(public)` is overkill. Plain pages under `/`:
 ### 3.5 Admin read-only preview
 
 New page `/admin/journal` under `(console)`:
+
 - Lists posts from the same in-memory cache (or refetches if cache is
   backend-private — see §3.5.1).
 - Columns: title, publishedAt, status (DRAFT/PUBLISHED badge), featured,
@@ -168,9 +173,11 @@ admin dumb.
 
 Backend Dockerfile (`docker/backend.Dockerfile`) gains one line, after the
 existing `COPY` steps:
+
 ```dockerfile
 COPY content/journal ./content/journal
 ```
+
 That's it. New post → tag → image rebuilds + deploys. Acceptable for weekly
 cadence; revisit volume mount if daily.
 
@@ -181,15 +188,15 @@ content; verify in lockfile).
 
 `packages/e2e/tests/e2e-19-journal.spec.ts` — main config, live dev servers.
 
-| Test | What it asserts |
-|---|---|
-| List shows posts | `/journal` renders ≥ 1 card with `journal-card-{slug}` testid, featured card has `journal-featured-card` testid |
-| Slug page renders | `/journal/{slug}` shows title (`journal-title`), markdown body, published date |
-| Featured slot on `/` | `/` shows `<FeaturedJournalPost>` section with link to post (`home-featured-journal`) |
-| Image loads | Co-located image in post body renders with `src` starting with `/api/public/journal-assets/` |
-| Draft hidden | A `status: draft` post in `content/journal/` does NOT appear on `/journal` list |
-| Admin read-only list | `/admin/journal` (authed as admin) lists posts with `journal-admin-row-{slug}` testid |
-| Missing slug → 404 | `/journal/does-not-exist` → frontend not-found |
+| Test                 | What it asserts                                                                                                 |
+| -------------------- | --------------------------------------------------------------------------------------------------------------- |
+| List shows posts     | `/journal` renders ≥ 1 card with `journal-card-{slug}` testid, featured card has `journal-featured-card` testid |
+| Slug page renders    | `/journal/{slug}` shows title (`journal-title`), markdown body, published date                                  |
+| Featured slot on `/` | `/` shows `<FeaturedJournalPost>` section with link to post (`home-featured-journal`)                           |
+| Image loads          | Co-located image in post body renders with `src` starting with `/api/public/journal-assets/`                    |
+| Draft hidden         | A `status: draft` post in `content/journal/` does NOT appear on `/journal` list                                 |
+| Admin read-only list | `/admin/journal` (authed as admin) lists posts with `journal-admin-row-{slug}` testid                           |
+| Missing slug → 404   | `/journal/does-not-exist` → frontend not-found                                                                  |
 
 Seed posts: ship 2 fixture posts in `content/journal/` (the two starter posts
 we agreed on, e.g. "shipping v0.1.0" + "BAML vs raw OpenRouter"), one with a
@@ -204,6 +211,7 @@ markdown post. Reuses **all** PRD-06 widget infrastructure (hardening, scene
 frame, CSP, height reporter). E2E proves the round-trip.
 
 **Exit criteria**:
+
 - A `\`\`\`widget` code fence in a post renders a sandboxed iframe inline.
 - The widget HTML is co-located with the post (`content/journal/{slug}/widgets/foo.html`).
 - The widget passes through `hardenSceneHtml` (same as lessons) — CSP + reporter
@@ -234,6 +242,7 @@ fallback: |
 The renderer recognizes the fence via a small **remark plugin**
 (`packages/frontend/src/components/student/journal-widget-remark.ts`).
 The plugin:
+
 1. Detects `code` nodes with `lang === 'widget'`.
 2. Parses the body as YAML (4 simple string fields).
 3. Replaces the node with a custom JSX-like marker that the renderer expands
@@ -282,14 +291,14 @@ context. Scene-frame itself is unchanged; the wrapper handles the prop.
 (`playwright.notfound.config.ts`-style, no webServer). Spec ships its own
 fixture widget HTML in `tests/fixtures/journal-widget.html`.
 
-| Test | What it asserts |
-|---|---|
-| Widget fence renders iframe | `/journal/{slug-with-widget}` shows `journal-widget-{i}` testid with `iframe[sandbox="allow-scripts"]` |
-| CSP present | Fetched `html` string contains the `Content-Security-Policy` meta (assert against fixture's stored version, not the iframe content) |
-| Height reporter injected | Hardened HTML contains the `data-rb-scene` script |
-| Fallback path | Render with JS disabled → `journal-fallback-{i}` testid visible |
-| Opaque origin | Inside the iframe, accessing `top.document` throws (SecurityError) — `iframe.contentWindow.eval("typeof top.document")` |
-| No external requests | Network log shows no requests to any host other than `127.0.0.1:4301` / `127.0.0.1:4300` |
+| Test                        | What it asserts                                                                                                                     |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Widget fence renders iframe | `/journal/{slug-with-widget}` shows `journal-widget-{i}` testid with `iframe[sandbox="allow-scripts"]`                              |
+| CSP present                 | Fetched `html` string contains the `Content-Security-Policy` meta (assert against fixture's stored version, not the iframe content) |
+| Height reporter injected    | Hardened HTML contains the `data-rb-scene` script                                                                                   |
+| Fallback path               | Render with JS disabled → `journal-fallback-{i}` testid visible                                                                     |
+| Opaque origin               | Inside the iframe, accessing `top.document` throws (SecurityError) — `iframe.contentWindow.eval("typeof top.document")`             |
+| No external requests        | Network log shows no requests to any host other than `127.0.0.1:4301` / `127.0.0.1:4300`                                            |
 
 ---
 
@@ -299,6 +308,7 @@ fixture widget HTML in `tests/fixtures/journal-widget.html`.
 card polish. Each addition independently testable.
 
 **Exit criteria**:
+
 - `/journal?page=2` works; navigation UI present on `/journal`.
 - `/journal/tag/{tag}` lists posts with that tag.
 - Read-time estimate shown on each card ("~5 min").
@@ -341,30 +351,30 @@ card polish. Each addition independently testable.
 
 `packages/e2e/tests/e2e-21-journal-discovery.spec.ts` — main config.
 
-| Test | What it asserts |
-|---|---|
-| Pagination | Seed 11 posts, `/journal` shows 10 cards, `journal-next-page` button → `/journal?page=2` shows 1 card |
-| Tag page | `/journal/tag/shipping` shows only posts with that tag; `journal-tag-{tag}` testid on each card |
-| Tag link from card | Click tag on a card → `/journal/tag/{tag}` |
-| Read-time | Card shows `journal-read-time` testid with format `~N min` |
-| Cover image | Post with `coverImage` renders `journal-card-cover-{slug}` testid, image `src` starts with `/api/public/journal-assets/` |
+| Test               | What it asserts                                                                                                          |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| Pagination         | Seed 11 posts, `/journal` shows 10 cards, `journal-next-page` button → `/journal?page=2` shows 1 card                    |
+| Tag page           | `/journal/tag/shipping` shows only posts with that tag; `journal-tag-{tag}` testid on each card                          |
+| Tag link from card | Click tag on a card → `/journal/tag/{tag}`                                                                               |
+| Read-time          | Card shows `journal-read-time` testid with format `~N min`                                                               |
+| Cover image        | Post with `coverImage` renders `journal-card-cover-{slug}` testid, image `src` starts with `/api/public/journal-assets/` |
 
 ---
 
 ## 6. Rings (execution order)
 
-| Ring    | Deliverable                                                                       | Exit                                                     |
-| ------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| P1.R1   | `content/journal/` seeded with 2 posts + 1 draft; frontmatter zod schema           | `pnpm --filter @reka-bytes/shared test` green            |
-| P1.R2   | `journal.service.ts` + 3 public routes; cache builds on startup                    | `curl /api/public/posts` returns ≥ 1 post                |
-| P1.R3   | Frontend `/journal`, `/journal/[slug]`, featured slot on `/`, admin read-only list | manual: load each page, see expected content             |
-| P1.R4   | Backend Dockerfile COPYs `content/journal/`; image smoke-tested                    | `docker build backend` + `curl /api/public/posts` from container |
-| P1.R5   | `e2e-19` green                                                                     | `pnpm --filter @reka-bytes/e2e test` → all green         |
-| P2.R1   | Remark plugin for `\`\`\`widget` fence; backend hardens widget HTML at cache time  | unit test: fence → marker conversion                     |
-| P2.R2   | `JournalWidget` + `SceneFrame` reuse; fallback path                                | fixture widget renders in iframe with hardened HTML      |
-| P2.R3   | `e2e-20` green via override config                                                 | override config run → all green                          |
-| P3.R1   | Pagination + tag pages + read-time + cover images                                  | manual + `e2e-21`                                        |
-| P3.R2   | `e2e-21` green                                                                     | main config run → all green                              |
+| Ring  | Deliverable                                                                        | Exit                                                             |
+| ----- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| P1.R1 | `content/journal/` seeded with 2 posts + 1 draft; frontmatter zod schema           | `pnpm --filter @reka-bytes/shared test` green                    |
+| P1.R2 | `journal.service.ts` + 3 public routes; cache builds on startup                    | `curl /api/public/posts` returns ≥ 1 post                        |
+| P1.R3 | Frontend `/journal`, `/journal/[slug]`, featured slot on `/`, admin read-only list | manual: load each page, see expected content                     |
+| P1.R4 | Backend Dockerfile COPYs `content/journal/`; image smoke-tested                    | `docker build backend` + `curl /api/public/posts` from container |
+| P1.R5 | `e2e-19` green                                                                     | `pnpm --filter @reka-bytes/e2e test` → all green                 |
+| P2.R1 | Remark plugin for `\`\`\`widget` fence; backend hardens widget HTML at cache time  | unit test: fence → marker conversion                             |
+| P2.R2 | `JournalWidget` + `SceneFrame` reuse; fallback path                                | fixture widget renders in iframe with hardened HTML              |
+| P2.R3 | `e2e-20` green via override config                                                 | override config run → all green                                  |
+| P3.R1 | Pagination + tag pages + read-time + cover images                                  | manual + `e2e-21`                                                |
+| P3.R2 | `e2e-21` green                                                                     | main config run → all green                                      |
 
 ---
 
@@ -381,16 +391,16 @@ card polish. Each addition independently testable.
 
 ## 8. Risks & mitigations
 
-| Risk | Mitigation |
-|---|---|
-| Markdown path rewriter misses an edge case (e.g. image inside a link, HTML-encoded src) | Backend logs all rewritten URLs at debug; fixture posts cover common cases; e2e covers image in body |
-| Repo size grows with co-located images | Commit guidelines: prefer SVG/PNG ≤ 200 KB; defer git-lfs until needed; document in README |
-| Featured slot on `/` shows stale post after cache TTL | Cache rebuild on file mtime change (60s floor) — fine for v1; Phase 3+ can add revalidation webhook |
-| Widget HTML fetched via asset route exposes raw (un-hardened) HTML | Hardening happens at cache-build in `journal.service.ts`, BEFORE the file is served. Asset route serves the hardened in-memory copy, not the disk file. |
-| Frontmatter typo (`status: Published` capital P) breaks filtering | Zod schema uses `.default('draft')`; case-sensitive enum; startup logs warnings |
-| Multiple `featured: true` posts | Startup logs a warning; first-by-filename wins; documented in the seed guideline |
-| Author forgets to update filename when changing slug | Filename ↔ frontmatter slug mismatch → startup log warning + post excluded |
-| `e2e-19` flakiness from seed posts being moved | Seed posts are fixtures checked into `packages/e2e/fixtures/journal/`, copied to `content/journal/` by `global-setup.ts` |
+| Risk                                                                                    | Mitigation                                                                                                                                                                             |
+| --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Markdown path rewriter misses an edge case (e.g. image inside a link, HTML-encoded src) | Backend logs all rewritten URLs at debug; fixture posts cover common cases; e2e covers image in body                                                                                   |
+| Repo size grows with co-located images                                                  | Commit guidelines: prefer SVG/PNG ≤ 200 KB; defer git-lfs until needed; document in README                                                                                             |
+| Featured slot on `/` shows stale post after cache TTL                                   | Cache rebuild on file mtime change (60s floor) — fine for v1; Phase 3+ can add revalidation webhook                                                                                    |
+| Widget HTML fetched via asset route exposes raw (un-hardened) HTML                      | Hardening happens at cache-build in `journal.service.ts`, BEFORE the file is served. Asset route serves the hardened in-memory copy, not the disk file.                                |
+| Frontmatter typo (`status: Published` capital P) breaks filtering                       | Zod schema uses `.default('draft')`; case-sensitive enum; startup logs warnings                                                                                                        |
+| Multiple `featured: true` posts                                                         | Startup logs a warning; first-by-filename wins; documented in the seed guideline                                                                                                       |
+| Author forgets to update filename when changing slug                                    | Filename ↔ frontmatter slug mismatch → startup log warning + post excluded                                                                                                             |
+| `e2e-19` flakiness from seed posts being moved                                          | Seed posts ship committed in `content/journal/` (the editorial fixtures ARE the repo content); specs target their frozen slugs — moving a post must update the spec in the same commit |
 
 ---
 
@@ -427,3 +437,40 @@ card polish. Each addition independently testable.
    widget `src:` paths.
 5. **Markdown `\`\`\`widget` fence is the journal's widget primitive** —
    remark plugin in the renderer, not a backend preprocessing step.
+
+---
+
+## 11. Implementation notes (2026-09-16, Phases 1–3)
+
+Deviations from the spec above, all deliberate:
+
+1. **§3.6 Dockerfile**: no explicit `COPY content/journal` line — the backend
+   build stage already does `COPY . .` and `.dockerignore` excludes nothing
+   under `content/`. Path resolution is module-relative from the service file
+   (identical in dev and the image); `JOURNAL_DIR` env var overrides.
+2. **§3.4 featured slot is a client component** (`FeaturedJournalPost` +
+   `useApiQuery`), not a server component — a build-time server fetch would
+   reintroduce the v0.1.1 failure mode (prerender against an
+   unreachable/wrong-baked BACKEND_URL). `/` stays ○ static; `/journal*` are
+   ƒ dynamic server-rendered (force-dynamic) for real 404 + SSR metadata.
+3. **§4.3 widgets need NO client fetch** — the post-detail DTO carries
+   `widgetHtml: Record<assetUrl, hardenedHtml>` inline (backend collects the
+   post's fences from its hardened cache). Fewer round-trips, no per-widget
+   loading states. The asset route still serves widgets (as `text/plain`,
+   hardened) for direct testing + future sharing.
+4. **§7 testid change**: `journal-widget-src-{i}` replaced by a
+   `data-rb-src="{assetUrl}"` attribute on the `journal-widget-{i}` wrapper
+   (one element can only carry one `data-testid`).
+5. **§5.5 pagination e2e** validates page math at the API (`?limit=2`,
+   clamping beyond the end) instead of seeding 11 temporary posts — repo
+   content stays a hand-authored editorial set. `packages/e2e/fixtures/
+journal/` + global-setup copy is therefore NOT needed.
+6. **Cover image**: seed posts ship a hand-authored SVG cover (the studio
+   image API was out of credits at implementation time); the `journal-images`
+   skill decision tree is unchanged.
+7. **Admin sidebar**: `Journal` (Newspaper icon) sits between Cohorts and
+   Content; the old dead footer link `News → /news` became
+   `Journal → /journal`.
+8. **Drafts 404 by slug** (not just list-hidden): `getPostBySlug` filters on
+   `status === 'published'`, so a draft URL hits the branded 404 — no
+   information leak that a slug exists.

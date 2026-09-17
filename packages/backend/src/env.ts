@@ -23,6 +23,9 @@ const envSchema = z.object({
   AI_DAILY_REGEN_LIMIT: z.coerce.number().default(50),
   // '1' → skip extraction + LLM entirely; deterministic fixture output (used by e2e)
   AI_MOCK: z.enum(['0', '1']).default('0'),
+  // Journal content directory (PRD-07). Empty → repo-root `content/journal`
+  // resolved from the service file, which matches both dev and the image.
+  JOURNAL_DIR: z.string().optional().default(''),
 });
 
 const parsed = envSchema.safeParse(process.env);

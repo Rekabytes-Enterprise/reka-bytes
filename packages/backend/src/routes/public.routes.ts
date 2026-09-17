@@ -3,8 +3,14 @@ import { zValidator } from '@hono/zod-validator';
 import { prisma } from '../lib/prisma';
 import { getSeats } from '../services/application.service';
 import { createLead } from '../services/lead.service';
+import {
+  getFeaturedPost,
+  getJournalAsset,
+  getPostBySlug,
+  listPosts,
+} from '../services/journal.service';
 import { rateLimit } from '../middleware/rate-limit';
-import { leadCreateSchema, type AdminStatsDTO } from '@reka-bytes/shared';
+import { leadCreateSchema, AppError, type AdminStatsDTO } from '@reka-bytes/shared';
 
 export const publicRoutes = new Hono()
   // Remaining cohort seats — cached in redis for 15s to absorb landing-page traffic
@@ -36,6 +42,41 @@ export const publicRoutes = new Hono()
     }
     const lead = await createLead(input);
     return c.json({ data: lead }, 201);
+  })
+
+  // ── Public studio journal (PRD-07) ──────────────────────────────────
+  // Content is read from the repo's content/journal dir (see journal.service).
+  // List order: featured first, then newest published.
+  .get('/posts', async (c) => {
+    return c.json({
+      data: listPosts({
+        page: c.req.query('page'),
+        limit: c.req.query('limit'),
+        tag: c.req.query('tag'),
+      }),
+    });
+  })
+  // Registered before /posts/:slug so the literal wins.
+  .get('/posts/featured', async (c) => {
+    return c.json({ data: getFeaturedPost() });
+  })
+  .get('/posts/:slug', async (c) => {
+    return c.json({ data: getPostBySlug(c.req.param('slug')) });
+  })
+  // Journal assets — hardened widget html (served as text/plain, the renderer
+  // feeds it to a sandboxed srcdoc iframe) + co-located images. Traversal +
+  // extension allow-list live in getJournalAsset.
+  .get('/journal-assets/*', async (c) => {
+    const rel = c.req.param('*');
+    if (!rel) throw AppError.notFound('Asset not found');
+    const asset = getJournalAsset(rel);
+    return new Response(asset.body, {
+      headers: {
+        'content-type': asset.contentType,
+        'cache-control': 'public, max-age=300',
+        'x-content-type-options': 'nosniff',
+      },
+    });
   });
 
 export const adminStats = async (): Promise<AdminStatsDTO> => {

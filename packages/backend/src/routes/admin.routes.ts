@@ -17,6 +17,7 @@ import {
   updateCohort,
 } from '../services/cohort.service';
 import { listLeads, updateLead } from '../services/lead.service';
+import { listAllPostsAdmin } from '../services/journal.service';
 import { adminStats } from './public.routes';
 import { contentRoutes } from './content.routes';
 import { aiRoutes } from './ai.routes';
@@ -51,6 +52,11 @@ export const adminRoutes = new Hono<AppEnv>()
   })
   .patch('/leads/:id', zValidator('json', leadUpdateSchema), async (c) => {
     return c.json({ data: await updateLead(c.req.param('id'), c.req.valid('json')) });
+  })
+  // ── Journal (PRD-07): read-only admin view — drafts + warnings included.
+  // Editing is a commit, not a console action (see PRD-07 §3.5).
+  .get('/journal', async (c) => {
+    return c.json({ data: listAllPostsAdmin() });
   })
   .get('/applications', async (c) => {
     const status = c.req.query('status');

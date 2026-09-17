@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The start-small ladder</title>
+    <style>
+      :root {
+        --paper: #fafaf7;
+        --ink: #14161a;
+        --muted: #565e66;
+        --accent: #4e7700;
+        --line: #e3e5de;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          'Segoe UI',
+          sans-serif;
+        background: var(--paper);
+        color: var(--ink);
+        padding: 16px;
+      }
+      .rail {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      button {
+        font: inherit;
+        cursor: pointer;
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--muted);
+        padding: 8px 14px;
+        min-height: 40px;
+        border-radius: 8px;
+      }
+      button[aria-pressed='true'] {
+        border-color: var(--accent);
+        color: var(--accent);
+        font-weight: 700;
+      }
+      button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .card {
+        margin-top: 12px;
+        border-left: 3px solid var(--accent);
+        background: #fff;
+        border-top: 1px solid var(--line);
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        padding: 14px 16px;
+        border-radius: 0 8px 8px 0;
+        min-height: 96px;
+      }
+      .card h2 {
+        margin: 0 0 6px;
+        font-size: 15px;
+        letter-spacing: 0.02em;
+      }
+      .price {
+        font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      .card p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="rail" role="group" aria-label="Pick a starting step">
+      <button type="button" data-step="0" aria-pressed="true">1 · Consultation</button>
+      <button type="button" data-step="1" aria-pressed="false">2 · Mockup</button>
+      <button type="button" data-step="2" aria-pressed="false">3 · PRD</button>
+    </div>
+    <div class="card" aria-live="polite">
+      <p class="price" id="price"></p>
+      <h2 id="name"></h2>
+      <p id="desc"></p>
+    </div>
+    <script>
+      var STEPS = [
+        {
+          price: 'FREE',
+          name: 'Tell us the idea',
+          desc: 'A call or an email thread. You get an honest read on scope, timeline, and budget — even when the honest read is "not yet."',
+        },
+        {
+          price: 'FREE WITH THE CALL',
+          name: 'See it as screens',
+          desc: 'We sketch the app as a few screens, so the rest of the conversation happens about something concrete instead of something imagined.',
+        },
+        {
+          price: 'FROM RM 150',
+          name: 'Hold the whole plan in your hands',
+          desc: 'A complete requirements document — what it must do, what it must never do, and the checklist that says done. Yours to keep, whoever builds it.',
+        },
+      ];
+      var buttons = document.querySelectorAll('button[data-step]');
+      var price = document.getElementById('price');
+      var name = document.getElementById('name');
+      var desc = document.getElementById('desc');
+      function show(i) {
+        for (var b = 0; b < buttons.length; b++) {
+          buttons[b].setAttribute('aria-pressed', String(b === i));
+        }
+        price.textContent = STEPS[i].price;
+        name.textContent = STEPS[i].name;
+        desc.textContent = STEPS[i].desc;
+      }
+      for (var i = 0; i < buttons.length; i++) {
+        (function (idx) {
+          buttons[idx].addEventListener('click', function () {
+            show(idx);
+          });
+        })(i);
+      }
+      show(0);
+    </script>
+  </body>
+</html>

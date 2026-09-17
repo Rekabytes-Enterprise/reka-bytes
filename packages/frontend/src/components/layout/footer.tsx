@@ -11,7 +11,7 @@ import { OPERATOR } from '@/lib/legal';
  * `{title, links: [...]}` entry below; the grid (3 cols on desktop, 2 on
  * mobile) will adapt.
  *
- * NOTE: Project / News / Showcase are planned routes that do not exist yet —
+ * NOTE: Project / Showcase are planned routes that do not exist yet —
  * they will 404 until the corresponding page is created. Remove or relabel
  * freely.
  */
@@ -23,8 +23,8 @@ const FOOTER_COLUMNS: ReadonlyArray<{
     title: 'Company',
     links: [
       { label: 'About', href: '/academy/about' },
+      { label: 'Journal', href: '/journal' },
       { label: 'Project', href: '/project' },
-      { label: 'News', href: '/news' },
     ],
   },
   {

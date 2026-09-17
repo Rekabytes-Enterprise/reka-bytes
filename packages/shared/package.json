@@ -13,13 +13,15 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/",
-    "test": "tsx --test src/game/*.test.ts src/blocks.test.ts"
+    "test": "tsx --test src/game/*.test.ts src/blocks.test.ts src/schemas/journal.test.ts"
   },
   "dependencies": {
+    "js-yaml": "^5.4.2",
     "zod": "^4.4.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.10.0",
     "eslint": "^9.20.0",
     "tsx": "^4.23.0",
