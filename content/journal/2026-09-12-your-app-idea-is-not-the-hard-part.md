@@ -8,6 +8,7 @@ excerpt: >
 publishedAt: 2026-09-12
 featured: false
 tags: [founders, ai-development]
+coverImage: ./cover.jpg
 status: published
 ---
 

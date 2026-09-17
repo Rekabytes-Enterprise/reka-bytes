@@ -61,6 +61,9 @@ test.describe('E2E-21 · journal discovery', () => {
     await expect(featured.getByTestId('journal-read-time')).toContainText(/~\d+ min/);
     const cover = featured.locator('img');
     await expect(cover).toHaveCount(1);
-    await expect(cover).toHaveAttribute('src', /\/api\/public\/journal-assets\/.+cover\.svg$/);
+    await expect(cover).toHaveAttribute(
+      'src',
+      /\/api\/public\/journal-assets\/.+cover\.(jpg|jpeg|png|svg)$/,
+    );
   });
 });

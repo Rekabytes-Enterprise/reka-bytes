@@ -17,7 +17,7 @@
 1. Live-server smoke: backend up → `curl /api/public/posts` + `/posts/featured` + asset route; frontend `/journal` in browser. (User's call / when they start dev servers.)
 2. Run e2e-19/21 (main config) + e2e-20 (journal override) — **explicit user permission required**.
 3. Tag v0.1.6 → GHCR images include `content/journal` (backend image ships it via COPY . .) → prod journal live.
-4. Replace SVG cover with generated PNG when the image API has credits (`journal-images` skill).
+4. ~~Replace SVG cover with generated PNG~~ — DONE 2026-09-17: photoreal ChatGPT covers for both published posts (drop zone `content/img/` gitignored; optimized to `cover.jpg` ≤200 KB; skill updated with the PHOTO COVER branch).
 5. Main-page content backlog (portfolio/showcase, FAQ, WhatsApp CTA) — unchanged.
 6. Phase B (simulation template library, LESSON-PLAN §11) still queued.
 

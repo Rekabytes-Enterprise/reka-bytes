@@ -30,3 +30,6 @@ coverage/
 .pi/clip/
 # pi generate_image scratch renders — finals get encoded into packages/frontend/public/
 .pi/media/
+
+# journal image drop zone — raw originals (finals optimized into content/journal/{folder}/)
+content/img/

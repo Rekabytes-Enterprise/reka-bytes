@@ -8,7 +8,7 @@ excerpt: >
 publishedAt: 2026-09-15
 featured: true
 tags: [studio, ai-development, founders]
-coverImage: ./cover.svg
+coverImage: ./cover.jpg
 status: published
 ---
 

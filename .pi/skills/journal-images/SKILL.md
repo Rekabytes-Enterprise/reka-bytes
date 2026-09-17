@@ -11,14 +11,14 @@ description: Decide how to source images for a journal post — generate with AI
 Does the image show something real from the running app or service?
 ├── YES (live UI, real screenshot, terminal output, real metrics)
 │   └── ASK THE USER (don't start dev servers — AGENTS.md dev-server rule)
-└── NO (diagram, illustration, abstract concept, mock UI)
+└── NO (diagram, illustration, abstract concept, mock UI, scene/cover)
     ├── Could it be expressed as mermaid / code / table?
     │   ├── YES (flow, architecture, sequence, hierarchy, state machine)
     │   │   └── USE MERMAID (cheaper, semantic, editable, free)
-    │   └── NO (mood shot, abstract, stylized illustration, mock UI)
-    │       └── GENERATE
+    │   ├── Editorial scene with humans (post covers) → PHOTO COVER (see below)
+    │   └── NO (abstract diagram-art, mood shot) → GENERATE illustration
     └── Ambiguous?
-        └── GENERATE (cheap to iterate; user can replace later)
+        └── ASK the user: illustration or photo cover?
 ```
 
 ## When to ASK THE USER
@@ -70,21 +70,54 @@ When generating, include these in the prompt:
 - "generous negative space"
 - "no photographic elements, no people, no stock photo vibes"
 
-**Avoid in prompts**: laptops, coffee, "team high-fiving", generic office
-imagery, neon green, pure white backgrounds, gradients.
+**Avoid in illustration prompts**: people, faces, laptops, coffee,
+"team high-fiving", generic office imagery, neon green, pure white
+backgrounds, gradients. (Human scenes are handled by the PHOTO COVER branch
+below, not by illustration generation.)
 
 ### Output spec
 
-- **Path**: `content/journal/{YYYY-MM-DD}-{slug}/cover.png` (featured)
+- **Path**: `content/journal/{YYYY-MM-DD}-{slug}/cover.jpg` (featured/cover)
   OR `content/journal/{YYYY-MM-DD}-{slug}/{descriptive-name}.png` (inline)
 - **Aspect**: **16:9** (e.g. 1280×720) for covers; flexible for inline
 - **Format**: PNG or WebP
-- **Size**: ≤ 200 KB; optimize with `pngquant`/`cwebp` if needed
+- **Size**: ≤ 200 KB; optimize with `pngquant`/`cwebp`/`sips` if needed
 - **Alt text**: **required.** Include in the markdown as
   `![Descriptive alt text](./file.png)` — never empty alt for content images.
 - **No external URLs**: assets are served via
   `/api/public/journal-assets/{slug-folder}/file.png` only. CDN/external
   hosting is out of scope (PRD-07 §9).
+
+## PHOTO COVERS — editorial human scenes (user-approved 2026-09-17)
+
+Post covers may use **photorealistic human imagery**. The workflow (live on
+both seeded posts as of 2026-09-17):
+
+1. **Source**: the founder generates in ChatGPT (or supplies REAL personal
+   photos — real beats generated for build-in-public trust whenever
+   possible). NOT the `generate_image` tool for human scenes.
+2. **Drop zone**: originals go in `content/img/` (gitignored — raw files are
+   1.5 MB+). The agent optimizes them into the post folder; the raw drop is
+   never committed.
+3. **Composition rules (identity safety)**:
+   - Faces **turned away, side-profile, over-the-shoulder, or hands only** —
+     never a front-facing portrait that could read as a real specific person.
+     A build-in-public studio claiming fake people as its team is a
+     credibility incident waiting to happen.
+   - **No legible text** in the image — image models garble lettering; ask
+     for blurred/defocused documents and dark/abstract screens.
+   - Keep brand palette through props: olive accents (mug, sticky note,
+     chair), warm neutrals, natural window light.
+   - Malaysian/Southeast-Asian context reads on-brand (KL skyline, studio
+     light) for the academy's actual audience.
+4. **Optimize into place** (1280×720-ish, ≤ 200 KB):
+   ```bash
+   sips --resampleWidth 1280 -s format jpeg -s formatOptions 78 \
+     content/img/cover_01 --out content/journal/{folder}/cover.jpg
+   ```
+   Frontmatter: `coverImage: ./cover.jpg`.
+5. **Inspect before accepting**: zoom on hands (extra/merged fingers), eyes
+   (dead/uncanny), stray text. Regenerate rather than accept defects.
 
 ## When to use MERMAID instead
 
@@ -129,7 +162,9 @@ Don't write `![](...)`. Alt text:
 
 - **Screenshot the GitHub repo for "shipping v0.1.0"** → ask the user to do it.
   Repo state matters and the agent can't be sure of timing.
-- **Generate a "team photo"** → no. Don't fake people.
+- **Front-facing AI portraits presented as real people/team** → never.
+  Identity-safe framing only (see PHOTO COVERS). Real personal photos are
+  always preferred over generated humans.
 - **Use stock photo URLs from Unsplash/etc** → no external image deps. Local
   only.
 - **Generate a "screenshot of the live app"** → if it's mock data, label it
