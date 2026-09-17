@@ -66,8 +66,14 @@ export const publicRoutes = new Hono()
   // Journal assets — hardened widget html (served as text/plain, the renderer
   // feeds it to a sandboxed srcdoc iframe) + co-located images. Traversal +
   // extension allow-list live in getJournalAsset.
+  // NOTE: Hono 4.12 does NOT populate c.req.param('*') for wildcard routes
+  // mounted under app.route() (params come back empty) — derive the tail from
+  // the raw path instead. Decoding turns %2e%2e into a literal '..' which the
+  // service guard then rejects.
   .get('/journal-assets/*', async (c) => {
-    const rel = c.req.param('*');
+    const marker = '/journal-assets/';
+    const at = c.req.path.lastIndexOf(marker);
+    const rel = at >= 0 ? decodeURIComponent(c.req.path.slice(at + marker.length)) : '';
     if (!rel) throw AppError.notFound('Asset not found');
     const asset = getJournalAsset(rel);
     return new Response(asset.body, {
