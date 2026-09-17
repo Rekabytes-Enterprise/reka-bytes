@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="Soft Terminal illustration of a UAT screening room: a projector beam casts an abstract browser window onto a wall screen, with one frame flagged by an olive outline and the label 'flag: fade never resolved'. Film strip along the bottom. Olive accent on warm paper.">
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#14161A" stroke-opacity="0.05" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="beam" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#4E7700" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#4E7700" stop-opacity="0.03"/>
+    </linearGradient>
+  </defs>
+
+  <!-- paper + grid -->
+  <rect width="1280" height="720" fill="#FAFAF7"/>
+  <rect width="1280" height="720" fill="url(#grid)"/>
+
+  <!-- projector beam -->
+  <polygon points="228,490 524,110 524,604 228,522" fill="url(#beam)"/>
+
+  <!-- projector -->
+  <g>
+    <rect x="84" y="468" width="112" height="52" rx="10" fill="#14161A"/>
+    <rect x="196" y="482" width="26" height="24" rx="6" fill="#14161A"/>
+    <circle cx="222" cy="494" r="9" fill="#4E7700"/>
+    <rect x="104" y="524" width="10" height="18" rx="3" fill="#565E66"/>
+    <rect x="168" y="524" width="10" height="18" rx="3" fill="#565E66"/>
+    <circle cx="104" cy="480" r="4" fill="#9AA1A9"/>
+  </g>
+
+  <!-- wall screen: elevated card -->
+  <g>
+    <rect x="538" y="108" width="692" height="522" rx="14" fill="#14161A" fill-opacity="0.08"/>
+    <rect x="532" y="100" width="692" height="522" rx="14" fill="#FFFFFF" stroke="#E3E5DE" stroke-width="1.5"/>
+
+    <!-- browser chrome -->
+    <circle cx="562" cy="128" r="6" fill="#DC2626" fill-opacity="0.75"/>
+    <circle cx="584" cy="128" r="6" fill="#A16207" fill-opacity="0.6"/>
+    <circle cx="606" cy="128" r="6" fill="#15803D" fill-opacity="0.6"/>
+    <rect x="636" y="116" width="300" height="24" rx="12" fill="#F0F1EC"/>
+    <text x="652" y="133" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="13" fill="#565E66">uat-run-0412 · recorded</text>
+    <rect x="1128" y="116" width="76" height="24" rx="12" fill="none" stroke="#4E7700" stroke-width="1.5"/>
+    <text x="1146" y="133" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="12" fill="#4E7700">REC</text>
+
+    <!-- hero row -->
+    <rect x="568" y="164" width="620" height="88" rx="10" fill="#F0F1EC"/>
+    <rect x="584" y="184" width="200" height="12" rx="6" fill="#C6CAC0"/>
+    <rect x="584" y="208" width="300" height="10" rx="5" fill="#E3E5DE"/>
+
+    <!-- flagged frame -->
+    <rect x="568" y="284" width="300" height="180" rx="10" fill="#F0F1EC" stroke="#4E7700" stroke-width="2"/>
+    <polygon points="692,352 692,396 730,374" fill="#4E7700"/>
+    <rect x="588" y="428" width="160" height="8" rx="4" fill="#C6CAC0"/>
+    <rect x="588" y="428" width="94" height="8" rx="4" fill="#4E7700"/>
+    <!-- corner brackets just outside the frame -->
+    <path d="M568 272 H556 V284" fill="none" stroke="#4E7700" stroke-width="3"/>
+    <path d="M880 272 H868 V284" fill="none" stroke="#4E7700" stroke-width="3"/>
+    <path d="M868 476 H880 V464" fill="none" stroke="#4E7700" stroke-width="3"/>
+    <path d="M568 476 H556 V464" fill="none" stroke="#4E7700" stroke-width="3"/>
+
+    <!-- annotation pill under the frame -->
+    <line x1="622" y1="506" x2="640" y2="470" stroke="#4E7700" stroke-width="2"/>
+    <rect x="568" y="506" width="252" height="30" rx="8" fill="#FFFFFF" stroke="#4E7700" stroke-width="1.5"/>
+    <text x="582" y="526" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="13" fill="#4E7700">flag · fade never resolved</text>
+
+    <!-- side rows -->
+    <rect x="880" y="284" width="308" height="40" rx="8" fill="#F0F1EC"/>
+    <rect x="880" y="336" width="308" height="40" rx="8" fill="#F0F1EC"/>
+    <rect x="880" y="388" width="308" height="40" rx="8" fill="#F0F1EC"/>
+    <rect x="880" y="440" width="308" height="40" rx="8" fill="#F0F1EC"/>
+
+    <!-- run status -->
+    <text x="568" y="598" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="14" fill="#565E66">run 0412 · 42 checks · 41 pass · 1 flag</text>
+  </g>
+
+  <!-- left column -->
+  <g>
+    <text x="68" y="128" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="13" letter-spacing="3" fill="#565E66">REKA BYTES · FIELD NOTES</text>
+    <text x="68" y="206" font-family="'Iowan Old Style', 'Palatino', Georgia, serif" font-size="52" fill="#14161A">Green isn&#8217;t</text>
+    <text x="68" y="266" font-family="'Iowan Old Style', 'Palatino', Georgia, serif" font-size="52" fill="#14161A">proof.</text>
+    <rect x="68" y="300" width="72" height="4" rx="2" fill="#4E7700"/>
+    <text x="68" y="346" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="15" fill="#565E66">we film every UAT run.</text>
+    <text x="68" y="372" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="15" fill="#565E66">an AI watches.</text>
+    <text x="68" y="398" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="15" fill="#565E66">a human signs off.</text>
+    <rect x="68" y="424" width="186" height="38" rx="19" fill="none" stroke="#14161A" stroke-width="1.5"/>
+    <circle cx="92" cy="443" r="6" fill="#DC2626"/>
+    <text x="110" y="448" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="13" fill="#14161A">REC · RUN 0412</text>
+  </g>
+
+  <!-- film strip -->
+  <g>
+    <rect x="64" y="640" width="1152" height="52" rx="8" fill="#F0F1EC" stroke="#E3E5DE" stroke-width="1.5"/>
+    <g fill="#FAFAF7">
+      <rect x="80" y="646" width="10" height="7" rx="2"/><rect x="180" y="646" width="10" height="7" rx="2"/><rect x="280" y="646" width="10" height="7" rx="2"/><rect x="380" y="646" width="10" height="7" rx="2"/><rect x="480" y="646" width="10" height="7" rx="2"/><rect x="580" y="646" width="10" height="7" rx="2"/><rect x="680" y="646" width="10" height="7" rx="2"/><rect x="780" y="646" width="10" height="7" rx="2"/><rect x="880" y="646" width="10" height="7" rx="2"/><rect x="980" y="646" width="10" height="7" rx="2"/><rect x="1080" y="646" width="10" height="7" rx="2"/><rect x="1180" y="646" width="10" height="7" rx="2"/>
+      <rect x="80" y="679" width="10" height="7" rx="2"/><rect x="180" y="679" width="10" height="7" rx="2"/><rect x="280" y="679" width="10" height="7" rx="2"/><rect x="380" y="679" width="10" height="7" rx="2"/><rect x="480" y="679" width="10" height="7" rx="2"/><rect x="580" y="679" width="10" height="7" rx="2"/><rect x="680" y="679" width="10" height="7" rx="2"/><rect x="780" y="679" width="10" height="7" rx="2"/><rect x="880" y="679" width="10" height="7" rx="2"/><rect x="980" y="679" width="10" height="7" rx="2"/><rect x="1080" y="679" width="10" height="7" rx="2"/><rect x="1180" y="679" width="10" height="7" rx="2"/>
+    </g>
+    <g>
+      <rect x="104" y="656" width="120" height="20" rx="4" fill="#C6CAC0"/>
+      <rect x="252" y="656" width="120" height="20" rx="4" fill="#C6CAC0"/>
+      <rect x="400" y="656" width="120" height="20" rx="4" fill="#C6CAC0"/>
+      <rect x="548" y="656" width="120" height="20" rx="4" fill="#4E7700"/>
+      <rect x="696" y="656" width="120" height="20" rx="4" fill="#C6CAC0"/>
+      <rect x="844" y="656" width="120" height="20" rx="4" fill="#C6CAC0"/>
+      <rect x="992" y="656" width="120" height="20" rx="4" fill="#C6CAC0"/>
+      <rect x="1140" y="656" width="52" height="20" rx="4" fill="#C6CAC0"/>
+    </g>
+  </g>
+</svg>
