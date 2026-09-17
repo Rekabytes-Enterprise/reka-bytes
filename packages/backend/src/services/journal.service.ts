@@ -66,10 +66,10 @@ interface JournalCache {
 let cache: JournalCache | null = null;
 
 function sortPosts(posts: CachedPost[]): CachedPost[] {
-  return [...posts].sort((a, b) => {
-    if (a.meta.featured !== b.meta.featured) return a.meta.featured ? -1 : 1;
-    return b.meta.publishedAt.localeCompare(a.meta.publishedAt);
-  });
+  // Pure latest-first (user call 2026-09-18): no featured pinning in the list —
+  // the featured slot on `/` is a separate endpoint, and the featured card
+  // keeps its hero styling inline wherever its date puts it.
+  return [...posts].sort((a, b) => b.meta.publishedAt.localeCompare(a.meta.publishedAt));
 }
 
 function buildCache(): JournalCache {
