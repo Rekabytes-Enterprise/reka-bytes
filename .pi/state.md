@@ -9,11 +9,11 @@
 - Published journal is now 4 posts: free-prd (featured), seven-days-building-whimsery, we-shipped-our-own-journal, your-app-idea (+1 draft behind-the-classroom-engine). e2e-19/20/21 frozen slugs untouched.
 
 ## Next steps
-1. User's call: commit + push the merge (everything still untracked/unstaged).
+1. ~~Commit + push the merge~~ — DONE: `0252974` pushed to origin/dev (2026-09-18).
 2. Live-server smoke + e2e-19/20/21 runs (still pending from 2026-09-16, user's call).
 3. Tag v0.1.6 → GHCR images with journal content.
 4. Phase B (simulation template library, LESSON-PLAN §11) + real-AI WriteLesson smoke — queued.
 5. Main-page content backlog (portfolio/showcase, FAQ, WhatsApp CTA) — unchanged.
 
 ## Blocked / waiting on
-User call: commit, e2e runs, deploy tag.
+User call: e2e runs, deploy tag.
