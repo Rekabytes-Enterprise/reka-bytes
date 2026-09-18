@@ -10,10 +10,11 @@
     "lint": "eslint src/"
   },
   "dependencies": {
+    "@google/model-viewer": "^4.3.1",
     "@reka-bytes/shared": "workspace:*",
+    "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "framer-motion": "^12.0.0",
-    "canvas-confetti": "^1.9.4",
     "highlight.js": "^11.12.0",
     "jotai": "^2.11.0",
     "lucide-react": "^0.469.0",
@@ -30,8 +31,8 @@
     "@eslint/js": "^9.20.0",
     "@tailwindcss/postcss": "^4.1.0",
     "@tailwindcss/typography": "^0.5.20",
-    "@types/node": "^22.10.0",
     "@types/canvas-confetti": "^1.9.0",
+    "@types/node": "^22.10.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "eslint": "^9.20.0",

@@ -9,6 +9,7 @@ excerpt: >
 publishedAt: 2026-09-18
 featured: false
 tags: [studio, build-in-public, process]
+coverImage: ./cover.jpg
 status: published
 ---
 

@@ -5,7 +5,7 @@ import { typeStyles } from '@reka-bytes/shared';
 import { cn } from '@/lib/utils';
 import { SectionHeader } from '@/components/landing/section-header';
 import { LeadForm } from '@/components/landing/lead-form';
-import { FeaturedJournalPost } from '@/components/landing/featured-journal-post';
+import { JournalDesk } from '@/components/landing/journal-desk';
 import { Footer } from '@/components/layout/footer';
 import { SiteNav } from '@/components/layout/site-nav';
 import { Button } from '@/components/ui/button';
@@ -263,8 +263,8 @@ export default function CompanyPage() {
         </div>
       </section>
 
-      {/* ── FROM THE JOURNAL (featured slot, hidden when none) ──────── */}
-      <FeaturedJournalPost />
+      {/* ── FROM THE JOURNAL (desk scene + editorial + peek, PRD-07 §3.4) ── */}
+      <JournalDesk />
 
       {/* ── START A PROJECT (lead form) ─────────────────────────────── */}
       <section id="start" className="border-t border-line bg-elevated">
